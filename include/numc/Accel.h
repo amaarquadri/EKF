@@ -2,7 +2,7 @@
 
 #include "Vector3.h"
 
-template<typename T>
+template<typename T = double>
 struct Accel {
     Vector3<T> linear;
     Vector3<T> angular;

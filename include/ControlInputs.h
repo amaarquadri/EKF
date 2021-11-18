@@ -8,8 +8,8 @@ struct ControlInputs {
     double left_aileron_angle;
     double elevator_angle;
 
-    static ControlInputs parseU(const Vector<double, 4> &inputs);
+    static ControlInputs parseU(const Vector<4> &inputs);
 
     // may be unnecessary and replaced with more specific functions in the future
-    [[nodiscard]] Vector<double, 4> getU() const;
+    [[nodiscard]] Vector<4> getU() const;
 };

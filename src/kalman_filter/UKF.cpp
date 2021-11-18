@@ -14,9 +14,9 @@ UKF::UKF() {
     for (size_t i = 1; i < 2 * n + 1; i++) covariance_weights[i] = 1 / (2 * (n + lambda));
 }
 
-void UKF::updateKF(const SensorMeasurements &sensorMeasurements,
+void UKF::updateKF(const SensorMeasurements<> &sensorMeasurements,
                   const double &dt) {
-    Vector<double, n> x_new = f(x, dt);
+    Vector<n> x_new = f(x, dt);
     auto new_sigma = sigma;
 
     for (size_t j = 0; j < n; j++) { // i is column number, j is row number
@@ -30,42 +30,42 @@ void UKF::updateKF(const SensorMeasurements &sensorMeasurements,
     for (size_t i = 0; i < 2 * n + 1; i++) state_sigma[i] = f(new_sigma[i], dt);
 
     // for i=0 to 2n state estimate += state weights[i] times state sigma[i]
-    Vector<double, n> state_estimate;
+    Vector<n> state_estimate;
     for (size_t i = 0; i < 2 * n + 1; i++) state_estimate += state_sigma[i] * state_weights[i];
 
     // for i=0 to 2n state covariance += covariance weight[i] times state sigma[i] - state estimate dot itself
-    Matrix<double, n, n> state_covariance;
+    Matrix<n, n> state_covariance;
     for (size_t i = 0; i < 2 * n + 1; i++)
         state_covariance +=
-                Matrix<double, n, n>::outerProduct((state_sigma[i] - state_estimate),
+                Matrix<n, n>::outerProduct((state_sigma[i] - state_estimate),
                                                    (state_sigma[i] - state_estimate)) * covariance_weights[i];
 
     // transform state sigma through measurement function
-    Matrix<double, 2 * n + 1, p> measurement_sigma;
+    Matrix<2 * n + 1, p> measurement_sigma;
     for (size_t i = 0; i < 2 * n + 1; i++) measurement_sigma[i] = h(state_sigma[i], dt);
 
     // mean measurement vector += state weights[i] times measurement sigma[i]
-    Vector<double, p> measurement_estimate;
+    Vector<p> measurement_estimate;
     for (size_t i = 0; i < 2 * n + 1; i++) measurement_estimate += measurement_sigma[i] * state_weights[i];
 
     // measurement covariance += covariance weights times transformed sigma points minus mean measurement vector dot itself
-    Matrix<double, p, p> measurement_covariance;
+    Matrix<p, p> measurement_covariance;
     for (size_t i = 0; i < 2 * n + 1; i++)
         measurement_covariance +=
-                Matrix<double, p, p>::outerProduct((measurement_sigma[i] - measurement_estimate),
+                Matrix<p, p>::outerProduct((measurement_sigma[i] - measurement_estimate),
                                                    (measurement_sigma[i] - measurement_estimate)) *
                 covariance_weights[i];
 
     // cross covariance is state covariance and measurement covariance
-    Matrix<double, n, p> cross_covariance;
+    Matrix<n, p> cross_covariance;
     for (size_t i = 0; i < 2 * n + 1; i++)
         cross_covariance +=
-                Matrix<double, n, p>::outerProduct((state_sigma[i] - state_estimate),
+                Matrix<n, p>::outerProduct((state_sigma[i] - state_estimate),
                                                    (measurement_sigma[i] - measurement_estimate)) *
                 covariance_weights[i];
 
     // Kalman gain is cross covariance times inverse of measurement covariance
-    Matrix<double, n, p> K;
+    Matrix<n, p> K;
     K = cross_covariance * measurement_covariance.inv();
 
     // kalman gain update

@@ -24,8 +24,8 @@ void testDifferentiation() {
                        Variable::make("wy"),
                        Variable::make("wz")};
     ExprPtr dt = Variable::make("dt");
-    Vector<ExprPtr, 4> mat = quat.E().transpose() * quat.cong().toDCM() * w * (dt / 2);
-    Matrix<ExprPtr, 4, 4> jac;
+    Vector<4, ExprPtr> mat = quat.E().transpose() * quat.cong().toDCM() * w * (dt / 2);
+    Matrix<4, 4, ExprPtr> jac;
     for (size_t i = 0; i < 4; i++) for (size_t j = 0; j < 4; j++) {
         jac[i][j] = mat[i]->diff("q" + std::to_string(j));
         // std::cout << jac[i][j]->toStr() << std::endl;

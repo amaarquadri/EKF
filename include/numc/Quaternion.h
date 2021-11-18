@@ -3,8 +3,8 @@
 #include "Vector3.h"
 #include "Matrix.h"
 
-template<typename T>
-class Quaternion : public Vector<T, 4> {
+template<typename T = double>
+class Quaternion : public Vector<4, T> {
 public:
     T &q0 = this->data[0];
     T &q1 = this->data[1];
@@ -19,7 +19,7 @@ public:
     }
 
     // allow implicit conversions
-    Quaternion(Vector<T, 4> vec) : Quaternion(vec[0], vec[1], vec[2], vec[3]) {} // NOLINT(google-explicit-constructor)
+    Quaternion(Vector<4, T> vec) : Quaternion(vec[0], vec[1], vec[2], vec[3]) {} // NOLINT(google-explicit-constructor)
 
     Quaternion& operator=(const Quaternion<T> &other) {
         // need to overload this operator to allow copying the contents of a Quaternion
@@ -50,8 +50,8 @@ public:
         return this->cong().rotate(vec);
     }
 
-    Matrix<T, 3, 4> E() const {
-        Matrix<T, 3, 4>matrix{};
+    Matrix<3, 4, T> E() const {
+        Matrix<3, 4, T> matrix{};
 
         matrix[0][0] = -q1;
         matrix[0][1] = q0;
@@ -71,8 +71,8 @@ public:
         return matrix;
     }
 
-    Matrix<T, 3, 4> G() const {
-        Matrix<T, 3, 4> matrix{};
+    Matrix<3, 4, T> G() const {
+        Matrix<3, 4, T> matrix{};
 
         matrix[0][0] = -q1;
         matrix[0][1] = q0;
@@ -92,9 +92,9 @@ public:
         return matrix;
     }
 
-    Matrix<T, 3, 3> toDCM() const {
+    Matrix<3, 3, T> toDCM() const {
         // https://www.vectornav.com/resources/inertial-navigation-primer/math-fundamentals/math-attitudetran
-        Matrix<T, 3, 3> DCM;
+        Matrix<3, 3, T> DCM;
         T q0q0 = q0 * q0;
         T q1q1 = q1 * q1;
         T q2q2 = q2 * q2;

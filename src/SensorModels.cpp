@@ -13,26 +13,26 @@
 #include <random>
 static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count(); // NOLINT(cert-err58-cpp)
 static auto random_engine = std::default_random_engine(seed); // NOLINT(cert-err58-cpp)
-static std::normal_distribution<double> optical_flow_noise(0, 1); // NOLINT(cert-err58-cpp)
+static std::normal_distribution<> optical_flow_noise(0, 1); // NOLINT(cert-err58-cpp)
 #endif
 
-static void railDetection(const Quaternion<double> &quat, const double &altitude, SensorMeasurements &sensor_measurements) {
+static void railDetection(const Quaternion<> &quat, const double &altitude, SensorMeasurements<> &sensor_measurements) {
     if (altitude < 0) {
         // cannot see rail if we are underground
         // leave found_rail as false and leave rail_pixel_x, rail_pixel_y, rail_pixel_width, and rail_angle as 0
         return;
     }
 
-    Vector3<double> down_earth = quat.unrotate({0, 0, 1}); // down (i.e. the direction the camera is pointing) in earth coordinates
+    Vector3<> down_earth = quat.unrotate({0, 0, 1}); // down (i.e. the direction the camera is pointing) in earth coordinates
     if (down_earth.z < 0) {
         // cannot see rail if the plane is upside down
         return;
     }
 
     // rail offset in body coordinates
-    Vector3<double> rail_offset_body = quat.rotate(down_earth * altitude / down_earth.z);
+    Vector3<> rail_offset_body = quat.rotate(down_earth * altitude / down_earth.z);
 
-    Vector3<double> rail_pixel_location = rail_offset_body * CAMERA_GAIN / rail_offset_body.z;
+    Vector3<> rail_pixel_location = rail_offset_body * CAMERA_GAIN / rail_offset_body.z;
     if (HALF_CAMERA_HORIZONTAL_PIXELS < std::abs(rail_pixel_location.x) ||
         HALF_CAMERA_VERTICAL_PIXELS < std::abs(rail_pixel_location.y)) {
         // rail tracks are out of the field of view of the camera
@@ -45,13 +45,13 @@ static void railDetection(const Quaternion<double> &quat, const double &altitude
     sensor_measurements.rail_pixel_y = rail_pixel_location.y;
     sensor_measurements.rail_pixel_width = RAIL_WIDTH * CAMERA_GAIN / rail_offset_body.z;
 
-    Vector3<double> rail_direction_body = quat.rotate(NORTH); // rail direction in body coordinates
-    Vector3<double> rail_direction_pixels = rail_direction_body * CAMERA_GAIN / rail_offset_body.z;
+    Vector3<> rail_direction_body = quat.rotate(NORTH); // rail direction in body coordinates
+    Vector3<> rail_direction_pixels = rail_direction_body * CAMERA_GAIN / rail_offset_body.z;
     sensor_measurements.rail_angle = std::atan2(rail_direction_pixels.y, rail_direction_pixels.x);
 }
 
-static void opticalFlow(const Vector3<double> &velocity, const double &altitude, SensorMeasurements &sensor_measurements) {
-    Vector3<double> pixel_velocity = velocity * OPTICAL_FLOW_VELOCITY_GAIN / altitude;
+static void opticalFlow(const Vector3<> &velocity, const double &altitude, SensorMeasurements<> &sensor_measurements) {
+    Vector3<> pixel_velocity = velocity * OPTICAL_FLOW_VELOCITY_GAIN / altitude;
     sensor_measurements.pixel_velocity[0] = pixel_velocity.x;
     sensor_measurements.pixel_velocity[1] = pixel_velocity.y;
 #if SENSOR_NOISE == 1
@@ -60,22 +60,22 @@ static void opticalFlow(const Vector3<double> &velocity, const double &altitude,
 #endif
 }
 
-static void altitudeSensor(const double &altitude, SensorMeasurements &sensor_measurements) {
+static void altitudeSensor(const double &altitude, SensorMeasurements<> &sensor_measurements) {
     // temperature is a function of height and also location and also time of year so this might change
     double temperature = 288.15; // K
     sensor_measurements.pressure = ATMOSPHERIC_PRESSURE *
             exp(-GRAVITATIONAL_ACCELERATION * AIR_MOLAR_MASS * altitude / (GAS_CONSTANT * temperature));
 }
 
-static void imu(const Quaternion<double> &quat,
-                const Vector3<double> &body_acceleration,
-                const Vector3<double> &body_ang_acceleration,
-                const Vector3<double> &body_ang_velocity,
-                const Vector3<double> &accelerometer_bias,
-                const Vector3<double> &gyroscope_bias,
-                SensorMeasurements &sensor_measurements) {
-    Vector3<double> body_gravity = quat.rotate(EARTH_GRAVITY);
-    Vector3<double> measured_acceleration = body_acceleration +
+static void imu(const Quaternion<> &quat,
+                const Vector3<> &body_acceleration,
+                const Vector3<> &body_ang_acceleration,
+                const Vector3<> &body_ang_velocity,
+                const Vector3<> &accelerometer_bias,
+                const Vector3<> &gyroscope_bias,
+                SensorMeasurements<> &sensor_measurements) {
+    Vector3<> body_gravity = quat.rotate(EARTH_GRAVITY);
+    Vector3<> measured_acceleration = body_acceleration +
                                             body_ang_velocity.cross(body_ang_velocity.cross(IMU_OFFSET)) +
                                             body_ang_acceleration.cross(IMU_OFFSET) -
                                             body_gravity; // idealize measured acceleration
@@ -85,7 +85,7 @@ static void imu(const Quaternion<double> &quat,
     sensor_measurements.imu_angular_velocity = body_ang_velocity + gyroscope_bias;
 }
 
-static void gps(const Vector3<double> &position, SensorMeasurements &sensor_measurements) {
+static void gps(const Vector3<> &position, SensorMeasurements<> &sensor_measurements) {
     // Based on: https://www.movable-type.co.uk/scripts/latlong.html
     double rect_dist = sqrt(position.x * position.x + position.y * position.y);
     sensor_measurements.latitude = asin(sin(STARTING_COORDINATES[0]) * cos(rect_dist / EARTH_RADIUS) +
@@ -97,19 +97,19 @@ static void gps(const Vector3<double> &position, SensorMeasurements &sensor_meas
                                             sin(STARTING_COORDINATES[0]) * sin(sensor_measurements.latitude));
 }
 
-SensorMeasurements getSensorMeasurements(const Vector<double, n> &state, const Accel<double> &accel) {
-    Quaternion<double> quat{state[KF::q0], state[KF::q1], state[KF::q2], state[KF::q3]};
-    Vector3<double> position{state[KF::px], state[KF::py], state[KF::pz]};
-    Vector3<double> velocity{state[KF::vx], state[KF::vy], state[KF::vz]};
+SensorMeasurements<> getSensorMeasurements(const Vector<n> &state, const Accel<> &accel) {
+    Quaternion<> quat{state[KF::q0], state[KF::q1], state[KF::q2], state[KF::q3]};
+    Vector3<> position{state[KF::px], state[KF::py], state[KF::pz]};
+    Vector3<> velocity{state[KF::vx], state[KF::vy], state[KF::vz]};
     double altitude = -position.z;
 
     SensorMeasurements sensor_measurements;
     altitudeSensor(altitude, sensor_measurements);
     gps(position, sensor_measurements);
     imu(quat, accel.linear, accel.angular,
-        Vector3<double>{state[KF::wx], state[KF::wy], state[KF::wz]},
-        Vector3<double>{state[KF::accel_bx], state[KF::accel_by], state[KF::accel_bz]},
-        Vector3<double>{state[KF::gyro_bx], state[KF::gyro_by], state[KF::gyro_bz]},
+        Vector3<>{state[KF::wx], state[KF::wy], state[KF::wz]},
+        Vector3<>{state[KF::accel_bx], state[KF::accel_by], state[KF::accel_bz]},
+        Vector3<>{state[KF::gyro_bx], state[KF::gyro_by], state[KF::gyro_bz]},
         sensor_measurements);
     railDetection(quat, altitude, sensor_measurements);
     opticalFlow(velocity, altitude, sensor_measurements);
@@ -119,31 +119,31 @@ SensorMeasurements getSensorMeasurements(const Vector<double, n> &state, const A
 
 void getSensorMeasurementsWrapper(const double *aircraft_state, double *double_sensor_measurements,
                                   uint8_t *uint8_sensor_measurements, unsigned char *bool_sensor_measurements) {
-    Vector<double, n> aircraft_state_vec;
+    Vector<n> aircraft_state_vec;
 
     // only copy over the position, orientation, velocity, and angular velocity
     // TODO: clean up
     for (size_t i = 0; i < 13; i++) aircraft_state_vec[i] = aircraft_state[i];
 
-    Wrench<double> applied_loads = AppliedLoads{}.getAppliedLoads(aircraft_state_vec);
+    Wrench<> applied_loads = AppliedLoads{}.getAppliedLoads(aircraft_state_vec);
 
     getSensorMeasurements(aircraft_state_vec, toAccel(applied_loads)).assignZ(double_sensor_measurements,
                                                                               uint8_sensor_measurements,
                                                                               bool_sensor_measurements);
 }
 
-std::pair<Matrix<double, p, n>, Matrix<double, p, 6>> getSensorMeasurementsJacobian(const Vector<double, n> &state, const Accel<double> &accel) {
-    Matrix<double, p, n> h_jac = Matrix<double, p, n>::zeros();
-    Matrix<double, p, 6> accel_to_h_jac = Matrix<double, p, 6>::zeros();
+std::pair<Matrix<p, n>, Matrix<p, 6>> getSensorMeasurementsJacobian(const Vector<n> &state, const Accel<> &accel) {
+    Matrix<p, n> h_jac = Matrix<p, n>::zeros();
+    Matrix<p, 6> accel_to_h_jac = Matrix<p, 6>::zeros();
 
     // TODO
-    h_jac[SensorMeasurements::PRESSURE][KF::px] = AIR_DENSITY * GRAVITATIONAL_ACCELERATION;
+    h_jac[SensorMeasurements<>::PRESSURE][KF::px] = AIR_DENSITY * GRAVITATIONAL_ACCELERATION;
 
-    h_jac[SensorMeasurements::IMU_wx][KF::wx] = 1;
-    h_jac[SensorMeasurements::IMU_wy][KF::wy] = 1;
-    h_jac[SensorMeasurements::IMU_wz][KF::wz] = 1;
+    h_jac[SensorMeasurements<>::IMU_wx][KF::wx] = 1;
+    h_jac[SensorMeasurements<>::IMU_wy][KF::wy] = 1;
+    h_jac[SensorMeasurements<>::IMU_wz][KF::wz] = 1;
 
-    h_jac[SensorMeasurements::ALT][KF::pz] = -1;
+    h_jac[SensorMeasurements<>::ALT][KF::pz] = -1;
 
     return {h_jac, accel_to_h_jac};
 }

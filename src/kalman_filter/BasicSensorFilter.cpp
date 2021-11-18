@@ -1,13 +1,13 @@
 #include "BasicSensorFilter.h"
 
 BasicSensorFilter::BasicSensorFilter() {
-    state.orientation = Quaternion<double>::identity();
+    state.orientation = Quaternion<>::identity();
 }
 
-void BasicSensorFilter::update(const SensorMeasurements &sensorMeasurements,
+void BasicSensorFilter::update(const SensorMeasurements<> &sensorMeasurements,
                                const ControlInputs &control_inputs, const double &dt) {
     AircraftState last_state = state;
-    Vector3<double> w_abs = state.orientation.unrotate(state.body_angular_velocity);
+    Vector3<> w_abs = state.orientation.unrotate(state.body_angular_velocity);
 
     // TODO: x and y based on GPS
     state.position.z = -sensorMeasurements.gps_altitude;

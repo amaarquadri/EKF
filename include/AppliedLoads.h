@@ -13,16 +13,12 @@ public:
 
     void updateWrapper(const double *control_inputs, const double *aircraft_state, double *forces, double *torques);
 
-    [[nodiscard]] Wrench<double> getAppliedLoads(const Vector<double, n> &state) const;
+    [[nodiscard]] Wrench<> getAppliedLoads(const Vector<n> &state) const;
 
-    [[nodiscard]] Matrix<double, 6, n> getAppliedLoadsJacobian(const Vector<double, n> &state) const;
-
-    static double saturation(const double &value, const double &limit);
-
-    static double saturation(const double &value, const double &min, const double &max);
+    [[nodiscard]] Matrix<6, n> getAppliedLoadsJacobian(const Vector<n> &state) const;
 
 private:
-    static const Matrix<ExprPtr, 3, 4> QUAT_TO_WEIGHT_JAC_EXPR;
+    static const Matrix<3, 4, ExprPtr> QUAT_TO_WEIGHT_JAC_EXPR;
 
     ControlInputs current_control_inputs{0, 0, 0, 0};
     ControlInputs last_control_inputs{0, 0, 0, 0};
@@ -30,13 +26,13 @@ private:
 
     [[nodiscard]] double getPropellerAngVelocity() const;
 
-    [[nodiscard]] Wrench<double> getPropellerLoads() const;
+    [[nodiscard]] Wrench<> getPropellerLoads() const;
 
-    [[nodiscard]] Wrench<double> getRightAileronLoads(const double &velocity) const;
+    [[nodiscard]] Wrench<> getRightAileronLoads(const double &velocity) const;
 
-    [[nodiscard]] Wrench<double> getLeftAileronLoads(const double &velocity) const;
+    [[nodiscard]] Wrench<> getLeftAileronLoads(const double &velocity) const;
 
-    [[nodiscard]] Wrench<double> getElevatorLoads(const double &velocity) const;
+    [[nodiscard]] Wrench<> getElevatorLoads(const double &velocity) const;
 
-    static Wrench<double> getEnvironmentalLoads(const Vector<double, n> &state);
+    static Wrench<> getEnvironmentalLoads(const Vector<n> &state);
 };

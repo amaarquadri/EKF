@@ -4,8 +4,8 @@
 #include <iostream>
 
 void testQuaternion() {
-    Quaternion<double> first = Quaternion<double>::identity();
-    Quaternion<double> second{};
+    Quaternion<> first = Quaternion<>::identity();
+    Quaternion<> second{};
     second = first;
     second.q1 = 1;
     assert(first.q1 == 0);

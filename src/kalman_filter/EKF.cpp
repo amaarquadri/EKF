@@ -7,22 +7,22 @@
 #include <map>
 #include <string>
 
-static Matrix3D<ExprPtr, 4, 4, 3> getQuatToQuatJacExpr() {
-    Matrix3D<ExprPtr, 4, 4, 3> expr;
+static Matrix3D<4, 4, 3, ExprPtr> getQuatToQuatJacExpr() {
+    Matrix3D<4, 4, 3, ExprPtr> expr;
 
     Quaternion<ExprPtr> quat{Variable::make("q0"),
                              Variable::make("q1"),
                              Variable::make("q2"),
                              Variable::make("q3")};
-    Matrix<ExprPtr, 4, 3> mat = quat.E().transpose() * quat.cong().toDCM();
+    Matrix<4, 3, ExprPtr> mat = quat.E().transpose() * quat.cong().toDCM();
     for (size_t i = 0; i < 4; i++) for (size_t j = 0; j < 4; j++) for (size_t k = 0; k < 3; k++)
         expr[i][j][k] = mat[j][k]->diff(std::static_pointer_cast<Variable>(quat[i])->getIdentifier())->simplify();
 
     return expr;
 }
 
-static Matrix<double, 6, 6> getWrenchToAccelJac() {
-    Matrix<double, 6, 6> mat = Matrix<double, 6, 6>::zeros();
+static Matrix<6, 6> getWrenchToAccelJac() {
+    Matrix<6, 6> mat = Matrix<6, 6>::zeros();
     for (size_t i = 0; i < 3; i++) {
         mat[i][i] = 1 / MASS;
         for (size_t j = 0; j < 3; j++) mat[i][j] = INERTIA_TENSOR_INV[i][j];
@@ -31,18 +31,18 @@ static Matrix<double, 6, 6> getWrenchToAccelJac() {
     return mat;
 }
 
-const Matrix3D<ExprPtr, 4, 4, 3> EKF::QUAT_TO_QUAT_JAC_EXPR = getQuatToQuatJacExpr(); // NOLINT(cert-err58-cpp)
-const Matrix<double, 6, 6> EKF::WRENCH_TO_ACCEL_JAC = getWrenchToAccelJac(); // NOLINT(cert-err58-cpp)
+const Matrix3D<4, 4, 3, ExprPtr> EKF::QUAT_TO_QUAT_JAC_EXPR = getQuatToQuatJacExpr(); // NOLINT(cert-err58-cpp)
+const Matrix<6, 6> EKF::WRENCH_TO_ACCEL_JAC = getWrenchToAccelJac(); // NOLINT(cert-err58-cpp)
 
-void EKF::updateKF(const SensorMeasurements &sensorMeasurements, const double &dt) {
+void EKF::updateKF(const SensorMeasurements<> &sensorMeasurements, const double &dt) {
     // Jacobian naming convention:
     // a_to_b_jac represents the derivative of b with respect to a, and is a matrix of size (b, a)
     // The ith row and jth column of a_to_b_jac represents the derivative of the ith element of b with respect to the jth element of a
     // In other words, how does a impact b
     // For simplicity, x_to_a_jac is simply written as a_jac when x represents the state
     // By the chain rule, b_to_c_jac * a_to_b_jac = a_to_c_jac
-    Matrix<double, 6, n> wrench_jac = applied_loads.getAppliedLoadsJacobian(x); // derivative of wrench with respect to state
-    Matrix<double, 6, n> accel_jac = WRENCH_TO_ACCEL_JAC * wrench_jac;
+    Matrix<6, n> wrench_jac = applied_loads.getAppliedLoadsJacobian(x); // derivative of wrench with respect to state
+    Matrix<6, n> accel_jac = WRENCH_TO_ACCEL_JAC * wrench_jac;
 
     // prediction step
     auto [f_jac, accel_to_f_jac] = fJacobian(x, dt);
@@ -52,39 +52,39 @@ void EKF::updateKF(const SensorMeasurements &sensorMeasurements, const double &d
     P = f_jac * P * f_jac.transpose() + Q;
 
     // update step
-    Vector<double, p> z = sensorMeasurements.getZ();
-    Vector<double, p> h_vec = h(x, dt);
+    Vector<p> z = sensorMeasurements.getZ();
+    Vector<p> h_vec = h(x, dt);
     auto [h_jac, accel_to_h_jac] = getSensorMeasurementsJacobian(x, current_accel);
     h_jac += accel_to_h_jac * accel_jac;
-    Matrix<double, n, p> h_jac_transpose = h_jac.transpose();
+    Matrix<n, p> h_jac_transpose = h_jac.transpose();
 
-    Vector<double, p> y = z - h_vec;
+    Vector<p> y = z - h_vec;
     // multiplication order doesn't matter, both require n*p*(n+p) multiplications regardless of order
-    Matrix<double, p, p> S = h_jac * P * h_jac_transpose + R;
-    Matrix<double, n, p> K = P * h_jac_transpose * S.inv();
+    Matrix<p, p> S = h_jac * P * h_jac_transpose + R;
+    Matrix<n, p> K = P * h_jac_transpose * S.inv();
 
     x += K * y;
     P -= K * h_jac * P;
 }
 
-std::pair<Matrix<double, n, n>, Matrix<double, n, 6>> EKF::fJacobian(const Vector<double, n> &x, const double &dt) {
-    Matrix<double, n, n> f_jac = Matrix<double, n, n>::zeros(); // derivative of state with respect to state
-    Matrix<double, n, 6> accel_jac = Matrix<double, n, 6>::zeros(); // derivative of state with respect to accel
+std::pair<Matrix<n, n>, Matrix<n, 6>> EKF::fJacobian(const Vector<n> &x, const double &dt) {
+    Matrix<n, n> f_jac = Matrix<n, n>::zeros(); // derivative of state with respect to state
+    Matrix<n, 6> accel_jac = Matrix<n, 6>::zeros(); // derivative of state with respect to accel
 
     // setup some basic variables for use later
-    Quaternion<double> quat{x[q0], x[q1], x[q2], x[q3]};
-    Matrix<double, 3, 3> DCM_inv = quat.cong().toDCM();
-    Vector3<double> w_abs = quat.unrotate(Vector3<double>{x[wx], x[wy], x[wz]});
-    Quaternion<double> quat_new = quat + quat.E().transpose() * w_abs * (dt / 2);
+    Quaternion<> quat{x[q0], x[q1], x[q2], x[q3]};
+    Matrix<3, 3> DCM_inv = quat.cong().toDCM();
+    Vector3<> w_abs = quat.unrotate(Vector3<>{x[wx], x[wy], x[wz]});
+    Quaternion<> quat_new = quat + quat.E().transpose() * w_abs * (dt / 2);
     const std::map<std::string, double> subs = {{"q0", x[q0]},
                                                 {"q1", x[q1]},
                                                 {"q2", x[q2]},
                                                 {"q3", x[q3]}};
 
-    Matrix3D<double, 4, 4, 3> mat = QUAT_TO_QUAT_JAC_EXPR.applyFunc<double>([&subs] (const ExprPtr &expr) { return expr->evaluate(subs); });
-    Matrix<double, 4, 4> quat_to_quat_jac = mat * Vector3<double>{x[wx], x[wy], x[wz]} * (dt / 2);
+    Matrix3D<4, 4, 3> mat = QUAT_TO_QUAT_JAC_EXPR.applyFunc<double>([&subs] (const ExprPtr &expr) { return expr->evaluate(subs); });
+    Matrix<4, 4> quat_to_quat_jac = mat * Vector3<>{x[wx], x[wy], x[wz]} * (dt / 2);
 
-    Matrix<double, 4, 3> w_to_quat_jac = quat.E().transpose() * DCM_inv * dt / 2;
+    Matrix<4, 3> w_to_quat_jac = quat.E().transpose() * DCM_inv * dt / 2;
 
     // TODO: magnetic field derivatives with respect to quaternion and angular velocity
     /**
@@ -96,7 +96,7 @@ std::pair<Matrix<double, n, n>, Matrix<double, n, 6>> EKF::fJacobian(const Vecto
      * (mag_new - mag) / dt = (M - I) / dt * (mag - mag_b)
      * Thus, mag_to_mag_jac = (M - I) / dt and mag_mag_b_jac = -mag_to_mag_jac
      */
-    Matrix<double, 3, 3> mag_to_mag_jac = (quat_new.toDCM() * DCM_inv - Matrix<double, 3, 3>::identity()) / dt;
+    Matrix<3, 3> mag_to_mag_jac = (quat_new.toDCM() * DCM_inv - Matrix<3, 3>::identity()) / dt;
 
     // fill in the separate elements into f_jac
     for (size_t i = 0; i < 3; i++) {

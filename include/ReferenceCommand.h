@@ -5,5 +5,5 @@
 struct ReferenceCommand {
     double airspeed;
     double altitude;
-    Vector<double, 2> waypoint;
+    Vector<2> waypoint;
 };

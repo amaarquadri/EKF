@@ -23,26 +23,26 @@ public:
     };
 
 protected:
-    Vector<double, n> x{};
-    Matrix<double, n, n> P = Matrix<double, n, n>::identity();
-    const Matrix<double, n, n> Q = Matrix<double, n, n>::identity();
-    const Matrix<double, p, p> R = Matrix<double, p, p>::identity();
+    Vector<n> x{};
+    Matrix<n, n> P = Matrix<n, n>::identity();
+    const Matrix<n, n> Q = Matrix<n, n>::identity();
+    const Matrix<p, p> R = Matrix<p, p>::identity();
     AppliedLoads applied_loads{};
-    Wrench<double> current_loads; // stores applied_loads.getAppliedLoads(x) for the current time-step
-    Accel<double> current_accel; // stores accelerations and angular accelerations based on current_loads
+    Wrench<> current_loads; // stores applied_loads.getAppliedLoads(x) for the current time-step
+    Accel<> current_accel; // stores accelerations and angular accelerations based on current_loads
 
 public:
     KF();
 
-    void update(const SensorMeasurements &sensorMeasurements,
+    void update(const SensorMeasurements<> &sensorMeasurements,
                 const ControlInputs &control_inputs, const double &dt) final;
 
-    virtual void updateKF(const SensorMeasurements &sensorMeasurements, const double &dt) = 0;
+    virtual void updateKF(const SensorMeasurements<> &sensorMeasurements, const double &dt) = 0;
 
     [[nodiscard]] AircraftState getOutput() const final;
 
 protected:
-    [[nodiscard]] Vector<double, n> f(const Vector<double, n> &state, const double &dt) const;
+    [[nodiscard]] Vector<n> f(const Vector<n> &state, const double &dt) const;
 
-    [[nodiscard]] Vector<double, p> h(const Vector<double, n> &state, const double &dt);
+    [[nodiscard]] Vector<p> h(const Vector<n> &state, const double &dt);
 };

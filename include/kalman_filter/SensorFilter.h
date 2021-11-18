@@ -11,7 +11,7 @@ public:
 
     void getOutputWrapper(double *doubleAircraftState) const;
 
-    virtual void update(const SensorMeasurements &sensorMeasurements,
+    virtual void update(const SensorMeasurements<> &sensorMeasurements,
                         const ControlInputs &control_inputs, const double &dt) = 0;
 
     [[nodiscard]] virtual AircraftState getOutput() const = 0;

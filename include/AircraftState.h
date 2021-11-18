@@ -6,12 +6,12 @@
 struct AircraftState {
     // represents the AircraftState as stored in Simulink
 
-    Vector3<double> position;
-    Quaternion<double> orientation;
-    Vector3<double> body_velocity;
-    Vector3<double> body_angular_velocity;
-    Vector3<double> body_angular_acceleration;
-    Vector3<double> body_acceleration;
+    Vector3<> position;
+    Quaternion<> orientation;
+    Vector3<> body_velocity;
+    Vector3<> body_angular_velocity;
+    Vector3<> body_angular_acceleration;
+    Vector3<> body_acceleration;
 
-    [[nodiscard]] Vector<double, 19> getX() const;
+    [[nodiscard]] Vector<19> getX() const;
 };

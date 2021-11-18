@@ -3,6 +3,7 @@
 #include "Vector3.h"
 #include <cmath>
 #include "AppliedLoads.h"
+#include "math_utils.h"
 
 double PID::output_signal(double error, double dt) {
     double output_signal = 0;
@@ -22,51 +23,51 @@ double PID::proportional_signal(double K_p, double error) {
     return K_p * error;
 }
 
-static double const heading_controller(Vector<double, 2> const *waypoint_command, Vector<double, 2> const *position) {
-    Vector<double, 2> diff = *waypoint_command - *position;
+static double const heading_controller(Vector<2> const *waypoint_command, Vector<2> const *position) {
+    Vector<2> diff = *waypoint_command - *position;
     return atan2(diff[0], diff[1]);
 }
 
-static Vector3<double> const throttle_controller(Vector3<double> const *airspeed_command, Vector3<double> const *body_velocity, double dt) {
-    Vector3<double> error = *airspeed_command - *body_velocity;
+static Vector3<> const throttle_controller(Vector3<> const *airspeed_command, Vector3<> const *body_velocity, double dt) {
+    Vector3<> error = *airspeed_command - *body_velocity;
     double K_ff = 1;
     double K_p = 1,  K_i = 1, K_d = 1;
     PID pid = PID(K_p, K_i, K_d);
-    Vector3<double> u;
+    Vector3<> u;
     for (int i = 0; i < 3; i++) {
        u[i] = pid.output_signal(error[i], dt);
     }
     return K_ff * *airspeed_command + u;
 }
 
-static Vector3<double> const roll_controller(Vector3<double> const *heading_command, Vector3<double> const *euler_angles, double dt) {
-    Vector3<double> error = *heading_command - *euler_angles;
+static Vector3<> const roll_controller(Vector3<> const *heading_command, Vector3<> const *euler_angles, double dt) {
+    Vector3<> error = *heading_command - *euler_angles;
     double K_p = 1,  K_i = 1, K_d = 1;
     PID pid = PID(K_p, K_i, K_d);
-    Vector3<double> u;
+    Vector3<> u;
     for (int i = 0; i < 3; i++) {
-        u[i] = AppliedLoads::saturation(pid.output_signal(error[i], dt), 5);
+        u[i] = utils::saturation<double>(pid.output_signal(error[i], dt), 5);
     }
     return u;
 }
 
-static Vector3<double> propeller_controller(const Vector3<double> &throttle_command) {
+static Vector3<> propeller_controller(const Vector3<> &throttle_command) {
     double K_p = 1;
     return K_p * throttle_command;
 }
 
-static Vector3<double> const elevator_controller(Vector3<double> const *pitch_command, Vector3<double> const *aircraft_pitch, double dt) {
-    Vector3<double> error = *pitch_command - *aircraft_pitch;
+static Vector3<> const elevator_controller(Vector3<> const *pitch_command, Vector3<> const *aircraft_pitch, double dt) {
+    Vector3<> error = *pitch_command - *aircraft_pitch;
     double K_ff = 1;
     double K_p = 1,  K_i = 1, K_d = 1;
     PID pid = PID(K_p, K_i, K_d);
-    Vector3<double> u;
+    Vector3<> u;
     for (int i = 0; i < 3; i++) {
         u[i] = pid.output_signal(error[i], dt);
     }
     return K_ff * *pitch_command + u;
 }
 
-static Vector<Vector3<double>, 2> const aileron_controller(Vector3<double> const *roll_command, Vector3<double> const *aircraft_roll, double dt) {
-    Vector3<double> error = *roll_command - *aircraft_roll;
+static Vector<2, Vector3<>> const aileron_controller(Vector3<> const *roll_command, Vector3<> const *aircraft_roll, double dt) {
+    Vector3<> error = *roll_command - *aircraft_roll;
 }

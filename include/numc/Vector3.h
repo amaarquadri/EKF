@@ -2,8 +2,8 @@
 
 #include "Vector.h"
 
-template<typename T>
-class Vector3 : public Vector<T, 3> {
+template<typename T = double>
+class Vector3 : public Vector<3, T> {
 public:
     T &x = this->data[0];
     T &y = this->data[1];
@@ -29,7 +29,7 @@ public:
     }
 
     // allow implicit conversions
-    Vector3(Vector<T, 3> vec) : Vector3(vec[0], vec[1], vec[2]) {} // NOLINT(google-explicit-constructor)
+    Vector3(Vector<3, T> vec) : Vector3(vec[0], vec[1], vec[2]) {} // NOLINT(google-explicit-constructor)
 
     Vector3<T> cross(const Vector3<T> &other) const {
         return Vector3{y * other.z - z * other.y,
