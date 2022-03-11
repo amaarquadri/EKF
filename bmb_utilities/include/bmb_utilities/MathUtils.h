@@ -6,6 +6,16 @@
 
 namespace bmb_utilities {
 
+template<typename T>
+constexpr auto deg2rad(const T& angle) {
+  return (M_PI / 180) * angle;
+}
+
+template<typename T>
+constexpr auto rad2deg(const T& angle) {
+  return (180 / M_PI) * angle;
+}
+
 template <typename T1, typename T2>
 std::common_type_t<T1, T2> saturation(const T1& value, const T2& limit) {
   if (value > limit) return limit;
