@@ -120,15 +120,23 @@
     <!-- Turn off gravity for each link since the aris_control plugin will apply it -->
     <gazebo reference="body">
         <gravity>0</gravity>
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="propeller">
+        <gravity>0</gravity>
+        <material>Gazebo/Green</material>
     </gazebo>
     <gazebo reference="right_aileron">
         <gravity>0</gravity>
+        <material>Gazebo/Gold</material>
     </gazebo>
     <gazebo reference="left_aileron">
         <gravity>0</gravity>
+        <material>Gazebo/Gold</material>
     </gazebo>
     <gazebo reference="elevator">
         <gravity>0</gravity>
+        <material>Gazebo/Gold</material>
     </gazebo>
 
     <gazebo>
