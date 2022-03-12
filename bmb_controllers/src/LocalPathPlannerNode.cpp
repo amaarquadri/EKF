@@ -84,7 +84,7 @@ void LocalPathPlannerNode::spin() {
 }
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "bmb_local_path_planner");
+  ros::init(argc, argv, "local_path_planner_node");
   ros::NodeHandle nh;
   LocalPathPlannerNode node{nh, 1};
   node.spin();

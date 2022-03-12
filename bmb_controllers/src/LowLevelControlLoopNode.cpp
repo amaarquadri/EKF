@@ -62,7 +62,7 @@ void LowLevelControlLoopNode::spin() {
 }
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "bmb_low_level_control_loop");
+  ros::init(argc, argv, "low_level_control_loop_node");
   ros::NodeHandle nh;
   LowLevelControlLoopNode node{nh, 100};
   node.spin();
