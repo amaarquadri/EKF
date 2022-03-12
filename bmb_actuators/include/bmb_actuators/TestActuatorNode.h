@@ -11,4 +11,5 @@ class TestActuatorNode {
 
  private:
   ros::Publisher control_inputs_pub_;
+  const double update_frequency;
 };
