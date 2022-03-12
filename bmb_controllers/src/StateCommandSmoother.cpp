@@ -43,7 +43,8 @@ static const TransferFunction<double, 1, 2> ROLL_SMOOTHER{
 static const TransferFunction<double, 1, 2> PITCH_SMOOTHER{
     1, bmb_utilities::deg2rad(15) / MAX_PITCH_RATE, 1};
 
-StateCommandSmoother::StateCommandSmoother(const double& dt) {
+StateCommandSmoother::StateCommandSmoother(const double& update_frequency) {
+  const double dt = 1 / update_frequency;
   speed_smoother = SPEED_SMOOTHER.discretize(dt);
   roll_smoother = ROLL_SMOOTHER.discretize(dt);
   pitch_smoother = PITCH_SMOOTHER.discretize(dt);

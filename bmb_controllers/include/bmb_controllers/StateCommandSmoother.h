@@ -5,7 +5,7 @@
 
 class StateCommandSmoother {
  public:
-  StateCommandSmoother(const double& dt);
+  StateCommandSmoother(const double& update_frequency);
 
   bmb_msgs::StateCommand getSmoothedStateCommand(
       const bmb_msgs::StateCommand& state_command);
