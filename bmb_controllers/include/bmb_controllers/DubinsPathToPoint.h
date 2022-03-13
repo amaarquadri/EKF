@@ -34,7 +34,8 @@ class DubinsPathToPoint {
     // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.823.5493&rep=rep1&type=pdf
     const T radius_squared = radius * radius;
     const Vector2 right_dir = bmb_math::ROT_90_CW * start.vel;
-    if (right_dir.dot(goal - start.pos) > 0) {
+    const Vector2 p = goal - start.pos;
+    if (right_dir.dot(p) > 0) {
       // goal is on the right
       const Vector2 center =
           start.pos + radius * right_dir / right_dir.magnitude();
@@ -42,6 +43,27 @@ class DubinsPathToPoint {
       const T d1_squared = d1_vec.magnitudeSquared();
       if (d1_squared < radius_squared) {
         // LR
+        const Vector2 center =
+            start.pos - radius * right_dir / right_dir.magnitude();
+        const T x = p.dot(right_dir) / right_dir.magnitude();
+        const T y = p.dot(start.vel) / start.vel.magnitude();
+        const T cos_theta2 = 1.5 - (p.magnitudeSquared() + 2 * radius * x) /
+                                       (4 * radius_squared);
+        const T sin_theta2 = std::sqrt(1 - cos_theta2 * cos_theta2);
+        const T cos_theta1 =
+            ((2 - cos_theta2) * (x + radius) + sin_theta2 * y) /
+            ((5 - 4 * cos_theta2) * r);
+        const T sin_theta1 = std::sqrt(1 - cos_theta1 * cos_theta1);
+        const T theta1 = std::acos(cos_theta1);
+        const T theta2 = 2 * M_PI - std::acos(cos_theta2);
+
+        const T starting_angle = bmb_math::atan2(right_dir);
+        const Vector2 second_center =
+            center + 2 * radius * Vector2{cos_theta1, sin_theta1};
+        const DubinsCurve<T> c1{center, radius, starting_angle, theta1};
+        const DubinsCurve<T> c2{second_center, radius,
+                                starting_angle + theta1 + M_PI, theta2};
+        return DubinsPathToPoint{{c1, c2}};
       } else {
         // RS
         const T start_angle = bmb_math::atan2(-right_dir);
