@@ -16,6 +16,20 @@ constexpr auto rad2deg(const T& angle) {
   return (180 / M_PI) * angle;
 }
 
+/**
+ * Normalizes the given angle in radians to [0, 2 * pi)
+ */
+template <typename T>
+T normalizeAngle(T angle) {
+  while (angle > 2 * M_PI) {
+    angle -= 2 * M_PI;
+  }
+  while (angle < 0) {
+    angle += 2 * M_PI;
+  }
+  return angle;
+}
+
 template <typename T1, typename T2>
 std::common_type_t<T1, T2> saturation(const T1& value, const T2& limit) {
   if (value > limit) return limit;

@@ -4,6 +4,7 @@
 #include <bmb_controllers/PosVelState.h>
 #include <bmb_math/Utility.h>
 #include <bmb_math/Vector.h>
+#include <bmb_utilities/MathUtils.h>
 #include <cmath>
 
 class DubinsPathToPoint {
@@ -45,7 +46,7 @@ class DubinsPathToPoint {
         // RS
         const T start_angle = bmb_math::atan2(-right_dir);
         const T dist = std::sqrt(d1_squared - radius_squared);
-        const T delta_angle = bmb_math::normalizeAngle(
+        const T delta_angle = bmb_utilities::normalizeAngle(
             start_angle - std::atan2(dist, radius) - bmb_math::atan2(d1_vec));
 
         const DubinsCurve<T> c1{center, radius, start_angle, delta_angle};
@@ -65,7 +66,7 @@ class DubinsPathToPoint {
         // LS
         const T start_angle = bmb_math::atan2(right_dir);
         const T dist = std::sqrt(d1_squared - radius_squared);
-        const T delta_angle = bmb_math::normalizeAngle(
+        const T delta_angle = bmb_utilities::normalizeAngle(
             start_angle - std::atan2(dist, radius) - bmb_math::atan2(d1_vec));
 
         const DubinsCurve<T> c1{center, radius, start_angle, delta_angle};
