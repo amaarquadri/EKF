@@ -11,13 +11,15 @@
 #include <cmath>
 
 // aerodynamic slope constants
-static const Wrench<double> BODY_M_WRENCH{0, 0, 0, 0, 0, 0};
+static const Wrench<double> BODY_M_WRENCH{
+    -0.320883207023485, 0, -1.39627650007691, 0, -0.250343385330279, 0};
 static const Wrench<double> AILERON_M_WRENCH{0, 0, 0, 0, 0, 0};
 static const Wrench<double> ELEVATOR_M_WRENCH{0, 0, 0, 0, 0, 0};
 static const Wrench<double> RUDDER_M_WRENCH{0, 0, 0, 0, 0, 0};
 
 // aerodynamic offset constants
-static const Wrench<double> BODY_B_WRENCH{0, 0, 0, 0, 0, 0};
+static const Wrench<double> BODY_B_WRENCH{
+    -0.0595573697856826, 0, -0.204721453757253, 0, 0.0015675980775375, 0};
 static const Wrench<double> AILERON_B_WRENCH{0, 0, 0, 0, 0, 0};
 static const Wrench<double> ELEVATOR_B_WRENCH{0, 0, 0, 0, 0, 0};
 static const Wrench<double> RUDDER_B_WRENCH{0, 0, 0, 0, 0, 0};
@@ -70,12 +72,20 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
   const double sin_aoa_xz = b_vel.z / std::sqrt(speed_xz_squared);
   const double sin_aoa_xy = -b_vel.y / std::sqrt(speed_xy_squared);
 
+  // absolute value of aileron angle is used for the force models
+  const double right_aileron_angle_mag =
+      std::fabs(control_inputs.right_aileron_angle);
+  const Wrench<double> aileron_wrench{right_aileron_angle_mag,
+                                      right_aileron_angle_mag,
+                                      right_aileron_angle_mag,
+                                      control_inputs.right_aileron_angle,
+                                      control_inputs.right_aileron_angle,
+                                      control_inputs.right_aileron_angle};
+
   const Wrench<double> body_loads =
       (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;
   const Wrench<double> aileron_loads =
-      (AILERON_M_WRENCH * control_inputs.right_aileron_angle +
-       AILERON_B_WRENCH) *
-      speed_xz_squared;
+      (AILERON_M_WRENCH * aileron_wrench + AILERON_B_WRENCH) * speed_xz_squared;
   const Wrench<double> elevator_loads =
       (ELEVATOR_M_WRENCH * control_inputs.elevator_angle + ELEVATOR_B_WRENCH) *
       speed_xz_squared;
