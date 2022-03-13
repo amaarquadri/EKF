@@ -1,3 +1,4 @@
+#include <bmb_controllers/PosVelState.h>
 #include <bmb_controllers/DubinsPath.h>
 #include <bmb_controllers/PurePursuit.h>
 #include <bmb_math/Vector.h>
@@ -9,8 +10,8 @@ TEST(TestPurePursuit, testPurePursuit) {
   const std::string directory =
       ros::package::getPath("bmb_controllers") + "/test/output/";
   using Vector2 = Vector<double, 2>;
-  DubinsPath<double>::State start = {Vector2{0, 0}, Vector2{0, 1}};
-  DubinsPath<double>::State goal = {Vector2{5, 3}, Vector2{-1, 2}};
+  PosVelState start = {Vector2{0, 0}, Vector2{0, 1}};
+  PosVelState goal = {Vector2{5, 3}, Vector2{-1, 2}};
   static constexpr double min_dubins_radius = 5;
   DubinsPath<double> path =
       DubinsPath<double>::create(start, goal, min_dubins_radius);

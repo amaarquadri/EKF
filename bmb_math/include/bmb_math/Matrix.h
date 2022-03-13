@@ -52,6 +52,15 @@ class Matrix {
     return transpose;
   }
 
+  void transposeInPlace() {
+    if constexpr (n != m)
+      throw std::invalid_argument(
+          "Cannot transpose in place a non-square matrix");
+
+    for (size_t i = 1; i < n; i++)
+      for (size_t j = 0; j < i; j++) std::swap(data[i][j], data[j][i]);
+  }
+
   Vector<T, n * m> flatten() const {
     Vector<T, n * m> flat_mat;
     for (size_t i = 0; i < n; i++)
@@ -66,7 +75,7 @@ class Matrix {
                                       const Vector<T, m>& second) {
     Matrix<T, n, m> outerProduct;
     for (size_t i = 0; i < n; i++)
-      for (size_t j = 0; j < n; j++) outerProduct[i][j] = first[i] * second[j];
+      for (size_t j = 0; j < m; j++) outerProduct[i][j] = first[i] * second[j];
     return outerProduct;
   }
 
@@ -117,7 +126,7 @@ class Matrix {
   }
 
   Matrix<T, m, n> cholesky() const {
-    if (m != n)
+    if constexpr (m != n)
       throw std::invalid_argument(
           "Cannot find the Cholesky Decomposition of a non-square matrix");
     Matrix<T, m, n> L;  // Lower-triangular matrix defined by A=LL'
@@ -136,17 +145,16 @@ class Matrix {
   }
 
   Matrix<T, m, n> inv() const {
-    if (m != n)
+    if constexpr (m != n)
       throw std::invalid_argument(
           "Cannot find the inverse of a non-square matrix");
-    Matrix<T, m, n> L = cholesky();
+    const Matrix<T, m, n> L = cholesky();
     Matrix<T, m, n> u;
-    Matrix<T, m, n> I = Matrix<T, m, n>::identity();
 
     // forward substitution
     for (size_t k = 0; k < n; k++) {
       for (size_t i = 0; i < m; i++) {
-        T alpha = I[i][k];
+        T alpha = (i == k) ? 1 : 0;
         for (size_t j = 0; j < i; j++) {
           alpha -= L[i][j] * u[i][j];
         }

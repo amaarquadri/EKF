@@ -18,10 +18,10 @@ class Fourier {
   static void fft(iterator begin, iterator end) {
     // Based on:
     // https://numericalrecipes.wordpress.com/2009/05/29/the-cooley-tukey-fft-algorithm-for-general-factorizations/
-    size_t N = end - begin;
+    const size_t N = end - begin;
     if (N <= 1) return;
-    FactorTree* factor_tree = planFFT(N);
-    std::vector<std::complex<T>> roots_of_unity = getRootsOfUnity(N);
+    const FactorTree* const factor_tree = planFFT(N);
+    const std::vector<std::complex<T>> roots_of_unity = getRootsOfUnity(N);
     cooleyTukeyFFT(begin, end, 1, factor_tree, roots_of_unity);
     delete factor_tree;
   }
@@ -39,7 +39,7 @@ class Fourier {
 
     fft(begin, end);
 
-    size_t N = (end - begin);
+    const size_t N = (end - begin);
     for (iterator it = begin; it < end; it++) {
       (*it) = std::conj(*it) / N;
     }
@@ -77,7 +77,7 @@ class Fourier {
    * @return A FactorTree for N
    */
   static FactorTree* planFFT(const size_t& N) {
-    std::vector<size_t> factors = primeFactorization(N);
+    const std::vector<size_t> factors = primeFactorization(N);
 
     auto* tree = new FactorTree();
     tree->value = factors[0];
@@ -107,7 +107,8 @@ class Fourier {
    * of elements in the array times incr
    */
   static void cooleyTukeyFFT(
-      iterator begin, iterator end, const size_t& incr, FactorTree* factor_tree,
+      iterator begin, iterator end, const size_t& incr,
+      const FactorTree* const factor_tree,
       const std::vector<std::complex<T>>& roots_of_unity) {
     const size_t& N = factor_tree->value;
 
@@ -152,7 +153,7 @@ class Fourier {
                   const std::vector<std::complex<T>>& roots_of_unity,
                   const size_t& N) {
     // should only be used for prime sized data
-    size_t ratio = roots_of_unity.size() / N;
+    const size_t ratio = roots_of_unity.size() / N;
     std::vector<std::complex<T>> result(N);
     for (size_t i = 0; i < N; i++) {
       for (size_t j = 0; j < N; j++) {
@@ -201,7 +202,7 @@ class Fourier {
                         const size_t& Q) {
     // Based on:
     // https://en.wikipedia.org/wiki/In-place_matrix_transposition#Properties_of_the_permutation
-    size_t N = P * Q;
+    const size_t N = P * Q;
     // first and last points of the matrix never need to move, so we only need N
     // - 2 bits of auxiliary storage thus, whether the ith element of the matrix
     // has been moved is stored in the (i - 1)th index of moved

@@ -1,9 +1,12 @@
 #pragma once
 
+#include <bmb_differentiation/compiled/CConstant.h>
 #include <array>
 #include <cstddef>
+#include <limits>
 
 namespace compiled {
+
 template <size_t id>
 struct Variable {
   using type = Variable<id>;
@@ -33,29 +36,24 @@ inline constexpr bool is_variable_v = is_variable<T>::value;
  * The char sequence can be any valid natural number.
  */
 template <char... cs>
-struct parse_size_t;
+struct parse_size_t {
+ private:
+  using R = parse_ratio_t<cs...>;
+  static_assert(R::den == 1 && R::num >= 0,
+                "literal does not evaluate to a natural number");
+  static_assert(R::num <= std::numeric_limits<size_t>::max(),
+                "literal does not fit in a size_t");
+
+ public:
+  static constexpr size_t value = static_cast<size_t>(R::num);
+};
 
 template <char... cs>
 inline constexpr size_t parse_size_t_v = parse_size_t<cs...>::value;
-
-template <char c>
-struct parse_size_t<c> {
-  static_assert('0' <= c && c <= '9');
-
-  static constexpr size_t power = 1;
-  static constexpr size_t value = c - '0';
-};
-
-template <char c, char... cs>
-struct parse_size_t<c, cs...> {
-  static_assert('0' <= c && c <= '9');
-
-  static constexpr size_t power = 10 * parse_size_t<cs...>::power;
-  static constexpr size_t value = power * (c - '0') + parse_size_t_v<cs...>;
-};
 
 template <char... cs>
 constexpr Variable<parse_size_t_v<cs...>> operator"" _v() {
   return {};
 }
+
 }  // namespace compiled

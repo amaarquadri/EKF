@@ -2,7 +2,6 @@
 #include <bmb_math/Quaternion.h>
 #include <bmb_math/Vector3.h>
 #include <bmb_msgs/SensorMeasurements.h>
-#include <bmb_world_model/AppliedLoads.h>
 #include <bmb_world_model/Constants.h>
 #include <cmath>
 #include <utility>
@@ -32,7 +31,7 @@ static void railDetection(const Quaternion<double>& quat,
     return;
   }
 
-  Vector3<double> down_earth =
+  const Vector3<double> down_earth =
       quat.unrotate({0, 0, 1});  // down (i.e. the direction the camera is
                                  // pointing) in earth coordinates
   if (down_earth.z < 0) {
@@ -41,10 +40,10 @@ static void railDetection(const Quaternion<double>& quat,
   }
 
   // rail offset in body coordinates
-  Vector3<double> rail_offset_body =
+  const Vector3<double> rail_offset_body =
       quat.rotate(down_earth * altitude / down_earth.z);
 
-  Vector3<double> rail_pixel_location =
+  const Vector3<double> rail_pixel_location =
       rail_offset_body * CAMERA_GAIN / rail_offset_body.z;
   if (HALF_CAMERA_HORIZONTAL_PIXELS < std::abs(rail_pixel_location.x) ||
       HALF_CAMERA_VERTICAL_PIXELS < std::abs(rail_pixel_location.y)) {
@@ -59,9 +58,9 @@ static void railDetection(const Quaternion<double>& quat,
   sensor_measurements.rail_detection.pixel_width =
       RAIL_WIDTH * CAMERA_GAIN / rail_offset_body.z;
 
-  Vector3<double> rail_direction_body =
+  const Vector3<double> rail_direction_body =
       quat.rotate(NORTH);  // rail direction in body coordinates
-  Vector3<double> rail_direction_pixels =
+  const Vector3<double> rail_direction_pixels =
       rail_direction_body * CAMERA_GAIN / rail_offset_body.z;
   sensor_measurements.rail_detection.angle =
       std::atan2(rail_direction_pixels.y, rail_direction_pixels.x);
@@ -69,7 +68,7 @@ static void railDetection(const Quaternion<double>& quat,
 
 static void opticalFlow(const Vector3<double>& velocity, const double& altitude,
                         bmb_msgs::SensorMeasurements& sensor_measurements) {
-  Vector3<double> pixel_velocity =
+  const Vector3<double> pixel_velocity =
       velocity * OPTICAL_FLOW_VELOCITY_GAIN / altitude;
   sensor_measurements.optical_flow_reading.x_pixel_velocity = pixel_velocity.x;
   sensor_measurements.optical_flow_reading.y_pixel_velocity = pixel_velocity.y;
@@ -83,9 +82,9 @@ static void opticalFlow(const Vector3<double>& velocity, const double& altitude,
 
 static void altitudeSensor(const double& altitude,
                            bmb_msgs::SensorMeasurements& sensor_measurements) {
-  // temperature is a function of height and also location and also time of year
-  // so this might change
-  double temperature = 288.15;  // K
+  // temperature is a function of height, location and time of year so this
+  // might change
+  static constexpr double temperature = 288.15;  // K
   sensor_measurements.pressure_reading.fluid_pressure =
       ATMOSPHERIC_PRESSURE * exp(-GRAVITATIONAL_ACCELERATION * AIR_MOLAR_MASS *
                                  altitude / (GAS_CONSTANT * temperature));
@@ -98,8 +97,8 @@ static void imu(const Quaternion<double>& quat,
                 const Vector3<double>& accelerometer_bias,
                 const Vector3<double>& gyroscope_bias,
                 bmb_msgs::SensorMeasurements& sensor_measurements) {
-  Vector3<double> body_gravity = quat.rotate(EARTH_GRAVITY);
-  Vector3<double> measured_acceleration =
+  const Vector3<double> body_gravity = quat.rotate(EARTH_GRAVITY);
+  const Vector3<double> measured_acceleration =
       body_acceleration +
       body_ang_velocity.cross(body_ang_velocity.cross(IMU_OFFSET)) +
       body_ang_acceleration.cross(IMU_OFFSET) -
@@ -116,7 +115,7 @@ static void imu(const Quaternion<double>& quat,
 static void gps(const Vector3<double>& position,
                 bmb_msgs::SensorMeasurements& sensor_measurements) {
   // Based on: https://www.movable-type.co.uk/scripts/latlong.html
-  double rect_dist = sqrt(position.x * position.x + position.y * position.y);
+  const double rect_dist = std::hypot(position.x, position.y);
   sensor_measurements.gps_reading.latitude =
       asin(sin(STARTING_COORDINATES[0]) * cos(rect_dist / EARTH_RADIUS) +
            cos(STARTING_COORDINATES[0]) * sin(rect_dist / EARTH_RADIUS) *
@@ -135,10 +134,10 @@ bmb_msgs::SensorMeasurements getSensorMeasurements(
     const bmb_msgs::AircraftState& state,
     const Vector3<double>& accelerometer_bias,
     const Vector3<double>& gyroscope_bias, const Accel<double>& accel) {
-  Vector3<double> position{state.pose.position};
-  Quaternion<double> quat{state.pose.orientation};
-  Vector3<double> velocity{state.twist.linear};
-  const double& altitude = -position.z;
+  const Vector3<double> position{state.pose.position};
+  const Quaternion<double> quat{state.pose.orientation};
+  const Vector3<double> velocity{state.twist.linear};
+  const double altitude = -position.z;
 
   bmb_msgs::SensorMeasurements sensor_measurements;
   altitudeSensor(altitude, sensor_measurements);

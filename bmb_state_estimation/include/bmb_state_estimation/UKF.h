@@ -2,6 +2,7 @@
 
 #include <bmb_math/Matrix.h>
 #include <bmb_math/Vector.h>
+#include <bmb_msgs/ControlInputs.h>
 #include <bmb_msgs/SensorMeasurements.h>
 #include <bmb_state_estimation/KF.h>
 
@@ -22,6 +23,7 @@ class UKF : public KF {
   Vector<double, 2 * n + 1> covariance_weights;
 
   void updateKF(const bmb_msgs::SensorMeasurements& sensor_measurements,
+                const bmb_msgs::ControlInputs& control_inputs,
                 const double& dt) override;
 
  public:

@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="aris">
+    <xacro:property name="infty" value="${1e9}"/>
+
+    <!-- Needs to be large enough so Gazebo doesn't ignore the links/joints -->
+    <xacro:property name="epsilon" value="${1e-3}"/>
+
+    <xacro:macro name="tiny_inertia_collision">
+        <inertial>
+            <mass value="${epsilon}"/>
+            <inertia ixx="${epsilon}" ixy="0" ixz="0"
+                     iyy="${epsilon}" iyz="0" izz="${epsilon}"/>
+        </inertial>
+        <collision>
+            <geometry>
+                <box size="${epsilon} ${epsilon} ${epsilon}"/>
+            </geometry>
+        </collision>
+    </xacro:macro>
+
+    <material name="black">
+        <color rgba="0 0 0 0.8"/>
+    </material>
+
+    <material name="gold">
+        <color rgba="0.7 0.6 0.4 0.9"/>
+    </material>
+
+    <material name="green">
+        <color rgba="0.3 0.9 0.2 1"/>
+    </material>
+
+    <xacro:macro name="aileron" params="prefix reflect">
+        <!-- TODO: compute reflect based on prefix -->
+        <link name="${prefix}_aileron">
+            <xacro:tiny_inertia_collision/>
+            <visual>
+                <geometry>
+                    <mesh filename="package://bmb_description/meshes/${prefix}_aileron.stl"
+                          scale="0.001 0.001 0.001"/>
+                </geometry>
+                <origin xyz="0.2649 0 -0.1714" rpy="0 0 0"/>
+                <material name="gold"/>
+            </visual>
+        </link>
+        <joint name="body_to_${prefix}_aileron" type="revolute">
+            <parent link="body"/>
+            <child link="${prefix}_aileron"/>
+            <origin xyz="-0.2649 0 0.1714" rpy="0 0 0"/>
+            <axis xyz="0 1 0"/>
+            <limit lower="${radians(-30)}" upper="${radians(30)}" velocity="${infty}" effort="${infty}"/>
+        </joint>
+    </xacro:macro>
+
+    <link name="body">
+        <visual>
+            <geometry>
+                <!-- All meshes are in mm -->
+                <mesh filename="package://bmb_description/meshes/body.stl"
+                      scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <inertial>
+            <mass value="3.3"/>
+            <inertia ixx="12.327" ixy="-3.07" ixz="0.739"
+                     iyy="1.711" iyz="-2.789" izz="12.659"/>
+        </inertial>
+        <collision>
+            <geometry>
+                <box size="1.6 2.1 0.4"/>
+            </geometry>
+            <origin xyz="-0.65 0 0.15" rpy="0 0 0"/>
+        </collision>
+    </link>
+
+    <!-- Propeller -->
+    <link name="propeller">
+        <xacro:tiny_inertia_collision/>
+        <visual>
+            <geometry>
+                <mesh filename="package://bmb_description/meshes/propeller.stl"
+                      scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="-0.4244 0 -0.1638" rpy="0 0 0"/>
+            <material name="green"/>
+        </visual>
+    </link>
+    <joint name="body_to_propeller" type="continuous">
+        <parent link="body"/>
+        <child link="propeller"/>
+        <origin xyz="0.4244 0 0.1638" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+
+    <!-- Ailerons -->
+    <xacro:aileron prefix="right" reflect="1"/>
+    <xacro:aileron prefix="left" reflect="-1"/>
+
+    <!-- Elevator -->
+    <link name="elevator">
+        <xacro:tiny_inertia_collision/>
+        <visual>
+            <geometry>
+                <mesh filename="package://bmb_description/meshes/elevator.stl"
+                      scale="0.001 0.001 0.001"/>
+            </geometry>
+            <origin xyz="1.2927 0 -0.1024" rpy="0 0 0"/>
+            <material name="gold"/>
+        </visual>
+    </link>
+    <joint name="body_to_elevator" type="revolute">
+        <parent link="body"/>
+        <child link="elevator"/>
+        <origin xyz="-1.2927 0 0.1024" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="${radians(-30)}" upper="${radians(30)}" velocity="${infty}" effort="${infty}"/>
+    </joint>
+
+    <!-- Turn off gravity for each link since the aris_control plugin will apply it -->
+    <gazebo reference="body">
+        <gravity>0</gravity>
+        <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="propeller">
+        <gravity>0</gravity>
+        <material>Gazebo/Green</material>
+    </gazebo>
+    <gazebo reference="right_aileron">
+        <gravity>0</gravity>
+        <material>Gazebo/Gold</material>
+    </gazebo>
+    <gazebo reference="left_aileron">
+        <gravity>0</gravity>
+        <material>Gazebo/Gold</material>
+    </gazebo>
+    <gazebo reference="elevator">
+        <gravity>0</gravity>
+        <material>Gazebo/Gold</material>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="aris_control" filename="libaris_control_plugin.so">
+            <base_link>body</base_link>
+            <propeller>body_to_propeller</propeller>
+            <left_aileron>body_to_left_aileron</left_aileron>
+            <right_aileron>body_to_right_aileron</right_aileron>
+            <elevator>body_to_elevator</elevator>
+        </plugin>
+    </gazebo>
+</robot>

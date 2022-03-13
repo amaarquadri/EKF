@@ -2,6 +2,7 @@
 #include <bmb_math/Matrix.h>
 #include <bmb_math/MessageUtilities.h>
 #include <bmb_math/Vector.h>
+#include <bmb_msgs/ControlInputs.h>
 #include <bmb_msgs/SensorMeasurements.h>
 #include <cmath>
 
@@ -24,6 +25,7 @@ UKF::UKF() {
 }
 
 void UKF::updateKF(const bmb_msgs::SensorMeasurements& sensor_measurements,
+                   const bmb_msgs::ControlInputs& /** control_inputs **/,
                    const double& dt) {
   Vector<double, n> x_new = f(x, dt);
   auto new_sigma = sigma;

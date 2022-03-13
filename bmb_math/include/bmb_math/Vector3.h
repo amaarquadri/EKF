@@ -12,9 +12,7 @@ class Vector3 : public Vector<T, 3> {
   T& z = this->data[2];
 
  public:
-  Vector3() = default;
-
-  Vector3(T x, T y, T z) {
+  Vector3(T x = 0, T y = 0, T z = 0) {
     this->x = x;
     this->y = y;
     this->z = z;
@@ -38,7 +36,7 @@ class Vector3 : public Vector<T, 3> {
   Vector3(const geometry_msgs::Vector3& msg)
       : Vector3(msg.x, msg.y, msg.z) {}  // NOLINT(google-explicit-constructor)
 
-  void copy_to(geometry_msgs::Vector3& msg) {
+  void copy_to(geometry_msgs::Vector3& msg) const {
     msg.x = x;
     msg.y = y;
     msg.z = z;
@@ -47,7 +45,7 @@ class Vector3 : public Vector<T, 3> {
   Vector3(const geometry_msgs::Point& msg)
       : Vector3(msg.x, msg.y, msg.z) {}  // NOLINT(google-explicit-constructor)
 
-  void copy_to(geometry_msgs::Point& msg) {
+  void copy_to(geometry_msgs::Point& msg) const {
     msg.x = x;
     msg.y = y;
     msg.z = z;

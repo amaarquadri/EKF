@@ -7,10 +7,10 @@
 template <typename T>
 class Quaternion : public Vector<T, 4> {
  public:
-  T& q0 = this->data[0];
-  T& q1 = this->data[1];
-  T& q2 = this->data[2];
-  T& q3 = this->data[3];
+  T& q0 = this->data[0];  // w
+  T& q1 = this->data[1];  // x
+  T& q2 = this->data[2];  // y
+  T& q3 = this->data[3];  // z
 
  public:
   explicit Quaternion(T q0 = static_cast<T>(1), T q1 = static_cast<T>(0),

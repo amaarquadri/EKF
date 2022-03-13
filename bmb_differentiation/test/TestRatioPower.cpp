@@ -16,6 +16,9 @@ TEST(TestRatioPower, testRatioPower) {
                                ratio_power_t<std::ratio<5>, std::ratio<0>>>);
   static_assert(std::is_same_v<std::ratio<0>,
                                ratio_power_t<std::ratio<0>, std::ratio<10>>>);
+
+  static_assert(std::is_same_v<std::ratio<1, 1000>,
+                               ratio_power_t<std::ratio<10>, std::ratio<-3>>>);
 }
 
 int main(int argc, char** argv) {

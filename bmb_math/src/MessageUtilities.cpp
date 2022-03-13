@@ -133,7 +133,7 @@ bmb_msgs::AircraftState as_msg(
 
 Vector3<double> as_vector(const bmb_msgs::ControlInputs& msg) {
   Vector3<double> vec;
-  vec[bmb_msgs::ControlInputs::PROPELLER] = msg.propeller_voltage;
+  vec[bmb_msgs::ControlInputs::PROPELLER] = msg.propeller_force;
   vec[bmb_msgs::ControlInputs::RIGHT_AILERON] = msg.right_aileron_angle;
   vec[bmb_msgs::ControlInputs::ELEVATOR] = msg.elevator_angle;
   return vec;
@@ -141,7 +141,7 @@ Vector3<double> as_vector(const bmb_msgs::ControlInputs& msg) {
 
 bmb_msgs::ControlInputs as_msg(const Vector3<double>& control_inputs) {
   bmb_msgs::ControlInputs msg;
-  msg.propeller_voltage = control_inputs[bmb_msgs::ControlInputs::PROPELLER];
+  msg.propeller_force = control_inputs[bmb_msgs::ControlInputs::PROPELLER];
   msg.right_aileron_angle =
       control_inputs[bmb_msgs::ControlInputs::RIGHT_AILERON];
   msg.elevator_angle = control_inputs[bmb_msgs::ControlInputs::ELEVATOR];

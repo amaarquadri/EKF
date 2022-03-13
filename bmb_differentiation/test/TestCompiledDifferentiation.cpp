@@ -55,6 +55,16 @@ TEST(TestCompiledDifferentiation, testCompiledDifferentiation) {
   ASSERT_EQUAL(3_c, 3_c + 0_c);
   ASSERT_EQUAL(9_c, pow(3_c, 2_c));
   ASSERT_EQUAL(1_c, pow(3_c, 0_c));
+
+  ASSERT_EQUAL(123456.23_c, 123'456.23_c);
+  ASSERT_EQUAL(12'34'56.2'3_c, 123'45'6.23_c);
+  ASSERT_EQUAL(65'43'21_v, 654'321_v);
+
+  ASSERT_EQUAL(123e3_c, 123'000_c);
+  ASSERT_EQUAL(123e-4_c, 0.0123_c);
+  ASSERT_EQUAL(123e0_c, 123_c);
+  ASSERT_EQUAL(123e01_c, 1230_c);
+
   static_assert(getNodeCount(3_c + 0_c) == 1);
   static_assert(getNodeCount(3_c + 2_c) == 1);
   static_assert(getNodeCount(x + y) == 3);

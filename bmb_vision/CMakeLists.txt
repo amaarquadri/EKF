@@ -3,6 +3,7 @@ project(bmb_vision)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++17)
+set(CMAKE_CXX_FLAGS "-O2 ${CMAKE_CXX_FLAGS}")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -103,7 +104,7 @@ catkin_python_setup()
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES bmb_vision
-#  CATKIN_DEPENDS
+  CATKIN_DEPENDS bmb_msgs sensor_msgs
 #  DEPENDS system_lib
 )
 

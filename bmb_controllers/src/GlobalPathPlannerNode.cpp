@@ -71,7 +71,7 @@ void GlobalPathPlannerNode::aircraftStateCallback(
 void GlobalPathPlannerNode::spin() { ros::spin(); }
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "bmb_global_path_planner");
+  ros::init(argc, argv, "global_path_planner_node");
   ros::NodeHandle nh;
   GlobalPathPlannerNode node{nh};
   node.spin();

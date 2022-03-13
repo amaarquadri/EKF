@@ -1,0 +1,15 @@
+<launch>
+    <!-- level 1: Control state_command -->
+    <!-- level 2: Control reference_command -->
+    <!-- level 3: Fully autonomous -->
+    <arg name="level" default="3"/>
+
+    <node name="keyboard_state_commander_node" pkg="bmb_control"
+          type="keyboard_state_commander_node.py" output="screen"
+          if="$(eval arg('level') == 1)"/>
+
+    <!--    TODO: uncomment once implemented -->
+    <!--        <node name="keyboard_reference_commander_node" pkg="bmb_control"-->
+    <!--              type="keyboard_reference_commander_node.py" output="screen"-->
+    <!--              if="$(eval arg('level') == 2)"/>-->
+</launch>

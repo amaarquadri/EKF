@@ -26,7 +26,7 @@ class LocalPathPlannerNode {
   PurePursuit<double> pursuer;
   PIDFFController<double> altitude_pid;
 
-  double update_frequency;
+  const double update_frequency;
   bmb_msgs::AircraftState latest_aircraft_state;
   bmb_msgs::ReferenceCommand latest_reference_command;
 

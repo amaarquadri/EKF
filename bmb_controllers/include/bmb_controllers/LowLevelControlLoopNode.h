@@ -25,7 +25,7 @@ class LowLevelControlLoopNode {
 
   bmb_msgs::AircraftState latest_aircraft_state;
   bmb_msgs::StateCommand latest_state_command;
-  double update_frequency;
+  const double update_frequency;
   PIDFFController<double> speed_pid;
   PIDFFController<double> roll_pid;
   PIDFFController<double> pitch_pid;

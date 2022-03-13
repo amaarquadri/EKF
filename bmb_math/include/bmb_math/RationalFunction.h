@@ -57,7 +57,7 @@ class RationalFunction {
     for (size_t i = 0; i < std::max(n, m); i++) {
       std::cout << "-----";
     }
-    std::cout << std::endl;
+    std::cout << '\n';
     denominator.print(independent_var);
   }
 
@@ -115,7 +115,7 @@ class RationalFunction {
     if constexpr (n != m) {  // because the denominators of the numerator and
                              // denominator are the same, they will cancel
       static constexpr size_t abs_diff = bmb_utilities::abs_difference(m, n);
-      Polynomial<T, abs_diff + 1> canceled_denominators =
+      const Polynomial<T, abs_diff + 1> canceled_denominators =
           g_of_x.denominator.template pow<abs_diff>();
       if constexpr (m > n)
         return {num * canceled_denominators, den};

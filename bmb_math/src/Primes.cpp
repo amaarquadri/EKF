@@ -1,5 +1,6 @@
 #include "bmb_math/Primes.h"
 #include <cmath>
+#include <cstddef>
 #include <stdexcept>
 #include <vector>
 
@@ -15,7 +16,7 @@ std::vector<size_t> primesUpTo(const size_t& n) {
 
   // use the prime number theorem to guess the number of primes
   // this will reduce the number of times the vector needs to be resized
-  primes.reserve((size_t)(n / log(n)));
+  primes.reserve((size_t)(n / std::log(n)));
 
   // TODO: use the segmented sieve of Eratosthenes to reduce memory usage for
   //  large n

@@ -100,7 +100,8 @@ struct ratio_power {
       return std::ratio<1>{};
     // for negative exponents, flip the base and recurse
     else if constexpr (R2::num < 0)
-      return ratio_power_t<std::ratio<R1::den, R1::num>, R2>{};
+      return ratio_power_t<std::ratio<R1::den, R1::num>,
+                           std::ratio<-R2::num>>{};
     // recursive case
     else
       return std::ratio_multiply<R1,

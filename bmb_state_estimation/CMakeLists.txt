@@ -3,6 +3,7 @@ project(bmb_state_estimation)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++17)
+set(CMAKE_CXX_FLAGS "-O2 ${CMAKE_CXX_FLAGS}")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -145,6 +146,10 @@ add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 add_executable(state_estimation_node src/StateEstimationNode.cpp)
 target_link_libraries(state_estimation_node ${PROJECT_NAME} ${catkin_LIBRARIES})
 add_dependencies(state_estimation_node ${catkin_EXPORTED_TARGETS})
+
+add_executable(omniscient_state_estimation_node src/OmniscientStateEstimationNode.cpp)
+target_link_libraries(omniscient_state_estimation_node ${PROJECT_NAME} ${catkin_LIBRARIES})
+add_dependencies(omniscient_state_estimation_node ${catkin_EXPORTED_TARGETS})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

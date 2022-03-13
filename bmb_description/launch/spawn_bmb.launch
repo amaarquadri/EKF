@@ -1,6 +1,0 @@
-<launch>
-    <!-- Load simulation environment -->
-    <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find bmb_description)/worlds/cessna_demo.world"/>
-    </include>
-</launch>

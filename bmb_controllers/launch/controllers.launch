@@ -1,8 +1,10 @@
 <launch>
+    <arg name="level" default="3"/>
+
     <node name="global_path_planner_node" pkg="bmb_controllers" type="global_path_planner_node"
-          output="screen"/>
+          output="screen" if="$(eval arg('level') >= 3)"/>
     <node name="local_path_planner_node" pkg="bmb_controllers" type="local_path_planner_node"
-          output="screen"/>
+          output="screen" if="$(eval arg('level') >= 2)"/>
     <node name="low_level_control_loop_node" pkg="bmb_controllers" type="low_level_control_loop_node"
-          output="screen"/>
+          output="screen" if="$(eval arg('level') >= 1)"/>
 </launch>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bmb_controllers/PosVelState.h>
 #include <bmb_controllers/DubinsPath.h>
 #include <bmb_math/Utility.h>
 #include <cmath>
@@ -26,12 +27,12 @@ class PurePursuit {
    * @return An std::pair of a bool indicating whether a re-plan is needed, and
    * the commanded angular velocity
    */
-  std::pair<bool, T> pursue(const typename DubinsPath<T>::State& state) const {
+  std::pair<bool, T> pursue(const PosVelState<T>& state) const {
     // TODO: can this be a stateless free global function?
 
     // Pursuit algorithm roughly based off of this article:
     // https://dingyan89.medium.com/three-methods-of-vehicle-lateral-control-pure-pursuit-stanley-and-mpc-db8cc1d32081
-    Vector2 ideal_target = state.pos + state.vel * lookahead_time;
+    const Vector2 ideal_target = state.pos + state.vel * lookahead_time;
     Vector2 target = path.closestPoint(ideal_target);
     // TODO: add check to see if we are too far off course
 
@@ -50,7 +51,7 @@ class PurePursuit {
     // target to the origin simple geometry shows that the y coordinate where
     // this occurs is given by the following note that this will be negative if
     // target[1] < 0, as it should be in that case to indicate a right turn
-    T radius = target.magnitudeSquared() / (2 * target[1]);
+    const T radius = target.magnitudeSquared() / (2 * target[1]);
 
     if (std::fabs(radius) < min_radius) {
       // required turn is too sharp, request re-plan
@@ -67,8 +68,8 @@ class PurePursuit {
    * once a replan is requested.
    */
   template <typename OStream>
-  void toCSV(OStream& out, const typename DubinsPath<T>::State& start) const {
-    State state = start;
+  void toCSV(OStream& out, const PosVelState<T>& start) const {
+    PosVelState<T> state = start;
     out << state.pos[0] << ", " << state.pos[1] << std::endl;
 
     while (true) {
@@ -83,7 +84,6 @@ class PurePursuit {
 
  private:
   using Vector2 = Vector<T, 2>;
-  using State = typename DubinsPath<T>::State;
   static constexpr T STEP_SIZE = static_cast<T>(0.01);
   T lookahead_time;
   T min_radius;

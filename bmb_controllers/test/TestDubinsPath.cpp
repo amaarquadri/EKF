@@ -1,3 +1,4 @@
+#include <bmb_controllers/PosVelState.h>
 #include <bmb_controllers/DubinsPath.h>
 #include <bmb_math/Vector.h>
 #include <gtest/gtest.h>
@@ -5,16 +6,15 @@
 #include <fstream>
 
 TEST(TestDubinsPath, testDubinsPath) {
-  using State = DubinsPath<double>::State;
   const std::string directory =
       ros::package::getPath("bmb_controllers") + "/test/output/";
   using Vector2 = Vector<double, 2>;
-  State start{Vector2{0, 0}, Vector2{0, 1}};
-  State goal{Vector2{10, 0}, Vector2{0, -1}};
+  PosVelState start{Vector2{0, 0}, Vector2{0, 1}};
+  PosVelState goal{Vector2{10, 0}, Vector2{0, -1}};
   static constexpr double radius = 1;
   DubinsPath<double> path = DubinsPath<double>::create(start, goal, radius);
-  ASSERT_TRUE(path[0].is_turning && path[0].isRightTurn() &&
-              !path[1].is_turning && path[2].is_turning &&
+  ASSERT_TRUE(path[0].isCircle() && path[0].isRightTurn() &&
+              path[1].isLine() && path[2].isCircle() &&
               path[2].isRightTurn());
   ASSERT_TRUE(std::fabs((path.closestPoint(Vector2{4.5, 1}) - Vector2{4.5, 1})
                             .magnitude()) < 0.001);
@@ -24,7 +24,7 @@ TEST(TestDubinsPath, testDubinsPath) {
   path.toCSV(out1);
   out1.close();
 
-  goal = State{Vector2{5, 3}, Vector2{-1, 2}};
+  goal = PosVelState{Vector2{5, 3}, Vector2{-1, 2}};
   path = DubinsPath<double>::create(start, goal, radius);
   std::ofstream out2(directory + "dubins_path2.csv");
   ASSERT_TRUE(out2);

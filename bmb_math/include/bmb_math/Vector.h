@@ -57,7 +57,7 @@ class Vector {
   T magnitude() const { return sqrt(magnitudeSquared()); }
 
   void normalize() {
-    T size = this->magnitude();
+    const T size = this->magnitude();
     for (size_t i = 0; i < n; i++) data[i] /= size;
   }
 

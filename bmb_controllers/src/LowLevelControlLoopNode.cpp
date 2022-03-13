@@ -33,7 +33,7 @@ bmb_msgs::ControlInputs LowLevelControlLoopNode::getControlInputs() {
   const double roll = orientation.getRoll();
 
   bmb_msgs::ControlInputs control_inputs{};
-  control_inputs.propeller_voltage = speed_pid.update(
+  control_inputs.propeller_force = speed_pid.update(
       latest_aircraft_state.twist.linear.x, latest_state_command.speed);
   control_inputs.right_aileron_angle =
       roll_pid.update(roll, latest_state_command.roll);
@@ -62,7 +62,7 @@ void LowLevelControlLoopNode::spin() {
 }
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "bmb_low_level_control_loop");
+  ros::init(argc, argv, "low_level_control_loop_node");
   ros::NodeHandle nh;
   LowLevelControlLoopNode node{nh, 100};
   node.spin();

@@ -1,3 +1,3 @@
-float64 speed
-float64 roll
-float64 pitch
+float64 speed # m/s
+float64 roll # radians
+float64 pitch # radians
