@@ -71,12 +71,20 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
   const double sin_aoa_xz = b_vel.z / std::sqrt(speed_xz_squared);
   const double sin_aoa_xy = -b_vel.y / std::sqrt(speed_xy_squared);
 
+  // absolute value of aileron angle is used for the force models
+  const double right_aileron_angle_mag =
+      std::fabs(control_inputs.right_aileron_angle);
+  const Wrench<double> aileron_wrench{right_aileron_angle_mag,
+                                      right_aileron_angle_mag,
+                                      right_aileron_angle_mag,
+                                      control_inputs.right_aileron_angle,
+                                      control_inputs.right_aileron_angle,
+                                      control_inputs.right_aileron_angle};
+
   const Wrench<double> body_loads =
       (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;
   const Wrench<double> aileron_loads =
-      (AILERON_M_WRENCH * control_inputs.right_aileron_angle +
-       AILERON_B_WRENCH) *
-      speed_xz_squared;
+      (AILERON_M_WRENCH * aileron_wrench + AILERON_B_WRENCH) * speed_xz_squared;
   const Wrench<double> elevator_loads =
       (ELEVATOR_M_WRENCH * control_inputs.elevator_angle + ELEVATOR_B_WRENCH) *
       speed_xz_squared;
