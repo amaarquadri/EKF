@@ -52,7 +52,7 @@ class DubinsPathToPoint {
         const DubinsCurve<T> c1{center, radius, start_angle, delta_angle};
         const DubinsCurve<T> c2{
             center + bmb_math::polarToVec(radius, start_angle), goal};
-        return DubinsPath{{c1, c2}};
+        return DubinsPathToPoint{{c1, c2}};
       }
     } else {
       // goal is on the left
