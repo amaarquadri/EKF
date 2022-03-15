@@ -85,7 +85,7 @@ public:
         return {discrete};
     }
 
-    T next_output(T input) const {
+    T next_output(T input) {
         assert(this->discretized);
         assert(m >= n);
         T next_output = 0;

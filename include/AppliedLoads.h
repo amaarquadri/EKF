@@ -22,7 +22,8 @@ private:
     static const Matrix<ExprPtr, 3, 4> QUAT_TO_WEIGHT_JAC_EXPR;
 
     ControlInputs current_control_inputs{0, 0, 0, 0};
-    const TransferFunction<double, 2, 2> ang_vel_volt_tf = c2d({K_PROPELLER, 1, TAU_PROPELLER}, SAMPLING_TIME);
+    const TransferFunction<double, 2, 2> ang_vel_volt_tf = c2d(TransferFunction<double, 1, 2>{K_PROPELLER, 1, TAU_PROPELLER},
+                                                               LOW_LEVEL_SAMPLE_TIME);
 
     [[nodiscard]] double getPropellerAngVelocity() const;
 

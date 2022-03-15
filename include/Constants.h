@@ -84,4 +84,6 @@ static const PIDGains AILERON_GAIN{1, 1, 1, 1};
 static const PIDGains PITCH_GAIN{1, 1, 1};
 static constexpr const double BASELINE_VELOCITY = 10; //m/s
 static constexpr const double TRIM = 7 * M_PI / 180.0; //rad. This is used for sin of trim. Alternatively can use length ratios
-static constexpr const double SAMPLING_TIME = 1e-3; //s
+static constexpr const double LOW_LEVEL_SAMPLE_TIME = 1e-3; //s
+static constexpr const double LOCAL_SAMPLE_TIME = 1e-3; //s
+static constexpr const double GLOBAL_SAMPLE_TIME = 1e-3; //s
