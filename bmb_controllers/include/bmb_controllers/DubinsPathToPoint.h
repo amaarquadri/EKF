@@ -6,6 +6,7 @@
 #include <bmb_math/Vector.h>
 #include <cmath>
 
+template<typename T>
 class DubinsPathToPoint {
   using Path = std::array<DubinsCurve<T>, 2>;
   using iterator = typename Path::iterator;
