@@ -20,9 +20,9 @@ class Vector {
   std::array<T, n> data{};
 
  public:
-  Vector() = default;
+  constexpr Vector() = default;
 
-  Vector(std::initializer_list<T> elements) {
+  constexpr Vector(std::initializer_list<T> elements) {
     // Function caller must ensure the number of arguments matches the template
     // argument Excess arguments will be ignored
     size_t i = 0;
@@ -30,25 +30,25 @@ class Vector {
       data[i++] = *it;
   }
 
-  explicit Vector(const T* arr) {
+  constexpr explicit Vector(const T* arr) {
     // initializes this Vector with data from the raw C++ array
     // this should only be used when inputting data from MATLAB
     for (size_t i = 0; i < n; i++) data[i] = arr[i];
   }
 
-  Vector<T, n>& operator=(const Vector<T, n>& other) {
+  constexpr Vector<T, n>& operator=(const Vector<T, n>& other) {
     for (size_t i = 0; i < n; i++) data[i] = other[i];
     return *this;
   }
 
-  Vector(const Vector<T, n>& other) { *this = other; }
+  constexpr Vector(const Vector<T, n>& other) { *this = other; }
 
   template <typename OStream>
-  void toCSV(OStream& out) const {
-    for (int i = 0; i < n; i++) out << data[i] << std::endl;
+  constexpr void toCSV(OStream& out) const {
+    for (int i = 0; i < n; i++) out << data[i] << '\n';
   }
 
-  T magnitudeSquared() const {
+  constexpr T magnitudeSquared() const {
     T sum{};
     for (size_t i = 0; i < n; i++) sum += data[i] * data[i];
     return sum;
@@ -61,14 +61,14 @@ class Vector {
     for (size_t i = 0; i < n; i++) data[i] /= size;
   }
 
-  T dot(const Vector<T, n>& other) const {
+  constexpr T dot(const Vector<T, n>& other) const {
     T sum{};
     for (size_t i = 0; i < n; i++) sum += data[i] * other[i];
     return sum;
   }
 
   template <size_t m>
-  Vector<T, n + m> concatenate(const Vector<T, m>& other) const {
+  constexpr Vector<T, n + m> concatenate(const Vector<T, m>& other) const {
     Vector<T, n + m> concat;
     for (size_t i = 0; i < n; i++) concat[i] = data[i];
     for (size_t i = n; i < n + m; i++) concat[i] = other[i];
@@ -76,7 +76,8 @@ class Vector {
   }
 
   template <size_t start = 0, size_t stop = n, size_t step = 1>
-  Vector<T, bmb_utilities::slice_count(start, stop, step)> slice() const {
+  constexpr Vector<T, bmb_utilities::slice_count(start, stop, step)> slice()
+      const {
     static_assert(stop <= n);
     static constexpr size_t m = bmb_utilities::slice_count(start, stop, step);
     Vector<T, m> vec;
@@ -85,7 +86,7 @@ class Vector {
   }
 
   template <size_t start = 0, size_t step = 1, size_t m>
-  void pasteSlice(const Vector<T, m>& vec) {
+  constexpr void pasteSlice(const Vector<T, m>& vec) {
     static constexpr size_t stop = start + step * (m - 1) + 1;
     static_assert(stop <= n);
     for (size_t i = 0; i < m; i++) data[start + i * step] = vec[i];
@@ -98,14 +99,14 @@ class Vector {
     return result;
   }
 
-  Vector<T, n + 1> pushFront(const T& value) const {
+  constexpr Vector<T, n + 1> pushFront(const T& value) const {
     Vector<T, n + 1> result;
     result[0] = value;
     for (size_t i = 0; i < n; i++) result[i + 1] = data[i];
     return result;
   }
 
-  Vector<T, n + 1> pushBack(const T& value) const {
+  constexpr Vector<T, n + 1> pushBack(const T& value) const {
     Vector<T, n + 1> result;
     for (size_t i = 0; i < n; i++) result[i] = data[i];
     result[n] = value;
@@ -130,20 +131,20 @@ class Vector {
     return pushBack(value).popFront();
   }
 
-  Vector<T, n> operator+(const Vector<T, n>& other) const {
+  constexpr Vector<T, n> operator+(const Vector<T, n>& other) const {
     Vector<T, n> sum;
     for (size_t i = 0; i < n; i++) sum[i] = data[i] + other[i];
     return sum;
   }
 
   template <size_t start = 0, size_t step = 1, size_t m>
-  void operator+=(const Vector<T, m>& other) {
+  constexpr void operator+=(const Vector<T, m>& other) {
     static constexpr size_t stop = start + step * (m - 1) + 1;
     static_assert(stop <= n);
     for (size_t i = 0; i < m; i++) data[start + step * i] += other[i];
   }
 
-  Vector<T, n> operator+(const double& scalar) const {
+  constexpr Vector<T, n> operator+(const double& scalar) const {
     Vector<T, n> sum;
     for (size_t i = 0; i < n; i++) sum[i] = data[i] + scalar;
     return sum;
@@ -153,35 +154,35 @@ class Vector {
    * If scalar overlaps with any of the elements of this Vector,
    * then the result is undefined behaviour.
    */
-  void operator+=(const double& scalar) {
+  constexpr void operator+=(const double& scalar) {
     for (size_t i = 0; i < n; i++) data[i] += scalar;
   }
 
-  Vector<T, n> operator-() const {
+  constexpr Vector<T, n> operator-() const {
     Vector<T, n> negative;
     for (size_t i = 0; i < n; i++) negative[i] = -data[i];
     return negative;
   }
 
-  Vector<T, n> operator+() const {
+  constexpr Vector<T, n> operator+() const {
     Vector<T, n> positive = *this;
     return positive;
   }
 
-  Vector<T, n> operator-(const Vector<T, n>& other) const {
+  constexpr Vector<T, n> operator-(const Vector<T, n>& other) const {
     Vector<T, n> sum;
     for (size_t i = 0; i < n; i++) sum[i] = data[i] - other[i];
     return sum;
   }
 
   template <size_t start = 0, size_t step = 1, size_t m>
-  void operator-=(const Vector<T, m>& other) {
+  constexpr void operator-=(const Vector<T, m>& other) {
     static constexpr size_t stop = start + step * (m - 1) + 1;
     static_assert(stop <= n);
     for (size_t i = 0; i < m; i++) data[start + step * i] -= other[i];
   }
 
-  Vector<T, n> operator-(const double& scalar) {
+  constexpr Vector<T, n> operator-(const double& scalar) {
     Vector<T, n> sum;
     for (size_t i = 0; i < n; i++) sum[i] = data[i] - scalar;
     return sum;
@@ -191,11 +192,11 @@ class Vector {
    * If scalar overlaps with any of the elements of this Vector,
    * then the result is undefined behaviour.
    */
-  void operator-=(const double& scalar) {
+  constexpr void operator-=(const double& scalar) {
     for (size_t i = 0; i < n; i++) data[i] -= scalar;
   }
 
-  Vector<T, n> operator*(const T& scalar) const {
+  constexpr Vector<T, n> operator*(const T& scalar) const {
     Vector<T, n> product;
     for (size_t i = 0; i < n; i++)
       product[i] = data[i] * scalar;  // respect operator order in case the
@@ -207,23 +208,23 @@ class Vector {
    * If scalar overlaps with any of the elements of this Vector,
    * then the result is undefined behaviour.
    */
-  void operator*=(const T& scalar) {
+  constexpr void operator*=(const T& scalar) {
     for (size_t i = 0; i < n; i++) data[i] *= scalar;
   }
 
-  Vector<T, n> operator*(const Vector<T, n>& other) const {
+  constexpr Vector<T, n> operator*(const Vector<T, n>& other) const {
     // elementwise multiplication
     Vector<T, n> product;
     for (size_t i = 0; i < n; i++) product[i] = data[i] * other[i];
     return product;
   }
 
-  void operator*=(const Vector<T, n>& other) {
+  constexpr void operator*=(const Vector<T, n>& other) {
     // elementwise multiplication
     for (size_t i = 0; i < n; i++) data[i] *= other[i];
   }
 
-  Vector<T, n> operator/(const T& scalar) const {
+  constexpr Vector<T, n> operator/(const T& scalar) const {
     Vector<T, n> product;
     for (size_t i = 0; i < n; i++) product[i] = data[i] / scalar;
     return product;
@@ -233,37 +234,39 @@ class Vector {
    * If scalar overlaps with any of the elements of this Vector,
    * then the result is undefined behaviour.
    */
-  void operator/=(const T& scalar) {
+  constexpr void operator/=(const T& scalar) {
     for (size_t i = 0; i < n; i++) data[i] /= scalar;
   }
 
-  Vector<T, n> operator/(const Vector<T, n>& other) const {
+  constexpr Vector<T, n> operator/(const Vector<T, n>& other) const {
     // elementwise division
     Vector<T, n> quotient;
     for (size_t i = 0; i < n; i++) quotient[i] = data[i] / other[i];
     return quotient;
   }
 
-  void operator/=(const Vector<T, n>& other) {
+  constexpr void operator/=(const Vector<T, n>& other) {
     // elementwise division
     for (size_t i = 0; i < n; i++) data[i] /= other[i];
   }
 
-  T& operator[](const size_t& index) { return this->data[index]; }
+  constexpr T& operator[](const size_t& index) { return this->data[index]; }
 
-  const T& operator[](const size_t& index) const { return this->data[index]; }
+  constexpr const T& operator[](const size_t& index) const {
+    return this->data[index];
+  }
 
-  iterator begin() { return data.begin(); }
+  constexpr iterator begin() { return data.begin(); }
 
-  iterator end() { return data.end(); }
+  constexpr iterator end() { return data.end(); }
 
-  const_iterator begin() const { return data.begin(); }
+  constexpr const_iterator begin() const { return data.begin(); }
 
-  const_iterator end() const { return data.end(); }
+  constexpr const_iterator end() const { return data.end(); }
 
-  const_iterator cbegin() const { return data.begin(); }
+  constexpr const_iterator cbegin() const { return data.begin(); }
 
-  const_iterator cend() const { return data.end(); }
+  constexpr const_iterator cend() const { return data.end(); }
 
   [[nodiscard]] std::string toStr() const {
     if (n == 0) return "{}";
@@ -276,7 +279,7 @@ class Vector {
 };
 
 template <typename T, size_t n>
-Vector<T, n> operator+(const T& scalar, const Vector<T, n>& vec) {
+constexpr Vector<T, n> operator+(const T& scalar, const Vector<T, n>& vec) {
   Vector<T, n> sum;
   for (size_t i = 0; i < n; i++)
     sum[i] = scalar + vec[i];  // respect operator order in case underlying type
@@ -285,7 +288,7 @@ Vector<T, n> operator+(const T& scalar, const Vector<T, n>& vec) {
 }
 
 template <typename T, size_t n>
-Vector<T, n> operator-(const T& scalar, const Vector<T, n>& vec) {
+constexpr Vector<T, n> operator-(const T& scalar, const Vector<T, n>& vec) {
   Vector<T, n> sum;
   for (size_t i = 0; i < n; i++)
     sum[i] = scalar - vec[i];  // respect operator order in case underlying type
@@ -294,7 +297,7 @@ Vector<T, n> operator-(const T& scalar, const Vector<T, n>& vec) {
 }
 
 template <typename T, size_t n>
-Vector<T, n> operator*(const T& scalar, const Vector<T, n>& vec) {
+constexpr Vector<T, n> operator*(const T& scalar, const Vector<T, n>& vec) {
   Vector<T, n> sum;
   for (size_t i = 0; i < n; i++)
     sum[i] = scalar * vec[i];  // respect operator order in case underlying type
@@ -303,7 +306,7 @@ Vector<T, n> operator*(const T& scalar, const Vector<T, n>& vec) {
 }
 
 template <typename T, size_t n>
-Vector<T, n> operator/(const T& scalar, const Vector<T, n>& vec) {
+constexpr Vector<T, n> operator/(const T& scalar, const Vector<T, n>& vec) {
   Vector<T, n> sum;
   for (size_t i = 0; i < n; i++)
     sum[i] = scalar / vec[i];  // respect operator order in case underlying type
