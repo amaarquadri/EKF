@@ -47,7 +47,7 @@ TEST(TestPolynomial, testPow) {
   static constexpr auto cube = f.pow<3>();
   static constexpr Polynomial<double, 13> truth{0,   0,   0,   1,   6,   21, 56,
                                                 111, 174, 219, 204, 144, 64};
-  static_assert(cube == thruth);
+  static_assert(cube == truth);
 }
 
 int main(int argc, char** argv) {
