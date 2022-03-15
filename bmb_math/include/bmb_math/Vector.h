@@ -79,7 +79,8 @@ class Vector {
   constexpr Vector<T, bmb_utilities::slice_count(start, stop, step)> slice()
       const {
     static_assert(stop <= n);
-    static constexpr size_t m = bmb_utilities::slice_count(start, stop, step);
+    /** static **/ constexpr size_t m =
+        bmb_utilities::slice_count(start, stop, step);
     Vector<T, m> vec;
     for (size_t i = 0; i < m; i++) vec[i] = data[start + i * step];
     return vec;
@@ -87,7 +88,7 @@ class Vector {
 
   template <size_t start = 0, size_t step = 1, size_t m>
   constexpr void pasteSlice(const Vector<T, m>& vec) {
-    static constexpr size_t stop = start + step * (m - 1) + 1;
+    /** static **/ constexpr size_t stop = start + step * (m - 1) + 1;
     static_assert(stop <= n);
     for (size_t i = 0; i < m; i++) data[start + i * step] = vec[i];
   }
@@ -139,7 +140,7 @@ class Vector {
 
   template <size_t start = 0, size_t step = 1, size_t m>
   constexpr void operator+=(const Vector<T, m>& other) {
-    static constexpr size_t stop = start + step * (m - 1) + 1;
+    /** static **/ constexpr size_t stop = start + step * (m - 1) + 1;
     static_assert(stop <= n);
     for (size_t i = 0; i < m; i++) data[start + step * i] += other[i];
   }
@@ -177,7 +178,7 @@ class Vector {
 
   template <size_t start = 0, size_t step = 1, size_t m>
   constexpr void operator-=(const Vector<T, m>& other) {
-    static constexpr size_t stop = start + step * (m - 1) + 1;
+    /** static **/ constexpr size_t stop = start + step * (m - 1) + 1;
     static_assert(stop <= n);
     for (size_t i = 0; i < m; i++) data[start + step * i] -= other[i];
   }
