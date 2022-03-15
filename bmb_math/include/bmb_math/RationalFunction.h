@@ -23,9 +23,9 @@ class RationalFunction {
   friend class TransferFunction;
 
  public:
-  RationalFunction() = default;
+  constexpr RationalFunction() = default;
 
-  RationalFunction(std::initializer_list<T> elements) {
+  constexpr RationalFunction(std::initializer_list<T> elements) {
     // Function caller must ensure the number of arguments matches the template
     // argument Excess arguments will be ignored
     size_t i = 0;
@@ -38,15 +38,18 @@ class RationalFunction {
     }
   }
 
-  RationalFunction(const Polynomial<T, n>& numerator,
-                   const Polynomial<T, m>& denominator) {
+  constexpr RationalFunction(const Polynomial<T, n>& numerator,
+                             const Polynomial<T, m>& denominator) {
     this->numerator = numerator;
     this->denominator = denominator;
   }
 
-  RationalFunction(const RationalFunction<T, n, m>& other) { (*this) = other; }
+  constexpr RationalFunction(const RationalFunction<T, n, m>& other) {
+    (*this) = other;
+  }
 
-  RationalFunction& operator=(const RationalFunction<T, n, m>& other) {
+  constexpr RationalFunction& operator=(
+      const RationalFunction<T, n, m>& other) {
     numerator = other.numerator;
     denominator = other.denominator;
     return (*this);
@@ -61,21 +64,23 @@ class RationalFunction {
     denominator.print(independent_var);
   }
 
-  T& numerator_data(const size_t& num_index) { return numerator[num_index]; }
-
-  T& denominator_data(const size_t& den_index) {
-    return denominator[den_index];
-  }
-
-  const T& numerator_data(const size_t& num_index) const {
+  constexpr T& numerator_data(const size_t& num_index) {
     return numerator[num_index];
   }
 
-  const T& denominator_data(const size_t& den_index) const {
+  constexpr T& denominator_data(const size_t& den_index) {
     return denominator[den_index];
   }
 
-  void normalize() {
+  constexpr const T& numerator_data(const size_t& num_index) const {
+    return numerator[num_index];
+  }
+
+  constexpr const T& denominator_data(const size_t& den_index) const {
+    return denominator[den_index];
+  }
+
+  constexpr void normalize() {
     // divide num and den by highest order denominator coefficient
     const double& factor = denominator[m - 1];
     if (factor != 0) {
@@ -85,8 +90,8 @@ class RationalFunction {
   }
 
   template <size_t p>
-  RationalFunction<T, (n - 1) * (p - 1) + 1, (m - 1) * (p - 1) + 1> _of_(
-      const Polynomial<T, p>& p_of_x) const {
+  constexpr RationalFunction<T, (n - 1) * (p - 1) + 1, (m - 1) * (p - 1) + 1>
+  _of_(const Polynomial<T, p>& p_of_x) const {
     return {numerator._of_(p_of_x), denominator._of_(p_of_x)};
   }
 
@@ -99,7 +104,8 @@ class RationalFunction {
           (q - 1) * bmb_utilities::heaviside_difference(n, m) + 1>;
 
   template <size_t p, size_t q>
-  composite_rational<p, q> _of_(const RationalFunction<T, p, q>& g_of_x) const {
+  constexpr composite_rational<p, q> _of_(
+      const RationalFunction<T, p, q>& g_of_x) const {
     Polynomial<T, (n - 1) * std::max(p - 1, q - 1) + 1> num;
     Polynomial<T, (m - 1) * std::max(p - 1, q - 1) + 1> den;
 
@@ -126,124 +132,128 @@ class RationalFunction {
   }
 
   template <size_t p, size_t q>
-  RationalFunction<T, n + p - 1, m + q - 1> operator*(
+  constexpr RationalFunction<T, n + p - 1, m + q - 1> operator*(
       const RationalFunction<T, p, q>& other) const {
     return {numerator * other.numerator, denominator * other.denominator};
   }
 
   template <size_t p>
-  RationalFunction<T, n + p - 1, m> operator*(
+  constexpr RationalFunction<T, n + p - 1, m> operator*(
       const Polynomial<T, p>& poly) const {
     return {poly * numerator, denominator};
   }
 
-  RationalFunction<T, n, m> operator*(const T& scalar) const {
+  constexpr RationalFunction<T, n, m> operator*(const T& scalar) const {
     return {scalar * numerator, denominator};
   }
 
-  void operator*=(const T& scalar) { numerator *= scalar; }
+  constexpr void operator*=(const T& scalar) { numerator *= scalar; }
 
   template <size_t p, size_t q>
-  RationalFunction<T, n + q - 1, m + p - 1> operator/(
+  constexpr RationalFunction<T, n + q - 1, m + p - 1> operator/(
       const RationalFunction<T, p, q>& other) const {
     return {numerator * other.denominator, denominator * other.numerator};
   }
 
   template <size_t p>
-  RationalFunction<T, n, m * p> operator/(const Polynomial<T, p>& poly) const {
+  constexpr RationalFunction<T, n, m * p> operator/(
+      const Polynomial<T, p>& poly) const {
     return {numerator, poly * denominator};
   }
 
-  RationalFunction<T, n, m> operator/(const T& scalar) const {
+  constexpr RationalFunction<T, n, m> operator/(const T& scalar) const {
     return {numerator, scalar * denominator};
   }
 
-  void operator/=(const T& scalar) { denominator /= scalar; }
+  constexpr void operator/=(const T& scalar) { denominator /= scalar; }
 
   template <size_t p, size_t q>
-  RationalFunction<T, std::max(n + q - 1, m + p - 1), m + q - 1> operator+(
-      const RationalFunction<T, p, q>& other) const {
+  constexpr RationalFunction<T, std::max(n + q - 1, m + p - 1), m + q - 1>
+  operator+(const RationalFunction<T, p, q>& other) const {
     return {numerator * other.denominator + denominator * other.numerator,
             denominator * other.denominator};
   }
 
   template <size_t p>
-  RationalFunction<T, std::max(n, p* m), m> operator+(
+  constexpr RationalFunction<T, std::max(n, p* m), m> operator+(
       const Polynomial<T, p>& poly) const {
     return {numerator + denominator * poly, denominator};
   }
 
-  RationalFunction<T, std::max(n, m), m> operator+(const T& scalar) const {
+  constexpr RationalFunction<T, std::max(n, m), m> operator+(
+      const T& scalar) const {
     return {numerator + scalar * denominator, denominator};
   }
 
-  RationalFunction<T, n, m> operator+() const {
+  constexpr RationalFunction<T, n, m> operator+() const {
     RationalFunction<T, n, m> result = (*this);
     return result;
   }
 
   template <size_t p, size_t q>
-  RationalFunction<T, std::max(n + q - 1, m + p - 1), m + q - 1> operator-(
-      const RationalFunction<T, p, q>& other) const {
+  constexpr RationalFunction<T, std::max(n + q - 1, m + p - 1), m + q - 1>
+  operator-(const RationalFunction<T, p, q>& other) const {
     return {numerator * other.denominator - denominator * other.numerator,
             denominator * other.denominator};
   }
 
   template <size_t p>
-  RationalFunction<T, std::max(n, p* m), m> operator-(
+  constexpr RationalFunction<T, std::max(n, p* m), m> operator-(
       const Polynomial<T, p>& poly) const {
     return {numerator - poly * denominator, denominator};
   }
 
-  RationalFunction<T, n, m> operator-(const T& scalar) const {
+  constexpr RationalFunction<T, n, m> operator-(const T& scalar) const {
     return {numerator - scalar * denominator, denominator};
   }
 
-  RationalFunction<T, n, m> operator-() const {
+  constexpr RationalFunction<T, n, m> operator-() const {
     return {-numerator, denominator};
   }
 
-  RationalFunction<T, m, n> inv() const { return {denominator, numerator}; }
+  constexpr RationalFunction<T, m, n> inv() const {
+    return {denominator, numerator};
+  }
 };
 
 template <typename T, size_t n, size_t m, size_t p>
-RationalFunction<T, n + p - 1, m> operator*(
+constexpr RationalFunction<T, n + p - 1, m> operator*(
     const Polynomial<T, p>& poly, const RationalFunction<T, n, m>& rf) {
   return rf * poly;
 }
 
 template <typename T, size_t n, size_t m>
-RationalFunction<T, n, m> operator*(const T& scalar,
-                                    const RationalFunction<T, n, m>& rf) {
+constexpr RationalFunction<T, n, m> operator*(
+    const T& scalar, const RationalFunction<T, n, m>& rf) {
   return rf * scalar;
 }
 
 template <typename T, size_t n, size_t m, size_t p>
-RationalFunction<T, n + p - 1, m> operator/(
+constexpr RationalFunction<T, n + p - 1, m> operator/(
     const Polynomial<T, p>& poly, const RationalFunction<T, n, m>& rf) {
   return rf.inv() * poly;
 }
 
 template <typename T, size_t n, size_t m, size_t p>
-RationalFunction<T, std::max(n, p* m), m> operator+(
+constexpr RationalFunction<T, std::max(n, p* m), m> operator+(
     const Polynomial<T, p>& poly, const RationalFunction<T, n, m>& rf) {
   return rf + poly;
 }
 
 template <typename T, size_t n, size_t m>
-RationalFunction<T, std::max(n, m), m> operator+(
+constexpr RationalFunction<T, std::max(n, m), m> operator+(
     const T& scalar, const RationalFunction<T, n, m>& rf) {
   return rf + scalar;
 }
 
 template <typename T, size_t n, size_t m, size_t p>
-RationalFunction<T, std::max(n, p* m), m> operator-(
+constexpr RationalFunction<T, std::max(n, p* m), m> operator-(
     const Polynomial<T, p>& poly, const RationalFunction<T, n, m>& rf) {
   return -rf + poly;
 }
 
 template <typename T, size_t n, size_t m>
-RationalFunction<T, std::max(n, m), m> operator-(
+constexpr RationalFunction<T, std::max(n, m), m> operator-(
     const T& scalar, const RationalFunction<T, n, m>& rf) {
   return -rf + scalar;
 }
