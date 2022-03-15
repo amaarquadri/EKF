@@ -63,9 +63,7 @@ void GlobalPathPlannerNode::aircraftStateCallback(
   if (squared(msg.pose.position.x - command.x_pos) +
           squared(msg.pose.position.y - command.y_pos) <
       RADIUS_TOL_SQUARED) {
-    waypoint_index++;
-    if (waypoint_index == reference_commands.size()) waypoint_index = 0;
-
+    waypoint_index = bmb_utilities::modulo(++waypoint_index, reference_commands.size());
     reference_command_pub_.publish(reference_commands[waypoint_index]);
   }
 }
