@@ -50,6 +50,25 @@ class Polynomial {
     return *this;
   }
 
+  template <size_t m>
+  constexpr bool operator==(const Polynomial<T, m>& other) const {
+    if constexpr (m < n) {
+      for (size_t i = 0; i < m; i++)
+        if (data[i] != other[i]) return false;
+      for (size_t i = m; i < n; i++)
+        if (data[i] != static_cast<T>(0)) return false;
+    } else if constexpr (n < m) {
+      for (size_t i = 0; i < n; i++)
+        if (data[i] != other[i]) return false;
+      for (size_t i = n; i < m; i++)
+        if (other[i] != static_cast<T>(0)) return false;
+    } else {  // n == m
+      for (size_t i = 0; i < n; i++)
+        if (data[i] != other[i]) return false;
+    }
+    return true;
+  }
+
   static constexpr Polynomial<T, n> identity() {
     Polynomial<T, n> p{};
     p[0] = 1;

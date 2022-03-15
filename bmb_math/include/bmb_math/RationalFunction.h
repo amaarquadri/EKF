@@ -55,6 +55,12 @@ class RationalFunction {
     return (*this);
   }
 
+  template <size_t p, size_t q>
+  constexpr bool operator==(const RationalFunction<T, p, q>& other) const {
+    // TODO: is this valid mathematically in all cases?
+    return numerator * other.denominator == denominator * other.numerator;
+  }
+
   void print(const char& independent_var = 's') const {
     numerator.print(independent_var);
     for (size_t i = 0; i < std::max(n, m); i++) {
