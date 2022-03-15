@@ -52,7 +52,7 @@ constexpr auto squared(const T& val) {
 
 template <typename T, typename U>
 auto positiveModulus(const T& dividend, const U& divisor) {
-  using R = std::common_type_t<T<U>>;
+  using R = std::common_type_t<T, U>;
   static_assert(std::is_arithmetic_v<R>,
                 "Can only be called on arithmetic types!");
   if constexpr (std::is_integral_v<R>) {
