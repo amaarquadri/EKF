@@ -121,5 +121,7 @@ class DubinsPathToPoint {
   const_iterator cend() const { return path.cend(); }
 
  private:
+  using Vector2 = Vector<T, 2>;
+
   Path path;
 };
