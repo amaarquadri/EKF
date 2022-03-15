@@ -66,8 +66,8 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
   const Quaternion<double> quat{state.pose.orientation};
 
   const double vx_squared = b_vel.x * b_vel.x;
-  const double speed_xz_squared = vx_squared + b_vel.z + b_vel.z;
-  const double speed_xy_squared = vx_squared + b_vel.y + b_vel.y;
+  const double speed_xz_squared = vx_squared + b_vel.z * b_vel.z;
+  const double speed_xy_squared = vx_squared + b_vel.y * b_vel.y;
   const double sin_aoa_xz = b_vel.z / std::sqrt(speed_xz_squared);
   const double sin_aoa_xy = -b_vel.y / std::sqrt(speed_xy_squared);
 
