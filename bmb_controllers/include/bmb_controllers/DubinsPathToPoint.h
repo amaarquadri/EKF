@@ -6,7 +6,7 @@
 #include <bmb_math/Vector.h>
 #include <cmath>
 
-template<typename T>
+template <typename T>
 class DubinsPathToPoint {
  public:
   using Path = std::array<DubinsCurve<T>, 2>;
@@ -43,6 +43,7 @@ class DubinsPathToPoint {
       const T d1_squared = d1_vec.magnitudeSquared();
       if (d1_squared < radius_squared) {
         // LR
+        return {};
       } else {
         // RS
         const T start_angle = bmb_math::atan2(-right_dir);
@@ -63,6 +64,7 @@ class DubinsPathToPoint {
       const T d1_squared = d1_vec.magnitudeSquared();
       if (d1_squared < radius_squared) {
         // RL
+        return {};
       } else {
         // LS
         const T start_angle = bmb_math::atan2(right_dir);
