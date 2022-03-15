@@ -8,6 +8,7 @@
 
 template<typename T>
 class DubinsPathToPoint {
+ public:
   using Path = std::array<DubinsCurve<T>, 2>;
   using iterator = typename Path::iterator;
   using const_iterator = typename Path::const_iterator;
@@ -33,7 +34,7 @@ class DubinsPathToPoint {
     // Based on:
     // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.823.5493&rep=rep1&type=pdf
     const T radius_squared = radius * radius;
-    const Vector2 right_dir = bmb_math::ROT_90_CW * start.vel;
+    const Vector2 right_dir = bmb_math::ROT_90_CW<T> * start.vel;
     if (right_dir.dot(goal - start.pos) > 0) {
       // goal is on the right
       const Vector2 center =
@@ -52,7 +53,7 @@ class DubinsPathToPoint {
         const DubinsCurve<T> c1{center, radius, start_angle, delta_angle};
         const DubinsCurve<T> c2{
             center + bmb_math::polarToVec(radius, start_angle), goal};
-        return DubinsPath{{c1, c2}};
+        return DubinsPathToPoint{{c1, c2}};
       }
     } else {
       // goal is on the left
@@ -72,7 +73,7 @@ class DubinsPathToPoint {
         const DubinsCurve<T> c1{center, radius, start_angle, delta_angle};
         const DubinsCurve<T> c2{
             center + bmb_math::polarToVec(radius, start_angle), goal};
-        return DubinsPath{{c1, c2}};
+        return DubinsPathToPoint{{c1, c2}};
       }
     }
   }

@@ -9,12 +9,12 @@ TEST(TestDubinsPathToPoint, testDubinsPathToPoint) {
   const std::string directory =
       ros::package::getPath("bmb_controllers") + "/test/output/";
   using Vector2 = Vector<double, 2>;
-  using DubinsPathToPoint<double>::create;
   PosVelState start{Vector2{0, 0}, Vector2{0, 1}};
 
   Vector2 goal{3, 2};
   static constexpr double radius = 1;
-  DubinsPathToPoint<double> path = create(start, goal, radius);
+  DubinsPathToPoint<double> path =
+      DubinsPathToPoint<double>::create(start, goal, radius);
   ASSERT_TRUE(path[0].isCircle() && path[0].isRightTurn() && path[1].isLine());
 
   std::ofstream out1(directory + "dubins_path_to_point1.csv");
@@ -23,7 +23,7 @@ TEST(TestDubinsPathToPoint, testDubinsPathToPoint) {
   out1.close();
 
   goal = Vector2{0.3, -0.2};
-  path = create(start, goal, radius);
+  path = DubinsPathToPoint<double>::create(start, goal, radius);
   ASSERT_TRUE(path[0].isCircle() && !path[0].isRightTurn() &&
               path[1].isCircle() && path[1].isRightTurn());
   std::ofstream out2(directory + "dubins_path_to_point2.csv");
@@ -32,7 +32,7 @@ TEST(TestDubinsPathToPoint, testDubinsPathToPoint) {
   out2.close();
 
   goal = Vector2{-4, -3};
-  path = create(start, goal, radius);
+  path = DubinsPathToPoint<double>::create(start, goal, radius);
   ASSERT_TRUE(path[0].isCircle() && !path[0].isRightTurn() && path[1].isLine());
   std::ofstream out3(directory + "dubins_path_to_point3.csv");
   ASSERT_TRUE(out3);
