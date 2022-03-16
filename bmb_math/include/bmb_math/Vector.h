@@ -51,7 +51,14 @@ class Vector {
 
   template <typename OStream>
   constexpr void toCSV(OStream& out) const {
-    for (int i = 0; i < n; i++) out << data[i] << '\n';
+    if constexpr (n == 0) {
+      out << "[]\n";
+    }
+    else {
+      out << '[' << data[0];
+      for (int i = 1; i < n; i++) out << ',' << data[i];
+      out << "]\n";
+    }
   }
 
   constexpr T magnitudeSquared() const {
