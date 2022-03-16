@@ -12,16 +12,16 @@
 
 // aerodynamic slope constants
 static const Wrench<double> BODY_M_WRENCH{1.39627650007691, 0.320883207023485, 0,
-                                          -0.250343385330279, 0, 0};
+                                          0, -0.250343385330279, 0};
 static const Wrench<double> AILERON_M_WRENCH{-0.0022957290598182, -0.000578264161264832, 0,
-                                             0.000218843487756994, -0.000956131027304632, -0.00015472345999439};
+                                             -0.000956131027304632, 0.000218843487756994, -0.00015472345999439};
 static const Wrench<double> ELEVATOR_M_WRENCH{-0.00140238887889279, 0.000416516268313824, 0,
-                                              0.00147045512221362, 0, 0};
+                                              0, 0.00147045512221362, 0};
 static const Wrench<double> RUDDER_M_WRENCH{0, 0, 0, 0, 0, 0.000279918236359769};
 
 // aerodynamic offset constants
 static const Wrench<double> BODY_B_WRENCH{0.204721453757253, 0.0595573697856826, 0,
-                                          0.0015675980775375, 0, 0};
+                                          0, 0.0015675980775375, 0};
 
 // propeller constants
 static constexpr double THRUST_TORQUE_RATIO_PROPELLER = 1;
