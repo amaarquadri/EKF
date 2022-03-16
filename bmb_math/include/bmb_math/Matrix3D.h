@@ -11,11 +11,11 @@ class Matrix3D {
   std::array<Matrix<T, m, p>, n> data{};
 
  public:
-  Matrix3D() = default;
+  constexpr Matrix3D() = default;
 
-  static Matrix3D<T, n, m, p> zeros() { return {}; }
+  static constexpr Matrix3D<T, n, m, p> zeros() { return {}; }
 
-  [[nodiscard]] Vector<T, n * m * p> flatten() const {
+  [[nodiscard]] constexpr Vector<T, n * m * p> flatten() const {
     Vector<T, n * m * p> flat_mat;
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
@@ -33,7 +33,8 @@ class Matrix3D {
     return result;
   }
 
-  Matrix3D<T, n, m, p> operator+(const Matrix3D<T, n, m, p>& other) const {
+  constexpr Matrix3D<T, n, m, p> operator+(
+      const Matrix3D<T, n, m, p>& other) const {
     Matrix3D<T, n, m, p> sum;
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
@@ -42,13 +43,14 @@ class Matrix3D {
     return sum;
   }
 
-  void operator+=(const Matrix3D<T, n, m, p>& other) {
+  constexpr void operator+=(const Matrix3D<T, n, m, p>& other) {
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
         for (size_t k = 0; k < p; k++) data[i][j][k] += other[i][j][k];
   }
 
-  Matrix3D<T, n, m, p> operator-(const Matrix3D<T, n, m, p>& other) const {
+  constexpr Matrix3D<T, n, m, p> operator-(
+      const Matrix3D<T, n, m, p>& other) const {
     Matrix3D<T, n, m, p> difference;
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
@@ -57,13 +59,13 @@ class Matrix3D {
     return difference;
   }
 
-  void operator-=(const Matrix3D<T, n, m, p>& other) {
+  constexpr void operator-=(const Matrix3D<T, n, m, p>& other) {
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
         for (size_t k = 0; k < p; k++) data[i][j][k] -= other[i][j][k];
   }
 
-  Matrix3D<T, n, m, p> operator*(const T& scalar) const {
+  constexpr Matrix3D<T, n, m, p> operator*(const T& scalar) const {
     Matrix3D<T, n, m, p> product;
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
@@ -72,13 +74,13 @@ class Matrix3D {
     return product;
   }
 
-  void operator*=(const T& scalar) {
+  constexpr void operator*=(const T& scalar) {
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
         for (size_t k = 0; k < p; k++) data[i][j][k] *= scalar;
   }
 
-  Matrix3D<T, n, m, p> operator/(const T& scalar) const {
+  constexpr Matrix3D<T, n, m, p> operator/(const T& scalar) const {
     Matrix3D<T, n, m, p> quotient;
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
@@ -87,13 +89,13 @@ class Matrix3D {
     return quotient;
   }
 
-  void operator/=(const T& scalar) {
+  constexpr void operator/=(const T& scalar) {
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
         for (size_t k = 0; k < p; k++) data[i][j][k] /= scalar;
   }
 
-  Matrix<T, n, m> operator*(const Vector<T, p>& vec) const {
+  constexpr Matrix<T, n, m> operator*(const Vector<T, p>& vec) const {
     Matrix<T, n, m> product{};
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < m; j++)
@@ -101,9 +103,11 @@ class Matrix3D {
     return product;
   }
 
-  Matrix<T, m, p>& operator[](const size_t& index) { return this->data[index]; }
+  constexpr Matrix<T, m, p>& operator[](const size_t& index) {
+    return this->data[index];
+  }
 
-  const Matrix<T, m, p>& operator[](const size_t& index) const {
+  constexpr const Matrix<T, m, p>& operator[](const size_t& index) const {
     return this->data[index];
   }
 };
