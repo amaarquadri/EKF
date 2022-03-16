@@ -156,7 +156,7 @@ struct DubinsCurve {
             (static_cast<T>(NUM_SAMPLES - i) * line.start_pos +
              static_cast<T>(i) * line.end_pos) /
             static_cast<T>(NUM_SAMPLES);
-        out << pos[0] << "," << pos[1] << std::endl;
+        out << pos[0] << "," << pos[1] << '\n';
       }
     } else {
       for (size_t i = 0; i < NUM_SAMPLES; i++) {
@@ -166,7 +166,7 @@ struct DubinsCurve {
         const Vector<T, 2> pos =
             circle.center +
             bmb_math::getRotationMatrix(theta) * Vector2{circle.radius, 0};
-        out << pos[0] << "," << pos[1] << std::endl;
+        out << pos[0] << "," << pos[1] << '\n';
       }
     }
   }

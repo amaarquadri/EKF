@@ -41,7 +41,7 @@ void testFFT(const size_t& N) {
   std::chrono::duration<double, std::milli> dft_ms = t2 - t1;
 
   std::cout << "FFT is " << dft_ms.count() / fft_ms.count()
-            << " times faster for N = " << N << std::endl;
+            << " times faster for N = " << N << '\n';
 #else
   Fourier<double>::fft(test1.begin(), test1.end());
   Fourier<double>::dft(test2.begin(), 1, Fourier<double>::getRootsOfUnity(N),

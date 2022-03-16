@@ -16,7 +16,7 @@ class ScopedTimer {
   ~ScopedTimer() {
     const std::chrono::duration<double, std::milli> ms =
         std::chrono::high_resolution_clock::now() - t_start;
-    std::cout << name << ": " << ms.count() << "ms" << std::endl;
+    std::cout << name << ": " << ms.count() << "ms\n";
   }
 
  private:
