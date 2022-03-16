@@ -13,10 +13,10 @@ class Quaternion : public Vector<T, 4> {
   T& q3 = this->data[3];  // z
 
  public:
-  explicit constexpr Quaternion(T q0 = static_cast<T>(1),
-                                T q1 = static_cast<T>(0),
-                                T q2 = static_cast<T>(0),
-                                T q3 = static_cast<T>(0)) {
+  explicit constexpr Quaternion(const T& q0 = static_cast<T>(1),
+                                const T& q1 = static_cast<T>(0),
+                                const T& q2 = static_cast<T>(0),
+                                const T& q3 = static_cast<T>(0)) {
     this->q0 = q0;
     this->q1 = q1;
     this->q2 = q2;
