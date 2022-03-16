@@ -13,6 +13,5 @@ uint8 WX = 10
 uint8 WY = 11
 uint8 WZ = 12
 
-#read README.md
 geometry_msgs/Pose pose
 geometry_msgs/Twist twist
