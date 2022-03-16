@@ -126,7 +126,7 @@ void ARISControlPlugin::update() {
 
   // apply loads
   const Wrench<double> wrench = bmb_utilities::NEDToNWU(
-      getAppliedLoads(getAircraftState(), control_inputs));
+      bmb_world_model::getAppliedLoads(getAircraftState(), control_inputs));
   base_link->AddRelativeForce(bmbToIgnitionVector3(wrench.force));
   base_link->AddRelativeTorque(bmbToIgnitionVector3(wrench.torque));
 

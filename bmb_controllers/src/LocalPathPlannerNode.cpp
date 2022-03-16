@@ -8,6 +8,7 @@
 #include <bmb_msgs/StateCommand.h>
 #include <bmb_utilities/ControllerGains.h>
 #include <bmb_world_model/Constants.h>
+#include <bmb_world_model/AppliedLoads.h>
 #include <ros/ros.h>
 #include <cmath>
 
@@ -66,6 +67,7 @@ bmb_msgs::StateCommand LocalPathPlannerNode::getStateCommand() {
       MASS * x_vel * angular_vel;  // Centripetal force
   const double net_force = std::hypot(horizontal_force, vertical_force);
   // TODO: calculate max lift, verify feasibility, calculate StateCommand
+  const double max_lift = bmb_world_model::wrenchFromAOA(current_state).force.x;
 
   bmb_msgs::StateCommand state_command;
   return state_command;

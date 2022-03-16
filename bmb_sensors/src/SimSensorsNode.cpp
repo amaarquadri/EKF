@@ -46,9 +46,9 @@ void SimSensorsNode::modelStatesCallback(const gazebo_msgs::ModelStates& msg) {
       state.twist = msg.twist[i];
 
       const Wrench<double> wrench =
-          getAppliedLoads(state, latest_control_inputs);
+          bmb_world_model::getAppliedLoads(state, latest_control_inputs);
       const Accel<double> accel = bmb_world_model::toAccel(wrench);
-      const bmb_msgs::SensorMeasurements measurements = getSensorMeasurements(
+      const bmb_msgs::SensorMeasurements measurements = bmb_world_model::getSensorMeasurements(
           state, Vector3<double>{}, Vector3<double>{}, accel);
 
       pressure_sensor_pub_.publish(measurements.pressure_reading);
