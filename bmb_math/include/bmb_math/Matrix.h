@@ -37,7 +37,7 @@ class Matrix {
   }
 
   static constexpr Matrix<T, n, m> identity() {
-    static constexpr size_t k = std::min(n, m);
+    /** static **/ constexpr size_t k = std::min(n, m);
     Matrix<T, n, m> output{};
     for (size_t i = 0; i < k; i++) output[i][i] = 1;
     return output;
@@ -83,7 +83,8 @@ class Matrix {
   constexpr Matrix<T, bmb_utilities::slice_count(start, stop, step), m>
   sliceRows() const {
     static_assert(stop <= n);
-    static constexpr size_t k = bmb_utilities::slice_count(start, stop, step);
+    /** static **/ constexpr size_t k =
+        bmb_utilities::slice_count(start, stop, step);
     Matrix<T, k, m> mat;
     for (size_t i = 0; i < k; i++) mat[i] = data[start + i * step];
     return mat;
@@ -93,7 +94,8 @@ class Matrix {
   constexpr Matrix<T, n, bmb_utilities::slice_count(start, stop, step)>
   sliceColumns() const {
     static_assert(stop <= m);
-    static constexpr size_t k = bmb_utilities::slice_count(start, stop, step);
+    /** static **/ constexpr size_t k =
+        bmb_utilities::slice_count(start, stop, step);
     Matrix<T, n, k> mat;
     for (size_t i = 0; i < n; i++)
       for (size_t j = 0; j < k; j++) mat[i][j] = data[i][start + j * step];
@@ -102,7 +104,7 @@ class Matrix {
 
   template <size_t start = 0, size_t step = 1, size_t k>
   constexpr void pasteSliceRows(const Matrix<T, k, m>& mat) {
-    static constexpr size_t stop = start + step * (k - 1) + 1;
+    /** static **/ constexpr size_t stop = start + step * (k - 1) + 1;
     static_assert(stop <= n);
     // delegate to Vector<T, m>::operator=
     for (size_t i = 0; i < k; i++) data[start + i * step] = mat[i];
@@ -110,7 +112,7 @@ class Matrix {
 
   template <size_t start = 0, size_t step = 1, size_t k>
   constexpr void pasteSliceColumns(const Matrix<T, n, k>& mat) {
-    static constexpr size_t stop = start + step * (k - 1) + 1;
+    /** static **/ constexpr size_t stop = start + step * (k - 1) + 1;
     static_assert(stop <= m);
     // delegate to Vector<T, m>::operator=
     for (size_t i = 0; i < n; i++)
@@ -175,8 +177,10 @@ class Matrix {
   template <size_t row_start = 0, size_t col_start = 0, size_t row_step = 1,
             size_t col_step = 1, size_t x, size_t y>
   constexpr void operator+=(const Matrix<T, x, y>& other) {
-    static constexpr size_t row_stop = row_start + row_step * (x - 1) + 1;
-    static constexpr size_t col_stop = col_start + col_step * (y - 1) + 1;
+    /** static **/ constexpr size_t row_stop =
+        row_start + row_step * (x - 1) + 1;
+    /** static **/ constexpr size_t col_stop =
+        col_start + col_step * (y - 1) + 1;
     static_assert(row_stop <= n && col_stop <= m);
     for (size_t i = 0; i < x; i++)
       for (size_t j = 0; j < y; j++)
@@ -194,8 +198,10 @@ class Matrix {
   template <size_t row_start = 0, size_t col_start = 0, size_t row_step = 1,
             size_t col_step = 1, size_t x, size_t y>
   constexpr void operator-=(const Matrix<T, x, y>& other) {
-    static constexpr size_t row_stop = row_start + row_step * (x - 1) + 1;
-    static constexpr size_t col_stop = col_start + col_step * (y - 1) + 1;
+    /** static **/ constexpr size_t row_stop =
+        row_start + row_step * (x - 1) + 1;
+    /** static **/ constexpr size_t col_stop =
+        col_start + col_step * (y - 1) + 1;
     static_assert(row_stop <= n && col_stop <= m);
     for (size_t i = 0; i < x; i++)
       for (size_t j = 0; j < y; j++)
