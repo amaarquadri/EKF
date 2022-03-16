@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bmb_controllers/PIDFFController.h>
+#include <bmb_controllers/StateCommandSmoother.h>
 #include <bmb_msgs/AircraftState.h>
 #include <bmb_msgs/ControlInputs.h>
 #include <bmb_msgs/StateCommand.h>
@@ -26,6 +27,7 @@ class LowLevelControlLoopNode {
   bmb_msgs::AircraftState latest_aircraft_state;
   bmb_msgs::StateCommand latest_state_command;
   const double update_frequency;
+  StateCommandSmoother smoother;
   PIDFFController<double> speed_pid;
   PIDFFController<double> roll_pid;
   PIDFFController<double> pitch_pid;
