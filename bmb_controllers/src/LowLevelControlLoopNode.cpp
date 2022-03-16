@@ -1,5 +1,6 @@
 #include "bmb_controllers/LowLevelControlLoopNode.h"
 #include <bmb_controllers/PIDFFController.h>
+#include <bmb_controllers/StateCommandSmoother.h>
 #include <bmb_math/Quaternion.h>
 #include <bmb_msgs/AircraftState.h>
 #include <bmb_msgs/ControlInputs.h>
@@ -9,7 +10,8 @@
 
 LowLevelControlLoopNode::LowLevelControlLoopNode(ros::NodeHandle& nh,
                                                  const double& update_frequency)
-    : update_frequency(update_frequency) {
+    : update_frequency(update_frequency),
+      smoother(StateCommandSmoother{update_frequency}) {
   const double update_period = 1 / update_frequency;
   speed_pid = PIDFFController<double>{THROTTLE_GAIN, update_period};
   roll_pid = PIDFFController<double>{ROLL_GAIN, update_period};
@@ -28,17 +30,20 @@ LowLevelControlLoopNode::LowLevelControlLoopNode(ros::NodeHandle& nh,
 }
 
 bmb_msgs::ControlInputs LowLevelControlLoopNode::getControlInputs() {
+  const bmb_msgs::StateCommand smoothed_command =
+      smoother.getSmoothedStateCommand(latest_state_command);
+
   const Quaternion<double> orientation{latest_aircraft_state.pose.orientation};
   const double pitch = orientation.getPitch();
   const double roll = orientation.getRoll();
 
   bmb_msgs::ControlInputs control_inputs{};
   control_inputs.propeller_force = speed_pid.update(
-      latest_aircraft_state.twist.linear.x, latest_state_command.speed);
+      latest_aircraft_state.twist.linear.x, smoothed_command.speed);
   control_inputs.right_aileron_angle =
-      roll_pid.update(roll, latest_state_command.roll);
+      roll_pid.update(roll, smoothed_command.roll);
   control_inputs.elevator_angle =
-      pitch_pid.update(pitch, latest_state_command.pitch);
+      pitch_pid.update(pitch, smoothed_command.pitch);
   return control_inputs;
 }
 
