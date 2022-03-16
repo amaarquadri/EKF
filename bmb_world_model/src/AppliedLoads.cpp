@@ -24,7 +24,7 @@ static const Wrench<double> RUDDER_M_WRENCH{0, 0, 0,
 
 // aerodynamic offset constants
 static const Wrench<double> BODY_B_WRENCH{
-    0.204721453757253, 0.0595573697856826, 0, 0, 0.0015675980775375, 0};
+    -0.0595573697856826, 0, -0.204721453757253, 0, 0.0015675980775375, 0};
 
 // propeller constants
 static constexpr double THRUST_TORQUE_RATIO_PROPELLER = 1;
