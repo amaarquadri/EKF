@@ -9,9 +9,16 @@ struct Accel {
   Vector3<T> angular{};
 
   constexpr Accel(const T& lin_x = 0, const T& lin_y = 0, const T& lin_z = 0,
-                  const T& ang_x = 0, const T& ang_y = 0, const T& ang_z = 0)
-      : linear(Vector3<T>{lin_x, lin_y, lin_z}),
-        angular(Vector3<T>{ang_x, ang_y, ang_z}) {}
+                  const T& ang_x = 0, const T& ang_y = 0, const T& ang_z = 0) {
+    // TODO: figure out how to use initializer list to delegate to the constexpr
+    //  Vector3 constructor in a constexpr way
+    linear.x = lin_x;
+    linear.y = lin_y;
+    linear.z = lin_z;
+    angular.x = ang_x;
+    angular.y = ang_y;
+    angular.z = ang_z;
+  }
 
   constexpr Accel(const Vector3<T>& linear,
                   const Vector3<T>& angular = Vector3<T>{})

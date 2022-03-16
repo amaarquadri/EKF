@@ -10,8 +10,16 @@ struct Wrench {
   Vector3<T> torque;
 
   constexpr Wrench(const T& fx = 0, const T& fy = 0, const T& fz = 0,
-                   const T& tx = 0, const T& ty = 0, const T& tz = 0)
-      : force(Vector3<T>{fx, fy, fz}), torque(Vector3<T>{tx, ty, tz}) {}
+                   const T& tx = 0, const T& ty = 0, const T& tz = 0) {
+    // TODO: figure out how to use initializer list to delegate to the constexpr
+    //  Vector3 constructor in a constexpr way
+    force.x = fx;
+    force.y = fy;
+    force.z = fz;
+    torque.x = tx;
+    torque.y = ty;
+    torque.z = tz;
+  }
 
   constexpr Wrench(const Vector3<T>& force,
                    const Vector3<T>& torque = Vector3<T>{})
