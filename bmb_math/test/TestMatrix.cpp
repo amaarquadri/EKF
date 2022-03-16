@@ -21,9 +21,9 @@ TEST(TestMatrix, testMatrix) {
   ASSERT_EQ(s_mat[0][1], 0);
 }
 
-Test(TestMatrix, testTranspose) {
+TEST(TestMatrix, testTranspose) {
   static constexpr auto mat = Matrix<uint8_t, 2, 2>::identity();
-  static_assert(mat == mat.transpose);
+  static_assert(mat == mat.transpose());
 }
 
 int main(int argc, char** argv) {
