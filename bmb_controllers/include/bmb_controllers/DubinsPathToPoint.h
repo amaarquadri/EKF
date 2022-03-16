@@ -51,7 +51,8 @@ class DubinsPathToPoint {
         const T delta_angle = bmb_math::normalizeAngle(
             start_angle - std::atan2(dist, radius) - bmb_math::atan2(d1_vec));
 
-        const DubinsCurve<T> c1{center, radius, start_angle, delta_angle};
+        const DubinsCurve<T> c1{center, radius, start_angle,
+                                start_angle - delta_angle};
         const DubinsCurve<T> c2{
             center + bmb_math::polarToVec(radius, start_angle + delta_angle),
             goal};
