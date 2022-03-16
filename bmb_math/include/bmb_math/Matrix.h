@@ -62,11 +62,10 @@ class Matrix {
     return transpose;
   }
 
-  constexpr void transposeInPlace() {
+  void transposeInPlace() {
     if constexpr (n != m)
       throw std::invalid_argument(
           "Cannot transpose in place a non-square matrix");
-    // TODO: is std::swap constexpr
     for (size_t i = 1; i < n; i++)
       for (size_t j = 0; j < i; j++) std::swap(data[i][j], data[j][i]);
   }
