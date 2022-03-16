@@ -18,6 +18,10 @@ sudo apt install git
 sudo apt install liburdfdom-tools
 sudo apt install python3-catkin-tools
 
+# Update .bashrc file with ROS
+echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+
 # Create workspace
 cd ~
 mkdir catkin_ws
@@ -30,12 +34,10 @@ cd ..
 rosdep install --from-paths src --ignore-src -r -y
 catkin build
 
-# Update .bashrc file
-echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+# Update .bashrc file with new workspace
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
 # Update system
 sudo apt update
 sudo apt upgrade
-

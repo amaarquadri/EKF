@@ -63,7 +63,7 @@ class TransferFunction : public RationalFunction<T, n, m> {
   TransferFunction<T, n + bmb_utilities::heaviside_difference(m, n),
                    m + bmb_utilities::heaviside_difference(n, m)>
   discretize(const T& dt = 1E-4) const {
-    // trapezoidal method, SCH looks hard
+    // use trapezoidal method since SCH looks hard
     static constexpr size_t p = n + bmb_utilities::heaviside_difference(m, n);
     static constexpr size_t q = m + bmb_utilities::heaviside_difference(n, m);
     RationalFunction<T, 2, 2> trapezoidal{Polynomial<T, 2>{-2, 2},
