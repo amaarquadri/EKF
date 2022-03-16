@@ -43,7 +43,7 @@ class Matrix {
   }
 
   constexpr bool operator!=(const Matrix<T, n, m>& other) const {
-    return !(*this == other)
+    return !(*this == other);
   }
 
   static constexpr Matrix<T, n, m> identity() {
