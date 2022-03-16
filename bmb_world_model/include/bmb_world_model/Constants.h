@@ -51,7 +51,7 @@ static constexpr Vector3<double> WEIGHT{
     0, 0, MASS* GRAVITATIONAL_ACCELERATION};  // NOLINT(cert-err58-cpp)
 static constexpr Matrix<double, 3, 3> INERTIA_TENSOR{
     1, 0, 0, 0, 1, 0, 0, 0, 1};  // NOLINT(cert-err58-cpp)
-static constexpr Matrix<double, 3, 3> INERTIA_TENSOR_INV =
+static const Matrix<double, 3, 3> INERTIA_TENSOR_INV =
     INERTIA_TENSOR.inv();  // NOLINT(cert-err58-cpp)
 
 // aircraft body aerodynamic constants
