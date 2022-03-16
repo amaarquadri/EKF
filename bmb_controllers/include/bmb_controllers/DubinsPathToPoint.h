@@ -49,8 +49,8 @@ class DubinsPathToPoint {
             start.pos - radius * right_dir / right_dir.magnitude();
         const T x = p.dot(right_dir) / right_dir.magnitude();
         const T y = p.dot(start.vel) / start.vel.magnitude();
-        const T cos_theta2 = 1.5 - (p.magnitudeSquared() + 2 * radius * x) /
-                                       (4 * radius_squared);
+        const T cos_theta2 =
+            1 - (p.magnitudeSquared() + 2 * radius * x) / (4 * radius_squared);
         const T sin_theta2 = std::sqrt(1 - cos_theta2 * cos_theta2);
         const T cos_theta1 =
             ((2 - cos_theta2) * (x + radius) + sin_theta2 * y) /
