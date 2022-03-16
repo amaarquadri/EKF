@@ -50,7 +50,7 @@ class Vector {
   }
 
   template <typename OStream>
-  constexpr void toCSV(OStream& out) const {
+  void toCSV(OStream& out) const {
     for (int i = 0; i < n; i++) out << data[i] << '\n';
   }
 
