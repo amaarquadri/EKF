@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 TEST(TestQuaternion, testQuaternion) {
-  Quaternion<double> first = Quaternion<double>::identity();
+  static constexpr Quaternion<double> first = Quaternion<double>::identity();
   Quaternion<double> second{};
   second = first;
   second.q1 = 1;
