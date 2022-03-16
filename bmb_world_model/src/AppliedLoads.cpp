@@ -11,18 +11,17 @@
 #include <cmath>
 
 // aerodynamic slope constants
-static const Wrench<double> BODY_M_WRENCH{};
-static const Wrench<double> AILERON_M_WRENCH{};
-static const Wrench<double> ELEVATOR_M_WRENCH{};
-static const Wrench<double> RUDDER_M_WRENCH{0, 0, 0,
-                                            0, 0, 0};
+static constexpr Wrench<double> BODY_M_WRENCH{};
+static constexpr Wrench<double> AILERON_M_WRENCH{};
+static constexpr Wrench<double> ELEVATOR_M_WRENCH{};
+static constexpr Wrench<double> RUDDER_M_WRENCH{};
 
 // aerodynamic offset constants
-static const Wrench<double> BODY_B_WRENCH{};
+static constexpr Wrench<double> BODY_B_WRENCH{};
 
 // propeller constants
 static constexpr double THRUST_TORQUE_RATIO_PROPELLER = 0;
-static const Vector3<double> L_FRONT_PROPELLER{0, 0, 0};
+static constexpr Vector3<double> L_FRONT_PROPELLER{};
 
 using bmb_utilities::saturation;
 

@@ -13,8 +13,10 @@ class Quaternion : public Vector<T, 4> {
   T& q3 = this->data[3];  // z
 
  public:
-  explicit Quaternion(T q0 = static_cast<T>(1), T q1 = static_cast<T>(0),
-                      T q2 = static_cast<T>(0), T q3 = static_cast<T>(0)) {
+  explicit constexpr Quaternion(const T& q0 = static_cast<T>(1),
+                                const T& q1 = static_cast<T>(0),
+                                const T& q2 = static_cast<T>(0),
+                                const T& q3 = static_cast<T>(0)) {
     this->q0 = q0;
     this->q1 = q1;
     this->q2 = q2;
@@ -22,23 +24,28 @@ class Quaternion : public Vector<T, 4> {
   }
 
   // allow implicit conversions
-  Quaternion(const Vector<T, 4>& vec)
-      : Quaternion(vec[0], vec[1], vec[2], vec[3]) {
+  constexpr Quaternion(const Vector<T, 4>& vec) {
+    // TODO: figure out how to use initializer list to delegate to the constexpr
+    //  Vector3 constructor in a constexpr way
+    q0 = vec[0];
+    q1 = vec[1];
+    q2 = vec[2];
+    q3 = vec[3];
   }  // NOLINT(google-explicit-constructor)
 
   // allow implicit conversions
-  Quaternion(const geometry_msgs::Quaternion& msg)
+  constexpr Quaternion(const geometry_msgs::Quaternion& msg)
       : Quaternion(msg.w, msg.x, msg.y, msg.z) {
   }  // NOLINT(google-explicit-constructor)
 
-  void copy_to(geometry_msgs::Quaternion& msg) {
+  constexpr void copy_to(geometry_msgs::Quaternion& msg) {
     msg.w = q0;
     msg.x = q1;
     msg.y = q2;
     msg.z = q3;
   }
 
-  Quaternion& operator=(const Quaternion<T>& other) {
+  constexpr Quaternion<T>& operator=(const Quaternion<T>& other) {
     // need to overload this operator to allow copying the contents of a
     // Quaternion
     q0 = other.q0;
@@ -48,28 +55,28 @@ class Quaternion : public Vector<T, 4> {
     return *this;
   }
 
-  static Quaternion identity() { return Quaternion{}; }
+  static constexpr Quaternion<T> identity() { return Quaternion<T>{}; }
 
-  Quaternion cong() const { return Quaternion{q0, -q1, -q2, -q3}; }
+  constexpr Quaternion<T> cong() const { return Quaternion{q0, -q1, -q2, -q3}; }
 
-  Vector3<T> rotate(const Vector3<T>& vec) const {
+  constexpr Vector3<T> rotate(const Vector3<T>& vec) const {
     Quaternion x_quat = Quaternion{static_cast<T>(0), vec.x, vec.y, vec.z};
     Quaternion x_rot_quat = this->cong() * x_quat * (*this);
     return Vector3<T>{x_rot_quat.q1, x_rot_quat.q2, x_rot_quat.q3};
   }
 
-  Vector3<T> unrotate(const Vector3<T>& vec) const {
+  constexpr Vector3<T> unrotate(const Vector3<T>& vec) const {
     return this->cong().rotate(vec);
   }
 
   T getRoll() const {
-    double sinr_cosp = 2 * (q0 * q1 + q2 * q3);
-    double cosr_cosp = 1 - 2 * (q0 * q1 + q2 * q3);
+    const double sinr_cosp = 2 * (q0 * q1 + q2 * q3);
+    const double cosr_cosp = 1 - 2 * (q0 * q1 + q2 * q3);
     return std::atan2(sinr_cosp, cosr_cosp);
   }
 
   T getPitch() const {
-    double sinp = 2 * (q0 * q1 - q2 * q3);
+    const double sinp = 2 * (q0 * q1 - q2 * q3);
     if (std::abs(sinp) >= 1)
       return std::copysign(M_PI / 2, sinp);  // use 90 degrees if out of range
     else
@@ -77,21 +84,16 @@ class Quaternion : public Vector<T, 4> {
   }
 
   T getYaw() const {
-    double siny_cosp = 2 * (q0 * q1 + q2 * q3);
-    double cosy_cosp = 1 - 2 * (q0 * q1 + q2 * q3);
+    const double siny_cosp = 2 * (q0 * q1 + q2 * q3);
+    const double cosy_cosp = 1 - 2 * (q0 * q1 + q2 * q3);
     return std::atan2(siny_cosp, cosy_cosp);
   }
 
   Vector3<T> euler_angles() const {
-    Vector3<T> angles;
-
-    angles[0] = getRoll();
-    angles[1] = getPitch();
-    angles[2] = getYaw();
-    return angles;
+    return Vector3<T>{getRoll(), getPitch(), getYaw()};
   }
 
-  Matrix<T, 3, 4> E() const {
+  constexpr Matrix<T, 3, 4> E() const {
     Matrix<T, 3, 4> matrix{};
 
     matrix[0][0] = -q1;
@@ -112,7 +114,7 @@ class Quaternion : public Vector<T, 4> {
     return matrix;
   }
 
-  Matrix<T, 3, 4> G() const {
+  constexpr Matrix<T, 3, 4> G() const {
     Matrix<T, 3, 4> matrix{};
 
     matrix[0][0] = -q1;
@@ -133,13 +135,13 @@ class Quaternion : public Vector<T, 4> {
     return matrix;
   }
 
-  Matrix<T, 3, 3> toDCM() const {
+  constexpr Matrix<T, 3, 3> toDCM() const {
     // https://www.vectornav.com/resources/inertial-navigation-primer/math-fundamentals/math-attitudetran
     Matrix<T, 3, 3> DCM;
-    T q0q0 = q0 * q0;
-    T q1q1 = q1 * q1;
-    T q2q2 = q2 * q2;
-    T q3q3 = q3 * q3;
+    const T q0q0 = q0 * q0;
+    const T q1q1 = q1 * q1;
+    const T q2q2 = q2 * q2;
+    const T q3q3 = q3 * q3;
     DCM[0][0] = q3q3 + q0q0 - q1q1 - q2q2;
     DCM[1][1] = q3q3 - q0q0 + q1q1 - q2q2;
     DCM[2][2] = q3q3 - q0q0 - q1q1 + q2q2;
@@ -154,7 +156,7 @@ class Quaternion : public Vector<T, 4> {
 
   // OPERATOR OVERLOADING:
 
-  Quaternion<T> operator*(const Quaternion<T>& other) const {
+  constexpr Quaternion<T> operator*(const Quaternion<T>& other) const {
     return Quaternion<T>{
         q0 * other.q0 - q1 * other.q1 - q2 * other.q2 - q3 * other.q3,
         q0 * other.q1 + other.q0 * q1 + q2 * other.q3 - q3 * other.q2,
@@ -162,13 +164,15 @@ class Quaternion : public Vector<T, 4> {
         q0 * other.q3 + other.q0 * q3 + q1 * other.q2 - q2 * other.q1};
   }
 
-  void operator*=(const Quaternion<T>& other) { *this = (*this) * other; }
+  constexpr void operator*=(const Quaternion<T>& other) {
+    *this = (*this) * other;
+  }
 
-  Quaternion<T> operator/(const Quaternion<T>& other) const {
+  constexpr Quaternion<T> operator/(const Quaternion<T>& other) const {
     return (*this) * other.cong();
   }
 
-  void operator/=(const Quaternion<T>& other) {
+  constexpr void operator/=(const Quaternion<T>& other) {
     *this = (*this) * other.cong();
   }
 };

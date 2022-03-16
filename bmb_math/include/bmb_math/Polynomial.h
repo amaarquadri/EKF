@@ -69,6 +69,11 @@ class Polynomial {
     return true;
   }
 
+  template <size_t m>
+  constexpr bool operator!=(const Polynomial<T, m>& other) const {
+    return !(*this == other);
+  }
+
   static constexpr Polynomial<T, n> identity() {
     Polynomial<T, n> p{};
     p[0] = 1;

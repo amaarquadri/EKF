@@ -2,7 +2,8 @@
 #include <gtest/gtest.h>
 
 TEST(TestQuaternion, testQuaternion) {
-  Quaternion<double> first = Quaternion<double>::identity();
+  // TODO: figure out how to make this static constexpr
+  static const Quaternion<double> first = Quaternion<double>::identity();
   Quaternion<double> second{};
   second = first;
   second.q1 = 1;
