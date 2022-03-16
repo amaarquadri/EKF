@@ -54,7 +54,7 @@ class DubinsPathToPoint {
         const T sin_theta2 = std::sqrt(1 - cos_theta2 * cos_theta2);
         const T cos_theta1 =
             ((2 - cos_theta2) * (x + radius) + sin_theta2 * y) /
-            ((5 - 4 * cos_theta2) * r);
+            ((5 - 4 * cos_theta2) * radius);
         const T sin_theta1 = std::sqrt(1 - cos_theta1 * cos_theta1);
         const T theta1 = std::acos(cos_theta1);
         const T theta2 = 2 * M_PI - std::acos(cos_theta2);
