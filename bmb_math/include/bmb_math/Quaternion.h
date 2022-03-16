@@ -45,7 +45,7 @@ class Quaternion : public Vector<T, 4> {
     msg.z = q3;
   }
 
-  constexpr Quaternion& operator=(const Quaternion<T>& other) {
+  constexpr Quaternion<T>& operator=(const Quaternion<T>& other) {
     // need to overload this operator to allow copying the contents of a
     // Quaternion
     q0 = other.q0;
@@ -55,9 +55,9 @@ class Quaternion : public Vector<T, 4> {
     return *this;
   }
 
-  static constexpr Quaternion identity() { return Quaternion{}; }
+  static constexpr Quaternion<T> identity() { return Quaternion<T>{}; }
 
-  constexpr Quaternion cong() const { return Quaternion{q0, -q1, -q2, -q3}; }
+  constexpr Quaternion<T> cong() const { return Quaternion{q0, -q1, -q2, -q3}; }
 
   constexpr Vector3<T> rotate(const Vector3<T>& vec) const {
     Quaternion x_quat = Quaternion{static_cast<T>(0), vec.x, vec.y, vec.z};
