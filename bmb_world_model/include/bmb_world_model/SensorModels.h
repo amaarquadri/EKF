@@ -8,20 +8,19 @@
 #include <bmb_world_model/Constants.h>
 #include <utility>
 
-
 namespace bmb_world_model {
-    bmb_msgs::SensorMeasurements getSensorMeasurements(
-            const bmb_msgs::AircraftState &state,
-            const Vector3<double> &accelerometer_bias,
-            const Vector3<double> &gyroscope_bias, const Accel<double> &accel);
+bmb_msgs::SensorMeasurements getSensorMeasurements(
+    const bmb_msgs::AircraftState& state,
+    const Vector3<double>& accelerometer_bias,
+    const Vector3<double>& gyroscope_bias, const Accel<double>& accel);
 
-    std::tuple <Matrix<double, bmb_msgs::SensorMeasurements::SIZE,
-            bmb_msgs::AircraftState::SIZE>,
-    Matrix<double, bmb_msgs::SensorMeasurements::SIZE, 3>,
-    Matrix<double, bmb_msgs::SensorMeasurements::SIZE, 3>,
-    Matrix<double, bmb_msgs::SensorMeasurements::SIZE, 6>>
-    getSensorMeasurementsJacobian(const bmb_msgs::AircraftState &state,
-                                  const Vector3<double> &accelerometer_bias,
-                                  const Vector3<double> &gyroscope_bias,
-                                  const Accel<double> &accel);
-}
+std::tuple<Matrix<double, bmb_msgs::SensorMeasurements::SIZE,
+                  bmb_msgs::AircraftState::SIZE>,
+           Matrix<double, bmb_msgs::SensorMeasurements::SIZE, 3>,
+           Matrix<double, bmb_msgs::SensorMeasurements::SIZE, 3>,
+           Matrix<double, bmb_msgs::SensorMeasurements::SIZE, 6>>
+getSensorMeasurementsJacobian(const bmb_msgs::AircraftState& state,
+                              const Vector3<double>& accelerometer_bias,
+                              const Vector3<double>& gyroscope_bias,
+                              const Accel<double>& accel);
+}  // namespace bmb_world_model

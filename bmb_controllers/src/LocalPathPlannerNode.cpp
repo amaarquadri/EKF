@@ -1,16 +1,20 @@
 #include "bmb_controllers/LocalPathPlannerNode.h"
-#include <bmb_controllers/PosVelState.h>
 #include <bmb_controllers/DubinsPath.h>
 #include <bmb_controllers/PIDFFController.h>
+#include <bmb_controllers/PosVelState.h>
 #include <bmb_controllers/PurePursuit.h>
 #include <bmb_msgs/AircraftState.h>
 #include <bmb_msgs/ReferenceCommand.h>
 #include <bmb_msgs/StateCommand.h>
 #include <bmb_utilities/ControllerGains.h>
-#include <bmb_world_model/Constants.h>
+#include <bmb_utilities/MathUtils.h>
 #include <bmb_world_model/AppliedLoads.h>
+#include <bmb_world_model/Constants.h>
 #include <ros/ros.h>
 #include <cmath>
+
+const double SIN8 = 0.13917310096;
+const double COS8 = 0.99026806874;
 
 LocalPathPlannerNode::LocalPathPlannerNode(ros::NodeHandle& nh,
                                            const double& update_frequency)
@@ -60,14 +64,19 @@ bmb_msgs::StateCommand LocalPathPlannerNode::getStateCommand() {
 #endif
   }
 
-  const double& x_vel = latest_aircraft_state.twist.linear.x;
-  const double vertical_force = altitude_pid.update(
-      latest_aircraft_state.pose.position.z, latest_reference_command.altitude);
-  const double horizontal_force =
-      MASS * x_vel * angular_vel;  // Centripetal force
-  const double net_force = std::hypot(horizontal_force, vertical_force);
+  const double& b_vel = latest_aircraft_state.twist.linear;
+  const double vertical_force =
+      altitude_pid.update(-latest_aircraft_state.pose.position.z,
+                          latest_reference_command.altitude);
+  const double horizontal_force = MASS *
+                                  bmb_utilities::magnitude(b_vel.x, b_vel.z) *
+                                  angular_vel;  // Centripetal force
+  const double net_force =
+      bmb_utilities::magnitude(horizontal_force, vertical_force);
   // TODO: calculate max lift, verify feasibility, calculate StateCommand
-  const double max_lift = bmb_world_model::wrenchFromAOA(current_state).force.x;
+  const Wrench<double> max_wrench = bmb_world_model::wrenchFromAOA(b_vel, SIN8);
+  const double max_vertical_force =
+      max_wrench.force.x * COS8 - max_wrench.force.y * SIN8;
 
   bmb_msgs::StateCommand state_command;
   return state_command;
