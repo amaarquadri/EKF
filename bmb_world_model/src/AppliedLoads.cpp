@@ -60,47 +60,59 @@ static Wrench<double> getGravitationalLoads(const Quaternion<double>& quat) {
   return {quat.rotate(WEIGHT), Vector3<double>{}};
 }
 
+wrench<double> wrenchFromAOA(const double& body_vel, const double& sin_aoa_xz) {
+    const double speed_xz_squared = body_vel.x*body_vel.x + body_vel.z*body_vel.z;
+    return (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;
+}
+
+const wrench<double> wrenchFromAileron(const double& body_vel, const double& sin_aoa_xz,
+                                       const double& right_aileron_angle) {
+    const double speed_xz_squared = body_vel.x*body_vel.x + body_vel.z*body_vel.z;
+    // absolute value of aileron angle is used for the force models
+    const double right_aileron_angle_mag =
+            std::fabs(right_aileron_angle);
+    const Wrench<double> aileron_wrench{right_aileron_angle_mag,
+                                        right_aileron_angle_mag,
+                                        right_aileron_angle_mag,
+                                        right_aileron_angle_mag,
+                                        right_aileron_angle,
+                                        right_aileron_angle};
+    return AILERON_M_WRENCH * aileron_wrench * speed_xz_squared;
+}
+
+const wrench<double> wrenchFromElevator(const double& body_vel, const double& sin_aoa_xz,
+                                        const double& elevator_angle) {
+    const double speed_xz_squared = body_vel.x*body_vel.x + body_vel.z*body_vel.z;
+    // absolute value of elevator angle is used for the force models
+    const double elevator_angle_mag =
+            std::fabs(elevator_angle);
+    const Wrench<double> elevator_wrench{elevator_angle,
+                                         elevator_angle_mag,
+                                         elevator_angle,
+                                         elevator_angle,
+                                         elevator_angle,
+                                         elevator_angle};
+    return ELEVATOR_M_WRENCH * elevator_wrench * speed_xz_squared;
+}
+
+const wrench<double> wrenchFromRudder(const double& body_vel, const double& sin_aoa_xy) {
+    const double speed_xy_squared = body_vel.x*body_vel.x + body_vel.y*body_vel.y;
+    return RUDDER_M_WRENCH * sin_aoa_xy * speed_xy_squared;
+}
+
 Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
                                const bmb_msgs::ControlInputs& control_inputs) {
-  const auto& b_vel = state.twist.linear;
-  const Quaternion<double> quat{state.pose.orientation};
+    const auto& b_vel = state.twist.linear;
+    const Quaternion<double> quat{state.pose.orientation};
 
-  const double vx_squared = b_vel.x * b_vel.x;
-  const double speed_xz_squared = vx_squared + b_vel.z + b_vel.z;
-  const double speed_xy_squared = vx_squared + b_vel.y + b_vel.y;
-  const double sin_aoa_xz = b_vel.z / std::sqrt(speed_xz_squared);
-  const double sin_aoa_xy = -b_vel.y / std::sqrt(speed_xy_squared);
+    const double sin_aoa_xy = -b_vel.y / bmb_utilities::magnitude(b_vel.x, b_vel.y);
+    const double sin_aoa_xz = b_vel.x / bmb_utilities::magnitude(b_vel.x, b_vel.z);
 
-  // absolute value of aileron angle is used for the force models
-  const double right_aileron_angle_mag =
-      std::fabs(control_inputs.right_aileron_angle);
-  const Wrench<double> aileron_wrench{right_aileron_angle_mag,
-                                      right_aileron_angle_mag,
-                                      right_aileron_angle_mag,
-                                      right_aileron_angle_mag,
-                                      control_inputs.right_aileron_angle,
-                                      control_inputs.right_aileron_angle};
-
-    // absolute value of aileron angle is used for the force models
-    const double elevator_angle_mag =
-            std::fabs(control_inputs.elevator_angle);
-    const Wrench<double> elevator_wrench{control_inputs.elevator_angle,
-                                        elevator_angle_mag,
-                                        control_inputs.elevator_angle,
-                                        control_inputs.elevator_angle,
-                                        control_inputs.elevator_angle,
-                                        control_inputs.elevator_angle};
-
-  const Wrench<double> body_loads =
-      (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;
-  const Wrench<double> aileron_loads =
-      AILERON_M_WRENCH * aileron_wrench * speed_xz_squared;
-  const Wrench<double> elevator_loads =
-      ELEVATOR_M_WRENCH * elevator_wrench * speed_xz_squared;
-  const Wrench<double> rudder_loads =
-      RUDDER_M_WRENCH * sin_aoa_xy * speed_xy_squared;
-
-  return body_loads + aileron_loads + elevator_loads + rudder_loads +
+    const Wrench<double> body_loads = wrenchFromAOA(b_vel, sin_aoa_xz);
+    const Wrench<double> aileron_loads = wrenchFromAileron(state, control_inputs, sin_aoa_xz);
+    const Wrench<double> elevator_loads = wrenchFromElevator(state, control_inputs, sin_aoa_xz);
+    const Wrench<double> rudder_loads = wrenchFromRudder(state, sin_aoa_xy);
+    return body_loads + aileron_loads + elevator_loads + rudder_loads +
          getPropellerLoads(control_inputs.propeller_force) +
          getGravitationalLoads(quat);
 }
