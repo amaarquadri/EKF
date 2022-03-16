@@ -100,8 +100,10 @@ class TransferFunction : public RationalFunction<T, n, m> {
 
 template <typename T, size_t n, size_t m>
 static TransferFunction<T, n + bmb_utilities::heaviside_difference(m, n),
-        m + bmb_utilities::heaviside_difference(n, m)> c2d(const TransferFunction<T,n,m> &tf, const T& dt=1e-4) {
-    TransferFunction<T, n + bmb_utilities::heaviside_difference(m, n),
-            m + bmb_utilities::heaviside_difference(n, m)> discrete = tf.discretize(dt);
-        return discrete;
-        }
+                        m + bmb_utilities::heaviside_difference(n, m)>
+c2d(const TransferFunction<T, n, m>& tf, const T& dt = 1e-4) {
+  TransferFunction<T, n + bmb_utilities::heaviside_difference(m, n),
+                   m + bmb_utilities::heaviside_difference(n, m)>
+      discrete = tf.discretize(dt);
+  return discrete;
+}

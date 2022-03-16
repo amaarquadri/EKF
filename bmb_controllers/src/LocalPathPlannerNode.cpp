@@ -64,7 +64,7 @@ bmb_msgs::StateCommand LocalPathPlannerNode::getStateCommand() {
 #endif
   }
 
-  const double& b_vel = latest_aircraft_state.twist.linear;
+  const auto& b_vel = latest_aircraft_state.twist.linear;
   const double vertical_force =
       altitude_pid.update(-latest_aircraft_state.pose.position.z,
                           latest_reference_command.altitude);
@@ -76,7 +76,7 @@ bmb_msgs::StateCommand LocalPathPlannerNode::getStateCommand() {
   // TODO: calculate max lift, verify feasibility, calculate StateCommand
   const Wrench<double> max_wrench = bmb_world_model::wrenchFromAOA(b_vel, SIN8);
   const double max_vertical_force =
-      max_wrench.force.x * COS8 - max_wrench.force.y * SIN8;
+      max_wrench.force.z * SIN8 - max_wrench.force.x * SIN8;
 
   bmb_msgs::StateCommand state_command;
   return state_command;
