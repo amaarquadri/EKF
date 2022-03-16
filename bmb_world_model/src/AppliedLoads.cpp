@@ -60,12 +60,12 @@ static Wrench<double> getGravitationalLoads(const Quaternion<double>& quat) {
   return {quat.rotate(WEIGHT), Vector3<double>{}};
 }
 
-wrench<double> wrenchFromAOA(const double& body_vel, const double& sin_aoa_xz) {
+Wrench<double> wrenchFromAOA(const double& body_vel, const double& sin_aoa_xz) {
     const double speed_xz_squared = body_vel.x*body_vel.x + body_vel.z*body_vel.z;
     return (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;
 }
 
-const wrench<double> wrenchFromAileron(const double& body_vel, const double& right_aileron_angle) {
+Wrench<double> wrenchFromAileron(const double& body_vel, const double& right_aileron_angle) {
     const double speed_xz_squared = body_vel.x*body_vel.x + body_vel.z*body_vel.z;
     // absolute value of aileron angle is used for the force models
     const double right_aileron_angle_mag =
