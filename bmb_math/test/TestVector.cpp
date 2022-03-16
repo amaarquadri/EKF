@@ -42,6 +42,12 @@ TEST(TestVector, testVector) {
     ASSERT_EQ(test_sq_int[i], (int)(test[i] * test[i]));
 }
 
+TEST(TestVector, testConstexpr) {
+  static constexpr Vector<double, 5> data{0, 1, 2, 3, 4};
+  static constexpr Vector<double, 5> other = data * 10 + data * data;
+  static_assert(other[2] == 2 * 10 + 2 * 2);
+}
+
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

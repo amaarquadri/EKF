@@ -1,6 +1,9 @@
 <launch>
-    <arg name="sim" default="true"/>
+    <!-- level 1: Control state_command -->
+    <!-- level 2: Control reference_command -->
+    <!-- level 3: Fully autonomous -->
     <arg name="level" default="1"/>
+    <arg name="sim" default="true"/>
     <arg name="omniscient" default="true"/>
     <arg name="paused" default="true"/>
 

@@ -32,6 +32,16 @@ struct Wrench {
     return {Vector3<T>{force - other.force}, Vector3<T>{torque - other.torque}};
   }
 
+  Wrench<T> operator*(const Wrench<T>& other) const {
+    // elementwise multiplication
+    return {Vector3<T>{force * other.force}, Vector3<T>{torque * other.torque}};
+  }
+
+  Wrench<T> operator/(const Wrench<T>& other) const {
+    // elementwise division
+    return {Vector3<T>{force / other.force}, Vector3<T>{torque / other.torque}};
+  }
+
   Wrench<T> operator+(const T& scalar) const {
     return {Vector3<T>{force + scalar}, Vector3<T>{torque + scalar}};
   }
@@ -56,6 +66,18 @@ struct Wrench {
   void operator-=(const Wrench<T>& other) {
     force -= other.force;
     torque -= other.torque;
+  }
+
+  void operator*=(const Wrench<T>& other) {
+    // elementwise multiplication
+    force *= other.force;
+    torque *= other.torque;
+  }
+
+  void operator/=(const Wrench<T>& other) {
+    // elementwise division
+    force /= other.force;
+    torque /= other.torque;
   }
 
   void operator+=(const T& scalar) {
