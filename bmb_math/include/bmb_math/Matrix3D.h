@@ -15,6 +15,16 @@ class Matrix3D {
 
   static constexpr Matrix3D<T, n, m, p> zeros() { return {}; }
 
+  constexpr bool operator==(const Matrix3D<T, n, m, p>& other) const {
+    for (size_t i = 0; i < n; i++)
+      if (data[i] != other[i]) return false;
+    return true;
+  }
+
+  constexpr bool operator!=(const Matrix3D<T, n, m, p>& other) const {
+    return !(*this == other);
+  }
+
   [[nodiscard]] constexpr Vector<T, n * m * p> flatten() const {
     Vector<T, n * m * p> flat_mat;
     for (size_t i = 0; i < n; i++)

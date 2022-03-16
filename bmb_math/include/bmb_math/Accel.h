@@ -27,6 +27,14 @@ struct Accel {
   constexpr Accel(const geometry_msgs::Accel& msg)
       : linear(msg.linear), angular(msg.angular) {}
 
+  constexpr bool operator==(const Accel<T>& other) const {
+    return linear == other.linear && angular == other.angular;
+  }
+
+  constexpr bool operator!=(const Accel<T>& other) const {
+    return !(*this == other);
+  }
+
   constexpr void copy_to(geometry_msgs::Accel& msg) const {
     linear.copy_to(msg.linear);
     angular.copy_to(msg.angular);

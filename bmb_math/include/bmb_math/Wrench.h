@@ -28,6 +28,14 @@ struct Wrench {
   constexpr Wrench(const geometry_msgs::Wrench& msg)
       : force(msg.force), torque(msg.torque) {}
 
+  constexpr bool operator==(const Wrench<T>& other) const {
+    return force == other.force && torque == other.torque;
+  }
+
+  constexpr bool operator!=(const Wrench<T>& other) const {
+    return !(*this == other);
+  }
+
   constexpr void copy_to(geometry_msgs::Wrench& msg) const {
     force.copy_to(msg.force);
     torque.copy_to(msg.torque);

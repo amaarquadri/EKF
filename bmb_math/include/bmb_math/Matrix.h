@@ -36,6 +36,16 @@ class Matrix {
     return *this;
   }
 
+  constexpr bool operator==(const Matrix<T, n, m>& other) const {
+    for (size_t i = 0; i < n; i++)
+      if (data[i] != other[i]) return false;
+    return true;
+  }
+
+  constexpr bool operator!=(const Matrix<T, n, m>& other) const {
+    return !(*this == other)
+  }
+
   static constexpr Matrix<T, n, m> identity() {
     /** static **/ constexpr size_t k = std::min(n, m);
     Matrix<T, n, m> output{};
