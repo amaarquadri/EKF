@@ -13,7 +13,6 @@ uint8 WX = 10
 uint8 WY = 11
 uint8 WZ = 12
 
-# pose.position, twist.linear, and twist.angular are in the absolute flat earth reference frame
-# pose.velocity is in the relative robot reference frame
+#read README.md
 geometry_msgs/Pose pose
 geometry_msgs/Twist twist
