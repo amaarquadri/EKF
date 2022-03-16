@@ -26,7 +26,7 @@ TEST(TestRuntimeDifferentiation, testRuntimeDifferentiation) {
   for (size_t i = 0; i < 4; i++)
     for (size_t j = 0; j < 4; j++) {
       jac[i][j] = mat[i]->diff("q" + std::to_string(j));
-      // std::cout << jac[i][j]->toStr() << std::endl;
+      // std::cout << jac[i][j]->toStr() << '\n';
     }
 
   Vector<ExprPtr, 3> expr{Variable::make("x"), Variable::make("y"),

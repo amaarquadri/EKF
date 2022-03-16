@@ -11,21 +11,24 @@
 #include <cmath>
 
 // aerodynamic slope constants
-static const Wrench<double> BODY_M_WRENCH{1.39627650007691, 0.320883207023485, 0,
-                                          -0.250343385330279, 0, 0};
-static const Wrench<double> AILERON_M_WRENCH{-0.0022957290598182, -0.000578264161264832, 0,
-                                             0.000218843487756994, -0.000956131027304632, -0.00015472345999439};
-static const Wrench<double> ELEVATOR_M_WRENCH{-0.00140238887889279, 0.000416516268313824, 0,
-                                              0.00147045512221362, 0, 0};
-static const Wrench<double> RUDDER_M_WRENCH{0, 0, 0, 0, 0, 0.000279918236359769};
+static constexpr Wrench<double> BODY_M_WRENCH{
+    -0.320883207023485, 0, -1.39627650007691, 0, -0.250343385330279, 0};
+static constexpr Wrench<double> AILERON_M_WRENCH{
+    -0.0331320958688885, 0,
+    0.131535586088028,   0.0547822725108043,
+    0.0125388081950779,  0.00886500122201903};
+static constexpr Wrench<double> ELEVATOR_M_WRENCH{
+    -0.0238646243046933, 0, 0.0803509547078008, 0, 0.0842508724650606, 0};
+static constexpr Wrench<double> RUDDER_M_WRENCH{0, 0, 0,
+                                            0, 0, 0.000279918236359769};
 
 // aerodynamic offset constants
-static const Wrench<double> BODY_B_WRENCH{0.204721453757253, 0.0595573697856826, 0,
-                                          0.0015675980775375, 0, 0};
+static constexpr Wrench<double> BODY_B_WRENCH{
+    -0.0595573697856826, 0, -0.204721453757253, 0, 0.0015675980775375, 0};
 
 // propeller constants
 static constexpr double THRUST_TORQUE_RATIO_PROPELLER = 1;
-static const Vector3<double> L_FRONT_PROPELLER{0, 0, 0};
+static constexpr Vector3<double> L_FRONT_PROPELLER{0, 0, 0};
 
 using bmb_utilities::saturation;
 
@@ -81,15 +84,12 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
                                       control_inputs.right_aileron_angle,
                                       control_inputs.right_aileron_angle};
 
-    // absolute value of aileron angle is used for the force models
-    const double elevator_angle_mag =
-            std::fabs(control_inputs.elevator_angle);
-    const Wrench<double> elevator_wrench{control_inputs.elevator_angle,
-                                        elevator_angle_mag,
-                                        control_inputs.elevator_angle,
-                                        control_inputs.elevator_angle,
-                                        control_inputs.elevator_angle,
-                                        control_inputs.elevator_angle};
+  // absolute value of aileron angle is used for the force models
+  const double elevator_angle_mag = std::fabs(control_inputs.elevator_angle);
+  const Wrench<double> elevator_wrench{
+      control_inputs.elevator_angle, elevator_angle_mag,
+      control_inputs.elevator_angle, control_inputs.elevator_angle,
+      control_inputs.elevator_angle, control_inputs.elevator_angle};
 
   const Wrench<double> body_loads =
       (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;

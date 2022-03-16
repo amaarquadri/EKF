@@ -70,7 +70,7 @@ class PurePursuit {
   template <typename OStream>
   void toCSV(OStream& out, const PosVelState<T>& start) const {
     PosVelState<T> state = start;
-    out << state.pos[0] << ", " << state.pos[1] << std::endl;
+    out << state.pos[0] << ", " << state.pos[1] << '\n';
 
     while (true) {
       auto [should_replan, ang_vel] = pursue(state);
@@ -78,7 +78,7 @@ class PurePursuit {
 
       state.pos += state.vel * STEP_SIZE;
       state.vel = bmb_math::getRotationMatrix(ang_vel * STEP_SIZE) * state.vel;
-      out << state.pos[0] << ", " << state.pos[1] << std::endl;
+      out << state.pos[0] << ", " << state.pos[1] << '\n';
     }
   }
 

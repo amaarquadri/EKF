@@ -49,8 +49,12 @@ class Vector {
     return true;
   }
 
+  constexpr bool operator!=(const Vector<T, n>& other) const {
+    return !(*this == other);
+  }
+
   template <typename OStream>
-  constexpr void toCSV(OStream& out) const {
+  void toCSV(OStream& out) const {
     for (int i = 0; i < n; i++) out << data[i] << '\n';
   }
 
