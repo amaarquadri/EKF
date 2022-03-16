@@ -65,8 +65,7 @@ wrench<double> wrenchFromAOA(const double& body_vel, const double& sin_aoa_xz) {
     return (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;
 }
 
-const wrench<double> wrenchFromAileron(const double& body_vel, const double& sin_aoa_xz,
-                                       const double& right_aileron_angle) {
+const wrench<double> wrenchFromAileron(const double& body_vel, const double& right_aileron_angle) {
     const double speed_xz_squared = body_vel.x*body_vel.x + body_vel.z*body_vel.z;
     // absolute value of aileron angle is used for the force models
     const double right_aileron_angle_mag =
@@ -80,8 +79,7 @@ const wrench<double> wrenchFromAileron(const double& body_vel, const double& sin
     return AILERON_M_WRENCH * aileron_wrench * speed_xz_squared;
 }
 
-const wrench<double> wrenchFromElevator(const double& body_vel, const double& sin_aoa_xz,
-                                        const double& elevator_angle) {
+const wrench<double> wrenchFromElevator(const double& body_vel, const double& elevator_angle) {
     const double speed_xz_squared = body_vel.x*body_vel.x + body_vel.z*body_vel.z;
     // absolute value of elevator angle is used for the force models
     const double elevator_angle_mag =

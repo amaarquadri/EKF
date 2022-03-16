@@ -13,15 +13,15 @@ namespace bmb_world_model {
     Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState &state,
                                    const bmb_msgs::ControlInputs &control_inputs);
 
-    const Wrench<double>wrenchFromAOA(const bmb_msgs::AircraftState &state);
+    const Wrench<double>wrenchFromAOA(const double& body_vel, const double& sin_aoa_xz);
 
     const wrench<double>
-    wrenchFromAileron(const bmb_msgs::AircraftState &state, const bmb_msgs::ControlInputs &control_inputs);
+    wrenchFromAileron(const double& body_vel, const double& right_aileron_angle);
 
     const wrench<double>
-    wrenchFromElevator(const bmb_msgs::AircraftState &state, const bmb_msgs::ControlInputs &control_inputs);
+    wrenchFromElevator(const double& body_vel, const double& elevator_angle);
 
-    const wrench<double> wrenchFromRudder(const bmb_msgs::AircraftState &state);
+    const wrench<double> wrenchFromRudder(const double& body_vel, const double& sin_aoa_xy);
 
     Matrix<double, 6, bmb_msgs::AircraftState::SIZE> bmb_world_model::getAppliedLoadsJacobian(
             const bmb_msgs::AircraftState &state,
