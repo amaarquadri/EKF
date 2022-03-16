@@ -31,7 +31,6 @@ class DubinsPathToPoint {
 
   static DubinsPathToPoint create(const PosVelState<T>& start,
                                   const Vector<T, 2>& goal, const T& radius) {
-    // TODO: implement
     // Based on:
     // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.823.5493&rep=rep1&type=pdf
     const T radius_squared = radius * radius;
@@ -44,6 +43,7 @@ class DubinsPathToPoint {
       const Vector2 d1_vec = goal - center;
       const T d1_squared = d1_vec.magnitudeSquared();
       if (d1_squared < radius_squared) {
+        // TODO: debug this case
         // LR
         const Vector2 center =
             start.pos - radius * right_dir / right_dir.magnitude();
@@ -89,6 +89,7 @@ class DubinsPathToPoint {
       const T d1_squared = d1_vec.magnitudeSquared();
       if (d1_squared < radius_squared) {
         // RL
+        // TODO: implement
         return {};
       } else {
         // LS
