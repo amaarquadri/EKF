@@ -24,8 +24,13 @@ class Quaternion : public Vector<T, 4> {
   }
 
   // allow implicit conversions
-  constexpr Quaternion(const Vector<T, 4>& vec)
-      : Quaternion(vec[0], vec[1], vec[2], vec[3]) {
+  constexpr Quaternion(const Vector<T, 4>& vec) {
+    // TODO: figure out how to use initializer list to delegate to the constexpr
+    //  Vector3 constructor in a constexpr way
+    q0 = vec[0];
+    q1 = vec[1];
+    q2 = vec[2];
+    q3 = vec[3];
   }  // NOLINT(google-explicit-constructor)
 
   // allow implicit conversions
