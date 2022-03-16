@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="aris">
+    <!--
+    The meshes are all in the NWU body-relative coordinate system
+    except that the origin is offset from the center of mass
+    -->
+
     <xacro:property name="infty" value="${1e9}"/>
 
     <!-- Needs to be large enough so Gazebo doesn't ignore the links/joints -->
@@ -65,6 +70,7 @@
             <mass value="3.3"/>
             <inertia ixx="12.327" ixy="-3.07" ixz="0.739"
                      iyy="1.711" iyz="-2.789" izz="12.659"/>
+            <origin xyz="-0.12195 0.00111 0.06595" rpy="0 0 0"/>
         </inertial>
         <collision>
             <geometry>
