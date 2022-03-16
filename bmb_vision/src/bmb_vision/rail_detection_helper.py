@@ -4,11 +4,14 @@ from sensor_msgs.msg import Image
 import numpy as np
 import cv2
 
+
+# TODO: clean up this entire class
 class RailDetectionHelper:
     def __init__(self):
         self.raw_image_sub = rospy.Subscriber("/rectified_image", Image, self.image_callback)
         self.rail_detection_pub = rospy.Publisher("/rail_detection", RailDetection, queue_size=1)
-    
+
+    @staticmethod
     def Distanceperp(x1, x3, height, m1, b1, m2, b2):
         if m1 == 0 and m2 == 0:
             distanceperp = abs(x3 - x1)
@@ -30,7 +33,7 @@ class RailDetectionHelper:
             distanceperp = abs(x2 - x1) * np.sin(angle)
         return distanceperp
 
-
+    @staticmethod
     def equationoflineVector(x1, y1, x2, y2):
         if (x2 - x1) == 0:
             m = 0
@@ -42,15 +45,16 @@ class RailDetectionHelper:
         # x=t
         # y=(m(t-b))
 
-
+    @staticmethod
     def ccw(A, B, C):
         return (C[1] - A[1]) * (B[0] - A[0]) > (B[1] - A[1]) * (C[0] - A[0])
 
-
     # Return true if line segments AB and CD intersect
+    @staticmethod
     def intersect(A, B, C, D):
         return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
 
+    @staticmethod
     def gauge_measurement(m1, b1, m2, b2):
         y = 0
         gauge = 0
@@ -62,7 +66,7 @@ class RailDetectionHelper:
         meangauge = abs(gauge / 100)
         print(f'Gauge:{meangauge}')
 
-
+    @staticmethod
     def railoffsetimagecrop(img, x0i, x0f, x1i, x1f):
         xin = round(min(x0i, x1i, x0f, x1f)) - 50
         xout = round(min(x0i, x1i, x0f, x1f)) + 65
@@ -76,10 +80,10 @@ class RailDetectionHelper:
         xtwo = 0
         mone = 0
         bone = 0
-        x_leftinside=0
-        b_leftinside=0
-        m_leftinside=0
-        left_rail_head_width=0
+        x_leftinside = 0
+        b_leftinside = 0
+        m_leftinside = 0
+        left_rail_head_width = 0
         ret, thresh = cv2.threshold(crop_img1, 50, 255, cv2.THRESH_BINARY_INV)
         ret, thresh2 = cv2.threshold(crop_img3, 80, 255, cv2.THRESH_BINARY_INV)
         thresh1 = cv2.Canny(thresh, 1500, 200, None, 3)
@@ -109,15 +113,15 @@ class RailDetectionHelper:
                     mone, bone = equationoflineVector(x1, y1, x2, y2)
                     mright1, bright1 = equationoflineVector(x1 + xin2, y1, x2 + xin2, y2)
                 else:
-                    if n2==0:
-                         continue
+                    if n2 == 0:
+                        continue
                     if rho < 0:
                         rho *= -1
                     closeness_rho = np.isclose(rho, rhoog, atol=1)
 
-                    if closeness_rho==False and np.allclose(abs(theta),abs(theta1),rtol=1)==True and \
+                    if closeness_rho == False and np.allclose(abs(theta), abs(theta1), rtol=1) == True and \
                             intersect(pt1og, pt2og, pt1, pt2) == False:
-                        success=True
+                        success = True
                         mtwo, btwo = equationoflineVector(x1, y1, x2, y2)
                         mright2, bright2 = equationoflineVector(x1 + xin2, y1, x2 + xin2, y2)
                         xthree = x1
@@ -149,20 +153,21 @@ class RailDetectionHelper:
                     pt1og = pt1
                     pt2og = pt2
                     theta1 = theta
-                    rhoog=rho
+                    rhoog = rho
                     xone = x1
                     xtwo = x2
                     mone, bone = equationoflineVector(x1, y1, x2, y2)
                     mleft1, bleft1 = equationoflineVector(x1 + xin, y1, x2 + xin, y2)
-                    success=False
+                    success = False
                 else:
                     if rho < 0:
                         rho *= -1
                     closeness_rho = np.isclose(rho, rhoog, atol=3)
-                    if closeness_rho==False and np.allclose(abs(theta), abs(theta1), rtol=1) == True and intersect(pt1og, pt2og,
-                                                                                                             pt1,
-                                                                                                             pt2) == False:
-                        success=True
+                    if closeness_rho == False and np.allclose(abs(theta), abs(theta1), rtol=1) == True and intersect(
+                            pt1og, pt2og,
+                            pt1,
+                            pt2) == False:
+                        success = True
                         mtwo, btwo = equationoflineVector(x1, y1, x2, y2)
                         mleft2, bleft2 = equationoflineVector(x1 + xin, y1, x2 + xin, y2)
                         xthree = x1
@@ -177,20 +182,22 @@ class RailDetectionHelper:
                             m_leftinside = mleft2
                             b_leftinside = bleft2
                             x_leftinside = xthree
-        meangauge = Distanceperp(x_leftinside + xin, x_rightinside + xin2, 200, m_leftinside, b_leftinside, m_rightinside,
-                                     b_rightinside)
-        if right_rail_head_width<3 or left_rail_head_width<3:
-            success=False
-        return crop_img, crop_img2, right_rail_head_width, left_rail_head_width, meangauge,success
+        meangauge = Distanceperp(x_leftinside + xin, x_rightinside + xin2, 200, m_leftinside, b_leftinside,
+                                 m_rightinside,
+                                 b_rightinside)
+        if right_rail_head_width < 3 or left_rail_head_width < 3:
+            success = False
+        return crop_img, crop_img2, right_rail_head_width, left_rail_head_width, meangauge, success
 
-
-    def linedetection(lines, img3, img, linekeep, x, crop_img, crop_img2, rightrailwidth, leftrailwidth, meangauge,success):
+    @staticmethod
+    def linedetection(lines, img3, img, linekeep, x, crop_img, crop_img2, rightrailwidth, leftrailwidth, meangauge,
+                      success):
         n2 = 0
-        crop_img3=np.copy(crop_img)
-        crop_img4=np.copy(crop_img2)
-        rightrailwidth1=rightrailwidth
-        leftrailwidth1=leftrailwidth
-        meangauge1=meangauge
+        crop_img3 = np.copy(crop_img)
+        crop_img4 = np.copy(crop_img2)
+        rightrailwidth1 = rightrailwidth
+        leftrailwidth1 = leftrailwidth
+        meangauge1 = meangauge
         for n1 in range(0, len(lines)):
             for rho, theta in lines[n1]:
                 a = np.cos(theta)
@@ -207,9 +214,9 @@ class RailDetectionHelper:
                     strong_lines[n2] = lines[n1]
                     linekeep = x1
                     m1, b1 = equationoflineVector(x1, y1, x2, y2)
-                    if m1==0:
-                        x0i=x1
-                        x0f=x2
+                    if m1 == 0:
+                        x0i = x1
+                        x0f = x2
                     else:
                         x0i = 300 / m1 + b1
                         x0f = 500 / m1 + b1
@@ -238,24 +245,23 @@ class RailDetectionHelper:
                         x1i = x1
                         x1f = x2
                         n2 = n2 + 1
-                        
-        if success == False or x % 61 == 0:
-            crop_img3, crop_img4, rightrailwidth1, leftrailwidth1, meangauge1,success = railoffsetimagecrop(img, x0i, x0f, x1i, x1f)
-        if success==True:
-            crop_img=crop_img3
-            crop_img2=crop_img4
-            rightrailwidth=rightrailwidth1
-            leftrailwidth=leftrailwidth1
-            meangauge=meangauge1
-        thetafinal=(theta1+theta)/2
-        ymid=(m1*50-b1)+(m2*50-b2)
-        xmid=50
-        return crop_img, crop_img2, rightrailwidth, leftrailwidth, meangauge,success, xmid,ymid,thetafinal
 
+        if success == False or x % 61 == 0:
+            crop_img3, crop_img4, rightrailwidth1, leftrailwidth1, meangauge1, success = railoffsetimagecrop(img, x0i,
+                                                                                                             x0f, x1i,
+                                                                                                             x1f)
+        if success == True:
+            crop_img = crop_img3
+            crop_img2 = crop_img4
+            rightrailwidth = rightrailwidth1
+            leftrailwidth = leftrailwidth1
+            meangauge = meangauge1
+        thetafinal = (theta1 + theta) / 2
+        ymid = (m1 * 50 - b1) + (m2 * 50 - b2)
+        xmid = 50
+        return crop_img, crop_img2, rightrailwidth, leftrailwidth, meangauge, success, xmid, ymid, thetafinal
 
     def image_callback(self, image):
-        # TODO: perform rail detection
-        rail_detection = RailDetection()
         x = 0
         linekeep = 500
         crop_img = np.zeros((200, 45, 3), np.uint8)
@@ -263,7 +269,7 @@ class RailDetectionHelper:
         rightrailheadwidth = 0
         leftrailheadwidth = 0
         meangauge = 0
-        success=False
+        success = False
         img = cv2.imread(image)
         img3 = np.copy(img)
         ret, img2 = cv2.threshold(img, 75, 255, cv2.THRESH_BINARY_INV)
@@ -274,17 +280,25 @@ class RailDetectionHelper:
         lines = cv2.HoughLines(dst, 1, np.pi / 180, 100, None, 500, 0)
         strong_lines = np.zeros([50, 1, 2])
         if int(0 if lines is None else 1) == 0:
-            found=False
+            found = False
 
         else:
-            crop_img, crop_img2, rightrailheadwidth, leftrailheadwidth, meangauge,success,xmid,ymid,thetafinal = linedetection(lines, img3, img,
-                                                                                                  linekeep, x, crop_img,
-                                                                                                  crop_img2,
-                                                                                                  rightrailheadwidth,
-                                                                                                  leftrailheadwidth,
-                                                                                                  meangauge,success)
-        rail_detection=(thetafinal,meangauge,xmid,ymid,success)
+            crop_img, crop_img2, rightrailheadwidth, leftrailheadwidth, meangauge, success, xmid, ymid, thetafinal = linedetection(
+                lines, img3, img,
+                linekeep, x, crop_img,
+                crop_img2,
+                rightrailheadwidth,
+                leftrailheadwidth,
+                meangauge, success)
+
+        rail_detection = RailDetection()
+        rail_detection.angle = thetafinal
+        rail_detection.pixel_width = meangauge
+        rail_detection.pixel_x = xmid
+        rail_detection.pixel_y = ymid
+        rail_detection.found = success
         self.rail_detection_pub.publish(rail_detection)
 
-    def spin(self):
+    @staticmethod
+    def spin():
         rospy.spin()
