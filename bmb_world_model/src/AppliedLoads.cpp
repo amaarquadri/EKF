@@ -107,9 +107,9 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
     const double sin_aoa_xz = b_vel.x / bmb_utilities::magnitude(b_vel.x, b_vel.z);
 
     const Wrench<double> body_loads = wrenchFromAOA(b_vel, sin_aoa_xz);
-    const Wrench<double> aileron_loads = wrenchFromAileron(state, control_inputs, sin_aoa_xz);
-    const Wrench<double> elevator_loads = wrenchFromElevator(state, control_inputs, sin_aoa_xz);
-    const Wrench<double> rudder_loads = wrenchFromRudder(state, sin_aoa_xy);
+    const Wrench<double> aileron_loads = wrenchFromAileron(state, control_inputs.right_aileron_angle);
+    const Wrench<double> elevator_loads = wrenchFromElevator(state, control_inputs.left_aileron_angle);
+    const Wrench<double> rudder_loads = wrenchFromRudder(b_vel, sin_aoa_xy);
     return body_loads + aileron_loads + elevator_loads + rudder_loads +
          getPropellerLoads(control_inputs.propeller_force) +
          getGravitationalLoads(quat);
