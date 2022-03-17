@@ -10,8 +10,8 @@ from time import perf_counter
 
 class OpticalFlow:
     def __init__(self):
-        self.image_sub = rospy.Subscriber("/rectified_image", Image, self.image_callback)
-        self.optical_flow_pub = rospy.Publisher("/optical_flow_reading", OpticalFlowReading, queue_size=1)
+        self.image_sub = rospy.Subscriber("rectified_image", Image, self.image_callback)
+        self.optical_flow_pub = rospy.Publisher("optical_flow_reading", OpticalFlowReading, queue_size=1)
         self.prvs = None
 
     def image_callback(self, image):

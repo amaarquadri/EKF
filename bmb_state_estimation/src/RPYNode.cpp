@@ -8,10 +8,10 @@
 RPYNode::RPYNode(ros::NodeHandle& nh) {
   // initialize subscribers
   aircraft_state_sub_ =
-      nh.subscribe("/aircraft_state", 1, &RPYNode::aircraftStateCallback, this);
+      nh.subscribe("aircraft_state", 1, &RPYNode::aircraftStateCallback, this);
 
   // initialize publishers
-  rpy_pub_ = nh.advertise<bmb_msgs::RPY>("/rpy", 1);
+  rpy_pub_ = nh.advertise<bmb_msgs::RPY>("rpy", 1);
 }
 
 void RPYNode::spin() { ros::spin(); }

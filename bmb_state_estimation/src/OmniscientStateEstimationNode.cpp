@@ -11,12 +11,12 @@ OmniscientStateEstimationNode::OmniscientStateEstimationNode(
     ros::NodeHandle& nh) {
   // initialize subscribers
   model_states_sub_ =
-      nh.subscribe("/gazebo/model_states", 1,
+      nh.subscribe("gazebo/model_states", 1,
                    &OmniscientStateEstimationNode::modelStatesCallback, this);
 
   // initialize publishers
   aircraft_state_pub_ =
-      nh.advertise<bmb_msgs::AircraftState>("/aircraft_state", 1);
+      nh.advertise<bmb_msgs::AircraftState>("aircraft_state", 1);
 }
 
 void OmniscientStateEstimationNode::spin() { ros::spin(); }

@@ -85,10 +85,10 @@ void ARISControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
 
   // Initialize ROS subscriber
   this->control_inputs_sub = this->nh.subscribe(
-      "/control_inputs", 1, &ARISControlPlugin::controlInputsCallback, this);
+      "control_inputs", 1, &ARISControlPlugin::controlInputsCallback, this);
 
   this->aircraft_state2_pub_ =
-      this->nh.advertise<bmb_msgs::AircraftState>("/aircraft_state2", 1);
+      this->nh.advertise<bmb_msgs::AircraftState>("aircraft_state2", 1);
 
   // initialize linear velocity to 10m/s
   // base_link->SetLinearVel(bmbToIgnitionVector3(Vector3<double>{10}));
