@@ -53,7 +53,7 @@ static Wrench<double> getPropellerLoads(const double& propeller_force) {
 }
 
 static Wrench<double> getGravitationalLoads(const Quaternion<double>& quat) {
-  return {quat.rotate(WEIGHT), Vector3<double>{}};
+  return {}; //{quat.rotate(WEIGHT), Vector3<double>{}};
 }
 
 Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
