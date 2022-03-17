@@ -20,7 +20,7 @@
 
 using namespace gazebo;
 
-static constexpr Vector3<double> COM_OFFSET{-0.12195 0.00111 0.06595};
+static constexpr Vector3<double> COM_OFFSET{-0.12195, 0.00111, 0.06595};
 
 ARISControlPlugin::~ARISControlPlugin() {
 #if GAZEBO_MAJOR_VERSION >= 8
@@ -109,13 +109,13 @@ bmb_msgs::AircraftState ARISControlPlugin::getAircraftState() const {
   bmb_msgs::AircraftState state;
   const auto pose = base_link->WorldCoGPose();
   // TODO: check coordinate system transformation
-  bmb_utilities::NWUToNED(ignitionToBMBVector3(pose.Pose()))
+  bmb_utilities::NWUToNED(ignitionToBMBVector3(pose.Pos()))
       .copyTo(state.pose.position);
   bmb_utilities::NWUToNED(ignitionToBMBQuaternion(pose.Rot()))
       .copyTo(state.pose.orientation);
   bmb_utilities::NWUToNED(ignitionToBMBVector3(base_link->RelativeLinearVel()))
       .copyTo(state.twist.linear);
-  bmb_utilties::NWUToNED(ignitionToBMBVector3(base_link->RelativeAngularVel()))
+  bmb_utilities::NWUToNED(ignitionToBMBVector3(base_link->RelativeAngularVel()))
       .copyTo(state.twist.angular);
   return state;
 }
