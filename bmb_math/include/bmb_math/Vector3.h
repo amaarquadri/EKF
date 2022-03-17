@@ -37,7 +37,7 @@ class Vector3 : public Vector<T, 3> {
   constexpr Vector3(const geometry_msgs::Vector3& msg)
       : Vector3(msg.x, msg.y, msg.z) {}  // NOLINT(google-explicit-constructor)
 
-  constexpr void copy_to(geometry_msgs::Vector3& msg) const {
+  constexpr void copyTo(geometry_msgs::Vector3& msg) const {
     msg.x = x;
     msg.y = y;
     msg.z = z;
@@ -46,7 +46,7 @@ class Vector3 : public Vector<T, 3> {
   constexpr Vector3(const geometry_msgs::Point& msg)
       : Vector3(msg.x, msg.y, msg.z) {}  // NOLINT(google-explicit-constructor)
 
-  constexpr void copy_to(geometry_msgs::Point& msg) const {
+  constexpr void copyTo(geometry_msgs::Point& msg) const {
     msg.x = x;
     msg.y = y;
     msg.z = z;

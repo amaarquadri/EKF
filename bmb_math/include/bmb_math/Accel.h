@@ -35,9 +35,9 @@ struct Accel {
     return !(*this == other);
   }
 
-  constexpr void copy_to(geometry_msgs::Accel& msg) const {
-    linear.copy_to(msg.linear);
-    angular.copy_to(msg.angular);
+  constexpr void copyTo(geometry_msgs::Accel& msg) const {
+    linear.copyTo(msg.linear);
+    angular.copyTo(msg.angular);
   }
 
   constexpr Accel<T> operator+(const Accel<T>& other) const {

@@ -38,7 +38,7 @@ class Quaternion : public Vector<T, 4> {
       : Quaternion(msg.w, msg.x, msg.y, msg.z) {
   }  // NOLINT(google-explicit-constructor)
 
-  constexpr void copy_to(geometry_msgs::Quaternion& msg) {
+  constexpr void copyTo(geometry_msgs::Quaternion& msg) {
     msg.w = q0;
     msg.x = q1;
     msg.y = q2;

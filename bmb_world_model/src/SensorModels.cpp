@@ -106,9 +106,9 @@ static void imu(const Quaternion<double>& quat,
   // TODO: implement noise stuff from here:
   // https://www.mathworks.com/help/aeroblks/threeaxisaccelerometer.html
   //  and here: https://www.mathworks.com/help/aeroblks/threeaxisgyroscope.html
-  Vector3<double>{measured_acceleration + accelerometer_bias}.copy_to(
+  Vector3<double>{measured_acceleration + accelerometer_bias}.copyTo(
       sensor_measurements.imu_reading.linear_acceleration);
-  Vector3<double>{body_ang_velocity + gyroscope_bias}.copy_to(
+  Vector3<double>{body_ang_velocity + gyroscope_bias}.copyTo(
       sensor_measurements.imu_reading.angular_velocity);
 }
 
