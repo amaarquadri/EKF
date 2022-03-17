@@ -39,6 +39,7 @@ class ARISControlPlugin : public ModelPlugin {
   // topics
   ros::NodeHandle nh;
   ros::Subscriber control_inputs_sub;
+  ros::Publisher aircraft_state2_pub_;
   bmb_msgs::ControlInputs latest_control_inputs;
   std::mutex mutex;
 };
