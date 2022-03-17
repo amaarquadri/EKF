@@ -93,7 +93,7 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
   const Wrench<double> aileron_loads =
       AILERON_M_WRENCH * aileron_wrench * speed_xz_squared;
   const Wrench<double> elevator_loads =
-      ELEVATOR_M_WRENCH * elevator_wrench * speed_xz_squared;
+      ELEVATOR_M_WRENCH * elevator_wrench * 10; // TODO: remove hardcoding
   const Wrench<double> rudder_loads =
       RUDDER_M_WRENCH * sin_aoa_xy * speed_xy_squared;
 
