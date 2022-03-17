@@ -127,6 +127,10 @@ struct Accel {
   constexpr const T& operator[](const size_t& index) const {
     return index < 3 ? linear[index] : angular[index - 3];
   }
+
+  std::string toStr() const {
+    return "{linear: " + linear.toStr() + ", angular: " + angular.toStr() + "}";
+  }
 };
 
 template <typename T>
