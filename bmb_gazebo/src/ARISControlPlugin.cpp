@@ -109,7 +109,6 @@ void ARISControlPlugin::controlInputsCallback(
 bmb_msgs::AircraftState ARISControlPlugin::getAircraftState() const {
   bmb_msgs::AircraftState state;
   const auto pose = base_link->WorldCoGPose();
-  // TODO: check coordinate system transformation
   bmb_utilities::NWUToNED(ignitionToBMBVector3(pose.Pos()))
       .copyTo(state.pose.position);
   bmb_utilities::NWUToNED(ignitionToBMBQuaternion(pose.Rot()))

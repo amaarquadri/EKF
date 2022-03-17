@@ -17,6 +17,7 @@ ROS Topics:
 - reference_command
 - state_command
 - control_inputs
+- rpy
 
 ROS Nodes:
 - camera_node

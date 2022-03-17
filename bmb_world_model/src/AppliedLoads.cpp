@@ -68,6 +68,7 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
   const double speed_xy_squared = vx_squared + b_vel.y * b_vel.y;
   const double speed_xy = std::sqrt(speed_xy_squared);
 
+  // TODO: is this safe
   const double sin_aoa_xz = speed_xz == 0 ? 0 : b_vel.z / speed_xz;
   const double sin_aoa_xy = speed_xy == 0 ? 0 : -b_vel.y / speed_xy;
 

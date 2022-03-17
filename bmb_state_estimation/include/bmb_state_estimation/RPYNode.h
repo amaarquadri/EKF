@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ros/ros.h>
 #include <bmb_msgs/AircraftState.h>
+#include <ros/ros.h>
 
 class RPYNode {
  public:
