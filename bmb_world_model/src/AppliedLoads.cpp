@@ -12,7 +12,7 @@
 
 // aerodynamic slope constants
 static constexpr Wrench<double> BODY_M_WRENCH{};
-static constexpr Wrench<double> AILERON_M_WRENCH{};
+static constexpr Wrench<double> AILERON_M_WRENCH{0, 0, 0, 0.0547822725108043};
 static constexpr Wrench<double> ELEVATOR_M_WRENCH{
     0, 0, 0, 0, 0.0842508724650606, 0};
 static constexpr Wrench<double> RUDDER_M_WRENCH{};
