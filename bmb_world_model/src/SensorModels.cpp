@@ -31,9 +31,9 @@ static void railDetection(const Quaternion<double>& quat,
     return;
   }
 
-  const Vector3<double> down_earth =
-      quat.unrotate({0, 0, 1});  // down (i.e. the direction the camera is
-                                 // pointing) in earth coordinates
+  const Vector3<double> down_earth = quat.unrotate(
+      Vector3<double>{0, 0, 1});  // down (i.e. the direction the camera is
+                                  // pointing) in earth coordinates
   if (down_earth.z < 0) {
     // cannot see rail if the plane is upside down
     return;

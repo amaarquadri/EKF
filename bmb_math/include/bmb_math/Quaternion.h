@@ -83,7 +83,7 @@ class Quaternion : public Vector<T, 4> {
     return {rotate(accel.linear), rotate(accel.angular)};
   }
 
-  constexpr Accel<T> unrotate(const Accel<T>& wrench) const {
+  constexpr Accel<T> unrotate(const Accel<T>& accel) const {
     return {unrotate(accel.linear), unrotate(accel.angular)};
   }
 
