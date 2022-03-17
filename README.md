@@ -13,7 +13,6 @@ ROS Topics:
 - imu_reading
 - gps_reading
 - aircraft_state
-- rpy
 - reference_command
 - state_command
 - control_inputs
