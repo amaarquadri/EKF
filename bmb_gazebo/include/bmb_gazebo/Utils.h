@@ -21,8 +21,8 @@ void ignitionToGeometryVector3(const T& src, V& dest) {
 }
 
 template <typename T>
-Vector3<T> ignitionToBMBVector3(const T& src) {
-  return Vector3<T>{src.X(), src.Y(), src.Z()};
+Vector3<double> ignitionToBMBVector3(const T& src) {
+  return Vector3<double>{src.X(), src.Y(), src.Z()};
 }
 
 template <typename T, typename V>
@@ -34,6 +34,6 @@ void ignitionToGeometryQuaternion(const T& src, V& dest) {
 }
 
 template <typename T>
-Quaternion<T> ignitionToBMBQuaternion(const T& src) {
-  return Quaternion<T>{src.W(), src.X(), src.Y(), src.Z()};
+Quaternion<double> ignitionToBMBQuaternion(const T& src) {
+  return Quaternion<double>{src.W(), src.X(), src.Y(), src.Z()};
 }
