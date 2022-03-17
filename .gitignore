@@ -4,4 +4,4 @@ cmake-build-debug
 /venn
 *__pycache__
 *.slxc
-*/slprj
+*slprj
