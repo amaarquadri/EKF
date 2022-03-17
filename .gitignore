@@ -3,3 +3,5 @@ cmake-build-debug
 *.pyc
 /venn
 *__pycache__
+*.slxc
+*/slprj
