@@ -109,13 +109,13 @@ bmb_msgs::AircraftState ARISControlPlugin::getAircraftState() const {
   bmb_msgs::AircraftState state;
   const auto pose = base_link->WorldCoGPose();
   // TODO: check coordinate system transformation
-  bmb_utilities::NWUtoNED(ignitionToBMBVector3(pose.Pose()))
+  bmb_utilities::NWUToNED(ignitionToBMBVector3(pose.Pose()))
       .copyTo(state.pose.position);
-  bmb_utilities::NWUtoNED(ignitionToBMBQuaternion(pose.Rot()))
+  bmb_utilities::NWUToNED(ignitionToBMBQuaternion(pose.Rot()))
       .copyTo(state.pose.orientation);
-  bmb_utilities::NWUtoNED(ignitionToBMBVector3(base_link->RelativeLinearVel()))
+  bmb_utilities::NWUToNED(ignitionToBMBVector3(base_link->RelativeLinearVel()))
       .copyTo(state.twist.linear);
-  bmb_utilties::NWUtoNED(ignitionToBMBVector3(base_link->RelativeAngularVel()))
+  bmb_utilties::NWUToNED(ignitionToBMBVector3(base_link->RelativeAngularVel()))
       .copyTo(state.twist.angular);
   return state;
 }

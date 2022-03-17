@@ -29,13 +29,13 @@ void OmniscientStateEstimationNode::modelStatesCallback(
       const auto& twist = msg.twist[i];
 
       bmb_msgs::AircraftState state;
-      bmb_utilities::NWUtoNED(Vector3<double>{pose.position})
+      bmb_utilities::NWUToNED(Vector3<double>{pose.position})
           .copyTo(state.pose.position);
-      bmb_utilities::NWUtoNED(Quaternion<double>{pose.orientation})
+      bmb_utilities::NWUToNED(Quaternion<double>{pose.orientation})
           .copyTo(state.pose.orientation);
-      bmb_utilities::NWUtoNED(Vector3<double>{twist.linear})
+      bmb_utilities::NWUToNED(Vector3<double>{twist.linear})
           .copyTo(state.twist.linear);
-      bmb_utilities::NWUtoNED(Vector3<double>{twist.angular})
+      bmb_utilities::NWUToNED(Vector3<double>{twist.angular})
           .copyTo(state.twist.angular);
       aircraft_state_pub_.publish(state);
       return;
