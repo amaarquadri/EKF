@@ -3,6 +3,7 @@
 #include <bmb_math/Vector3.h>
 #include <geometry_msgs/Wrench.h>
 #include <cstddef>
+#include <string>
 
 template <typename T>
 struct Wrench {
@@ -123,6 +124,10 @@ struct Wrench {
 
   constexpr const T& operator[](const size_t& index) const {
     return index < 3 ? force[index] : torque[index - 3];
+  }
+
+  std::string toStr() const {
+    return "{force: " + force.toStr() + ", torque: " + torque.toStr() + "}";
   }
 };
 
