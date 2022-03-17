@@ -66,7 +66,7 @@ static constexpr size_t p =
     bmb_msgs::SensorMeasurements::SIZE;  // number of sensor measurements
 
 // controller constants
-static constexpr ControllerGains THROTTLE_GAIN{1, 0, 0, 1};
+static constexpr ControllerGains THROTTLE_GAIN{3, 2, 0, 0};
 static constexpr ControllerGains ROLL_GAIN{1, 0, 0};
 static constexpr ControllerGains PITCH_GAIN{0.01, 0, 0, 0.01};
 static constexpr ControllerGains ELEVATOR_GAIN{1, 1, 1, 1};
