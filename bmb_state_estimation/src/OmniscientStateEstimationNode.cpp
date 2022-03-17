@@ -1,5 +1,8 @@
 #include "bmb_state_estimation/OmniscientStateEstimationNode.h"
+#include <bmb_math/Quaternion.h>
+#include <bmb_math/Vector3.h>
 #include <bmb_msgs/AircraftState.h>
+#include <bmb_utilities/CoordinateSystems.h>
 #include <gazebo_msgs/ModelStates.h>
 #include <ros/ros.h>
 #include <vector>
