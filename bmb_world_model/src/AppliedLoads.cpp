@@ -92,10 +92,12 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
       ELEVATOR_M_WRENCH * elevator_wrench * speed_xz_squared;
   const Wrench<double> rudder_loads =
       RUDDER_M_WRENCH * sin_aoa_xy * speed_xy_squared;
-
+/**
   return body_loads + aileron_loads + elevator_loads + rudder_loads +
          getPropellerLoads(control_inputs.propeller_force) +
          getGravitationalLoads(quat);
+         **/
+         return Wrench<double>{1e-3};
 }
 
 Matrix<double, 6, bmb_msgs::AircraftState::SIZE> getAppliedLoadsJacobian(
