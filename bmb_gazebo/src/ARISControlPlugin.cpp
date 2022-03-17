@@ -20,7 +20,8 @@
 
 using namespace gazebo;
 
-static constexpr Vector3<double> COM_OFFSET{-0.12195, 0.00111, 0.06595};
+static const auto COM_OFFSET =
+    bmbToIgntitionVector3(Vector3<double>{-0.12195, 0.00111, 0.06595});
 
 ARISControlPlugin::~ARISControlPlugin() {
 #if GAZEBO_MAJOR_VERSION >= 8
@@ -120,6 +121,15 @@ bmb_msgs::AircraftState ARISControlPlugin::getAircraftState() const {
   return state;
 }
 
+static Wrench<double> getWrench(const bmb_msgs::AircraftState& aircraft_state,
+                                const bmb_msgs::ControlInputs& control_inputs) {
+  const Wrench<double> wrench_relative =
+      getAppliedLoads(aircraft_state, control_inputs);
+  const Wrench<double> wrench_absolute =
+      Quaternion<double>{aircraft_state.pose.orientation}.unrotate(wrench);
+  return bmb_utilities::NEDToNWU(wrench_absolute);
+}
+
 void ARISControlPlugin::update() {
   // 9000RPM is max speed and 2.21kg is max force
   static constexpr double PROPELLER_FORCE_TO_VEL_RATIO =
@@ -132,14 +142,14 @@ void ARISControlPlugin::update() {
     control_inputs = this->latest_control_inputs;
   }
 
-  bmb_msgs::AircraftState state = getAircraftState();
-  aircraft_state2_pub_.publish(state);
+  //  bmb_msgs::AircraftState state = getAircraftState();
+  //  aircraft_state2_pub_.publish(state);
 
   // apply loads
-  const Wrench<double> wrench =
-      bmb_utilities::NEDToNWU(Wrench<double>{control_inputs.propeller_force});
-  base_link->AddRelativeForce(bmbToIgnitionVector3(wrench.force));
-  base_link->AddRelativeTorque(bmbToIgnitionVector3(wrench.torque));
+  const Wrench<double> wrench = getWrench(getAircraftState(), control_inputs);
+  base_link->AddForceAtRelativePosition(bmbToIgnitionVector3(wrench.force),
+                                        COM_OFFSET);
+  base_link->AddTorque(bmbToIgnitionVector3(wrench.torque));
 
   // geometric effects of the propeller and control surfaces
   this->joints[kPropeller]->SetVelocity(
