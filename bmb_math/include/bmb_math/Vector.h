@@ -49,6 +49,10 @@ class Vector {
     return true;
   }
 
+  constexpr bool operator!=(const Vector<T, n>& other) const {
+    return !(*this == other);
+  }
+
   template <typename OStream>
   void toCSV(OStream& out) const {
     for (int i = 0; i < n; i++) out << data[i] << '\n';
@@ -276,12 +280,14 @@ class Vector {
   constexpr const_iterator cend() const { return data.end(); }
 
   [[nodiscard]] std::string toStr() const {
-    if (n == 0) return "{}";
-    std::stringstream out;
-    out << "{" << data[0];
-    for (size_t i = 1; i < n; i++) out << ", " << data[i];
-    out << "}";
-    return out.str();
+    if constexpr (n == 0) return "{}";
+    else {
+      std::stringstream out;
+      out << "{" << data[0];
+      for (size_t i = 1; i < n; i++) out << ", " << data[i];
+      out << "}";
+      return out.str();
+    }
   }
 };
 

@@ -38,7 +38,7 @@ Matrix<T, 2, 2> getRotationMatrix(const Vector<T, 2>& vec) {
  */
 template <typename T>
 T atan2(const Vector<T, 2>& vec) {
-  return std::atan2(vec.y, vec.x);
+  return std::atan2(vec[1], vec[0]);
 }
 
 /**

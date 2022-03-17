@@ -7,7 +7,9 @@
 #include <bmb_utilities/MathUtils.h>
 #include <cmath>
 
+template <typename T>
 class DubinsPathToPoint {
+ public:
   using Path = std::array<DubinsCurve<T>, 2>;
   using iterator = typename Path::iterator;
   using const_iterator = typename Path::const_iterator;
@@ -29,11 +31,10 @@ class DubinsPathToPoint {
 
   static DubinsPathToPoint create(const PosVelState<T>& start,
                                   const Vector<T, 2>& goal, const T& radius) {
-    // TODO: implement
     // Based on:
     // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.823.5493&rep=rep1&type=pdf
     const T radius_squared = radius * radius;
-    const Vector2 right_dir = bmb_math::ROT_90_CW * start.vel;
+    const Vector2 right_dir = bmb_math::ROT_90_CW<T> * start.vel;
     const Vector2 p = goal - start.pos;
     if (right_dir.dot(p) > 0) {
       // goal is on the right
@@ -42,17 +43,18 @@ class DubinsPathToPoint {
       const Vector2 d1_vec = goal - center;
       const T d1_squared = d1_vec.magnitudeSquared();
       if (d1_squared < radius_squared) {
+        // TODO: debug this case
         // LR
         const Vector2 center =
             start.pos - radius * right_dir / right_dir.magnitude();
         const T x = p.dot(right_dir) / right_dir.magnitude();
         const T y = p.dot(start.vel) / start.vel.magnitude();
-        const T cos_theta2 = 1.5 - (p.magnitudeSquared() + 2 * radius * x) /
-                                       (4 * radius_squared);
+        const T cos_theta2 =
+            1 - (p.magnitudeSquared() + 2 * radius * x) / (4 * radius_squared);
         const T sin_theta2 = std::sqrt(1 - cos_theta2 * cos_theta2);
         const T cos_theta1 =
             ((2 - cos_theta2) * (x + radius) + sin_theta2 * y) /
-            ((5 - 4 * cos_theta2) * r);
+            ((5 - 4 * cos_theta2) * radius);
         const T sin_theta1 = std::sqrt(1 - cos_theta1 * cos_theta1);
         const T theta1 = std::acos(cos_theta1);
         const T theta2 = 2 * M_PI - std::acos(cos_theta2);
@@ -69,11 +71,14 @@ class DubinsPathToPoint {
         const T start_angle = bmb_math::atan2(-right_dir);
         const T dist = std::sqrt(d1_squared - radius_squared);
         const T delta_angle = bmb_utilities::normalizeAngle(
-            start_angle - std::atan2(dist, radius) - bmb_math::atan2(d1_vec));
+                                  bmb_math::atan2(d1_vec) +
+                                  std::atan2(dist, radius) - start_angle) -
+                              2 * M_PI;
 
         const DubinsCurve<T> c1{center, radius, start_angle, delta_angle};
         const DubinsCurve<T> c2{
-            center + bmb_math::polarToVec(radius, start_angle), goal};
+            center + bmb_math::polarToVec(radius, start_angle + delta_angle),
+            goal};
         return DubinsPathToPoint{{c1, c2}};
       }
     } else {
@@ -84,17 +89,21 @@ class DubinsPathToPoint {
       const T d1_squared = d1_vec.magnitudeSquared();
       if (d1_squared < radius_squared) {
         // RL
+        // TODO: implement
+        return {};
       } else {
         // LS
         const T start_angle = bmb_math::atan2(right_dir);
         const T dist = std::sqrt(d1_squared - radius_squared);
         const T delta_angle = bmb_utilities::normalizeAngle(
-            start_angle - std::atan2(dist, radius) - bmb_math::atan2(d1_vec));
+                                  bmb_math::atan2(d1_vec) -
+                                  std::atan2(dist, radius) - start_angle);
 
         const DubinsCurve<T> c1{center, radius, start_angle, delta_angle};
         const DubinsCurve<T> c2{
-            center + bmb_math::polarToVec(radius, start_angle), goal};
-        return DubinsPath{{c1, c2}};
+            center + bmb_math::polarToVec(radius, start_angle + delta_angle),
+            goal};
+        return DubinsPathToPoint{{c1, c2}};
       }
     }
   }
@@ -143,5 +152,7 @@ class DubinsPathToPoint {
   const_iterator cend() const { return path.cend(); }
 
  private:
+  using Vector2 = Vector<T, 2>;
+
   Path path;
 };
