@@ -36,9 +36,9 @@ struct Wrench {
     return !(*this == other);
   }
 
-  constexpr void copy_to(geometry_msgs::Wrench& msg) const {
-    force.copy_to(msg.force);
-    torque.copy_to(msg.torque);
+  constexpr void copyTo(geometry_msgs::Wrench& msg) const {
+    force.copyTo(msg.force);
+    torque.copyTo(msg.torque);
   }
 
   constexpr Wrench<T> operator+(const Wrench<T>& other) const {
