@@ -1,7 +1,9 @@
 #pragma once
 
+#include <bmb_math/Accel.h>
 #include <bmb_math/Matrix.h>
 #include <bmb_math/Vector3.h>
+#include <bmb_math/Wrench.h>
 #include <geometry_msgs/Quaternion.h>
 
 template <typename T>
@@ -67,6 +69,22 @@ class Quaternion : public Vector<T, 4> {
 
   constexpr Vector3<T> unrotate(const Vector3<T>& vec) const {
     return this->cong().rotate(vec);
+  }
+
+  constexpr Wrench<T> rotate(const Wrench<T>& wrench) const {
+    return {rotate(wrench.force), rotate(wrench.torque)};
+  }
+
+  constexpr Wrench<T> unrotate(const Wrench<T>& wrench) const {
+    return {unrotate(wrench.force), unrotate(wrench.torque)};
+  }
+
+  constexpr Accel<T> rotate(const Accel<T>& accel) const {
+    return {rotate(accel.linear), rotate(accel.angular)};
+  }
+
+  constexpr Accel<T> unrotate(const Accel<T>& accel) const {
+    return {unrotate(accel.linear), unrotate(accel.angular)};
   }
 
   T getRoll() const {
