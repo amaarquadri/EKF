@@ -20,7 +20,7 @@ static constexpr Wrench<double> AILERON_M_WRENCH{
 static constexpr Wrench<double> ELEVATOR_M_WRENCH{
     -0.0238646243046933, 0, 0.0803509547078008, 0, 0.0842508724650606, 0};
 static constexpr Wrench<double> RUDDER_M_WRENCH{0, 0, 0,
-                                            0, 0, 0.000279918236359769};
+                                                0, 0, 0.000279918236359769};
 
 // aerodynamic offset constants
 static constexpr Wrench<double> BODY_B_WRENCH{
@@ -70,9 +70,13 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
 
   const double vx_squared = b_vel.x * b_vel.x;
   const double speed_xz_squared = vx_squared + b_vel.z * b_vel.z;
+  const double speed_xz = std::sqrt(speed_xz_squared);
   const double speed_xy_squared = vx_squared + b_vel.y * b_vel.y;
-  const double sin_aoa_xz = b_vel.z / std::sqrt(speed_xz_squared);
-  const double sin_aoa_xy = -b_vel.y / std::sqrt(speed_xy_squared);
+  const double speed_xy = std::sqrt(speed_xy_squared);
+
+  // TODO: is this safe
+  const double sin_aoa_xz = speed_xz == 0 ? 0 : b_vel.z / speed_xz;
+  const double sin_aoa_xy = speed_xy == 0 ? 0 : -b_vel.y / speed_xy;
 
   // absolute value of aileron angle is used for the force models
   const double right_aileron_angle_mag =
