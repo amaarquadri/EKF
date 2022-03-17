@@ -53,7 +53,7 @@ static Wrench<double> getPropellerLoads(const double& propeller_force) {
 }
 
 static Wrench<double> getGravitationalLoads(const Quaternion<double>& quat) {
-  return {}; //{quat.rotate(WEIGHT), Vector3<double>{}};
+  return {};  //{quat.rotate(WEIGHT), Vector3<double>{}};
 }
 
 Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
@@ -63,9 +63,12 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
 
   const double vx_squared = b_vel.x * b_vel.x;
   const double speed_xz_squared = vx_squared + b_vel.z * b_vel.z;
+  const double speed_xz = std::sqrt(speed_xz_squared);
   const double speed_xy_squared = vx_squared + b_vel.y * b_vel.y;
-  const double sin_aoa_xz = b_vel.z / std::sqrt(speed_xz_squared);
-  const double sin_aoa_xy = -b_vel.y / std::sqrt(speed_xy_squared);
+  const double speed_xy = std::sqrt(speed_xy_squared);
+
+  const double sin_aoa_xz = speed_xz == 0 ? 0 : b_vel.z / speed_xz;
+  const double sin_aoa_xy = speed_xy == 0 ? 0 : -b_vel.y / speed_xy;
 
   // absolute value of aileron angle is used for the force models
   const double right_aileron_angle_mag =
@@ -92,12 +95,10 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
       ELEVATOR_M_WRENCH * elevator_wrench * speed_xz_squared;
   const Wrench<double> rudder_loads =
       RUDDER_M_WRENCH * sin_aoa_xy * speed_xy_squared;
-/**
+
   return body_loads + aileron_loads + elevator_loads + rudder_loads +
          getPropellerLoads(control_inputs.propeller_force) +
          getGravitationalLoads(quat);
-         **/
-         return Wrench<double>{1e-3};
 }
 
 Matrix<double, 6, bmb_msgs::AircraftState::SIZE> getAppliedLoadsJacobian(
