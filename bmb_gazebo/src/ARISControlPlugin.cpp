@@ -20,7 +20,7 @@
 
 using namespace gazebo;
 
-static constexpr Vector3<double>{};
+static constexpr Vector3<double> COM_OFFSET{-0.12195 0.00111 0.06595};
 
 ARISControlPlugin::~ARISControlPlugin() {
 #if GAZEBO_MAJOR_VERSION >= 8
