@@ -16,6 +16,7 @@ ROS Topics:
 - reference_command
 - state_command
 - control_inputs
+- rpy
 
 ROS Nodes:
 - camera_node
@@ -32,6 +33,7 @@ ROS Nodes:
 - propeller_node
 - aileron_node
 - elevator_node
+- rpy_node
 
 Reference Frames:
 - NED (north, east, down) absolute reference frame: 
