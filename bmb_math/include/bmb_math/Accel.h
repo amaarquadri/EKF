@@ -2,6 +2,7 @@
 
 #include <bmb_math/Vector3.h>
 #include <geometry_msgs/Accel.h>
+#include <string>
 
 template <typename T>
 struct Accel {

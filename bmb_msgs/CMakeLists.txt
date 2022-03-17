@@ -60,7 +60,6 @@ add_message_files(
   RPY.msg
   SensorMeasurements.msg
   StateCommand.msg
-  RPY.msg
 )
 
 ## Generate services in the 'srv' folder
