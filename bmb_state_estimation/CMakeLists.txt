@@ -151,6 +151,10 @@ add_executable(omniscient_state_estimation_node src/OmniscientStateEstimationNod
 target_link_libraries(omniscient_state_estimation_node ${PROJECT_NAME} ${catkin_LIBRARIES})
 add_dependencies(omniscient_state_estimation_node ${catkin_EXPORTED_TARGETS})
 
+add_executable(rpy_node src/RPYNode.cpp)
+target_link_libraries(rpy_node ${PROJECT_NAME} ${catkin_LIBRARIES})
+add_dependencies(rpy_node ${catkin_EXPORTED_TARGETS})
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -182,7 +186,7 @@ add_dependencies(omniscient_state_estimation_node ${catkin_EXPORTED_TARGETS})
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
-install(TARGETS state_estimation_node
+install(TARGETS state_estimation_node omniscient_state_estimation_node rpy_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

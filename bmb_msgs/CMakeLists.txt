@@ -59,6 +59,7 @@ add_message_files(
   ReferenceCommand.msg
   SensorMeasurements.msg
   StateCommand.msg
+  RPY.msg
 )
 
 ## Generate services in the 'srv' folder

@@ -5,4 +5,5 @@
           output="screen" unless="$(arg omniscient)"/>
     <node name="omniscient_state_estimation_node" pkg="bmb_state_estimation"
           type="omniscient_state_estimation_node" output="screen" if="$(arg omniscient)"/>
+    <node name="rpy_node" pkg="bmb_state_estimation" type="rpy_node" output="screen"/>
 </launch>
