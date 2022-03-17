@@ -35,8 +35,8 @@ class PIDFFController {
   }
 
   T update(const T& actual, const T& expected) {
-    const double error = actual - expected;
+    const double error = expected - actual;
     return gains.kp * error + I.next_output(error) + D.next_output(error) +
-           gains.kff * actual;
+           gains.kff * expected;
   }
 };
