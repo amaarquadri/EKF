@@ -17,4 +17,7 @@
     <include file="$(find bmb_control)/launch/keyboard_control.launch">
         <arg name="level" value="$(arg level)"/>
     </include>
+    <include file="$(find bmb_state_estimation)/launch/state_estimation.launch">
+        <arg name="omniscient" value="$(arg omniscient)"/>
+    </include>
 </launch>
