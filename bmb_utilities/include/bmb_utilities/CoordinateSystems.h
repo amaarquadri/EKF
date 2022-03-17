@@ -18,14 +18,14 @@ Vector3<T> NWUToNED(const Vector3<T>& vec) {
 
 template <typename T>
 Quaternion<T> NEDToNWU(const Quaternion<T>& quat) {
-  // 180 degree rotation about x axis
-  return Quaternion<T>{0, 1, 0, 0} * quat;
+  // negate the y and z axis components
+  return Quaternion<T>{quat.q0, quat.q1, -quat.q2, -quat.q3};
 }
 
 template <typename T>
 Quaternion<T> NWUToNED(const Quaternion<T>& quat) {
-  // multiply by 180-degree rotation about x-axis
-  return Quaternion<T>{0, 1, 0, 0} * quat;
+  // negate the y and z axis components
+  return Quaternion<T>{quat.q0, quat.q1, -quat.q2, -quat.q3};
 }
 
 template <typename T>
