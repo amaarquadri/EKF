@@ -13,6 +13,7 @@ ROS Topics:
 - imu_reading
 - gps_reading
 - aircraft_state
+- rpy
 - reference_command
 - state_command
 - control_inputs
@@ -32,6 +33,7 @@ ROS Nodes:
 - propeller_node
 - aileron_node
 - elevator_node
+- rpy_node
 
 Reference Frames:
 - NED (north, east, down) absolute reference frame: 
