@@ -18,18 +18,18 @@
 
 SimSensorsNode::SimSensorsNode(ros::NodeHandle& nh) {
   // initialize subscribers
-  model_states_sub_ = nh.subscribe("/gazebo/model_states", 1,
+  model_states_sub_ = nh.subscribe("gazebo/model_states", 1,
                                    &SimSensorsNode::modelStatesCallback, this);
 
   // initialize publishers
   pressure_sensor_pub_ =
-      nh.advertise<sensor_msgs::FluidPressure>("/pressure_sensor_reading", 1);
-  imu_pub_ = nh.advertise<sensor_msgs::Imu>("/imu_reading", 1);
-  gps_pub_ = nh.advertise<sensor_msgs::NavSatFix>("/gps_reading", 1);
+      nh.advertise<sensor_msgs::FluidPressure>("pressure_sensor_reading", 1);
+  imu_pub_ = nh.advertise<sensor_msgs::Imu>("imu_reading", 1);
+  gps_pub_ = nh.advertise<sensor_msgs::NavSatFix>("gps_reading", 1);
   rail_detection_pub_ =
-      nh.advertise<bmb_msgs::RailDetection>("/rail_detection", 1);
+      nh.advertise<bmb_msgs::RailDetection>("rail_detection", 1);
   optical_flow_pub_ =
-      nh.advertise<bmb_msgs::OpticalFlowReading>("/optical_flow_reading", 1);
+      nh.advertise<bmb_msgs::OpticalFlowReading>("optical_flow_reading", 1);
 }
 
 void SimSensorsNode::spin() { ros::spin(); }

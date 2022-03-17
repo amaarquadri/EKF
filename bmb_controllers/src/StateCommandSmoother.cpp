@@ -6,11 +6,6 @@
 static constexpr double MAX_ACCELERATION = 3;  // m/s^2
 
 /**
- * Based on max wing tip velocity of 0.1m/s and a 2m wingspan.
- */
-static constexpr double MAX_ROLL_RATE = 0.1;  // rad/s
-
-/**
  * Based on max tail velocity of 0.3m/s and a 1.3m distance from the rotation
  * axis to the tail.
  */
@@ -25,14 +20,7 @@ static constexpr double MAX_PITCH_RATE = 0.3 / 1.3;  // rad/s
 static const TransferFunction<double, 1, 2> SPEED_SMOOTHER{
     1, 10 / MAX_ACCELERATION, 1};
 
-/**
- * Based on a  most aggressive command of changing from -45 degrees to +45
- * degrees. This is a step input of 90 degrees.
- * Setting the time constant to 90 degrees / MAX_ROLL_RATE ensures that in this
- * worst case scenario the roll rate will equal the MAX_ROLL_RATE.
- */
-static const TransferFunction<double, 1, 2> ROLL_SMOOTHER{
-    1, bmb_utilities::deg2rad(90) / MAX_ROLL_RATE, 1};
+static const TransferFunction<double, 1, 2> ROLL_SMOOTHER{1, 2, 1};
 
 /**
  * Based on a most aggressive command of changing from -7 degrees to +8 degrees.

@@ -57,6 +57,7 @@ add_message_files(
   OpticalFlowReading.msg
   RailDetection.msg
   ReferenceCommand.msg
+  RPY.msg
   SensorMeasurements.msg
   StateCommand.msg
 )

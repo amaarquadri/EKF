@@ -8,8 +8,8 @@ import cv2
 # TODO: clean up this entire class
 class RailDetectionHelper:
     def __init__(self):
-        self.raw_image_sub = rospy.Subscriber("/rectified_image", Image, self.image_callback)
-        self.rail_detection_pub = rospy.Publisher("/rail_detection", RailDetection, queue_size=1)
+        self.raw_image_sub = rospy.Subscriber("rectified_image", Image, self.image_callback)
+        self.rail_detection_pub = rospy.Publisher("rail_detection", RailDetection, queue_size=1)
 
     @staticmethod
     def Distanceperp(x1, x3, height, m1, b1, m2, b2):

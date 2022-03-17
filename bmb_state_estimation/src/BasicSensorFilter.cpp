@@ -18,15 +18,15 @@ void BasicSensorFilter::update(
   Vector3<double> position;
   // TODO: x and y based on GPS
   position.z = -sensor_measurements.gps_reading.altitude;
-  position.copy_to(state.pose.position);
+  position.copyTo(state.pose.position);
 
   Quaternion<double> orientation =
       last_orientation + last_orientation.E().transpose() * w_abs * (dt / 2);
   orientation.normalize();
-  orientation.copy_to(state.pose.orientation);
+  orientation.copyTo(state.pose.orientation);
 
   const Vector3<double> velocity = (position - last_position) / dt;
-  velocity.copy_to(state.twist.linear);
+  velocity.copyTo(state.twist.linear);
   state.twist.angular = sensor_measurements.imu_reading.angular_velocity;
 }
 

@@ -2,6 +2,7 @@
 
 #include <bmb_math/Vector3.h>
 #include <geometry_msgs/Accel.h>
+#include <string>
 
 template <typename T>
 struct Accel {
@@ -35,9 +36,9 @@ struct Accel {
     return !(*this == other);
   }
 
-  constexpr void copy_to(geometry_msgs::Accel& msg) const {
-    linear.copy_to(msg.linear);
-    angular.copy_to(msg.angular);
+  constexpr void copyTo(geometry_msgs::Accel& msg) const {
+    linear.copyTo(msg.linear);
+    angular.copyTo(msg.angular);
   }
 
   constexpr Accel<T> operator+(const Accel<T>& other) const {
@@ -126,6 +127,10 @@ struct Accel {
 
   constexpr const T& operator[](const size_t& index) const {
     return index < 3 ? linear[index] : angular[index - 3];
+  }
+
+  std::string toStr() const {
+    return "{linear: " + linear.toStr() + ", angular: " + angular.toStr() + "}";
   }
 };
 

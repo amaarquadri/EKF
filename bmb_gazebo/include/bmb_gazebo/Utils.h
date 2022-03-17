@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bmb_math/Quaternion.h>
 #include <bmb_math/Vector3.h>
 #include <ignition/math/Vector3.hh>
 
@@ -19,10 +20,20 @@ void ignitionToGeometryVector3(const T& src, V& dest) {
   dest.z = src.Z();
 }
 
+template <typename T>
+Vector3<double> ignitionToBMBVector3(const T& src) {
+  return Vector3<double>{src.X(), src.Y(), src.Z()};
+}
+
 template <typename T, typename V>
 void ignitionToGeometryQuaternion(const T& src, V& dest) {
   dest.w = src.W();
   dest.x = src.X();
   dest.y = src.Y();
   dest.z = src.Z();
+}
+
+template <typename T>
+Quaternion<double> ignitionToBMBQuaternion(const T& src) {
+  return Quaternion<double>{src.W(), src.X(), src.Y(), src.Z()};
 }
