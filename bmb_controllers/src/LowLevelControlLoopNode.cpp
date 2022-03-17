@@ -40,10 +40,10 @@ bmb_msgs::ControlInputs LowLevelControlLoopNode::getControlInputs() {
   bmb_msgs::ControlInputs control_inputs{};
   control_inputs.propeller_force = speed_pid.update(
       latest_aircraft_state.twist.linear.x, smoothed_command.speed);
-  control_inputs.right_aileron_angle =
-      roll_pid.update(roll, smoothed_command.roll);
-  control_inputs.elevator_angle =
-      pitch_pid.update(pitch, smoothed_command.pitch);
+  control_inputs.right_aileron_angle = 0;
+//      roll_pid.update(roll, smoothed_command.roll);
+  control_inputs.elevator_angle = 0;
+//      pitch_pid.update(pitch, smoothed_command.pitch);
   return control_inputs;
 }
 

@@ -17,7 +17,7 @@ static constexpr Wrench<double> ELEVATOR_M_WRENCH{};
 static constexpr Wrench<double> RUDDER_M_WRENCH{};
 
 // aerodynamic offset constants
-static constexpr Wrench<double> BODY_B_WRENCH{};
+static constexpr Wrench<double> BODY_B_WRENCH{-0.0595573697856826};
 
 // propeller constants
 static constexpr double THRUST_TORQUE_RATIO_PROPELLER = 0;
