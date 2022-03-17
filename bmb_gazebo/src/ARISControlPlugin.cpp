@@ -20,6 +20,9 @@
 
 using namespace gazebo;
 
+static const auto COM_OFFSET =
+    bmbToIgnitionVector3(Vector3<double>{-0.12195, 0.00111, 0.06595});
+
 ARISControlPlugin::~ARISControlPlugin() {
 #if GAZEBO_MAJOR_VERSION >= 8
   this->update_connection.reset();
@@ -82,7 +85,7 @@ void ARISControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
 
   // Initialize ROS subscriber
   this->control_inputs_sub = this->nh.subscribe(
-      "/control_inputs", 1, &ARISControlPlugin::controlInputsCallback, this);
+      "control_inputs", 1, &ARISControlPlugin::controlInputsCallback, this);
 
   // initialize linear velocity to 10m/s
   base_link->SetLinearVel(bmbToIgnitionVector3(Vector3<double>{10}));
@@ -103,13 +106,26 @@ void ARISControlPlugin::controlInputsCallback(
 bmb_msgs::AircraftState ARISControlPlugin::getAircraftState() const {
   bmb_msgs::AircraftState state;
   const auto pose = base_link->WorldCoGPose();
-  // TODO: check coordinate system transformation
-  ignitionToGeometryVector3(pose.Pos(), state.pose.position);
-  ignitionToGeometryQuaternion(pose.Rot(), state.pose.orientation);
-  ignitionToGeometryVector3(base_link->RelativeLinearVel(), state.twist.linear);
-  ignitionToGeometryVector3(base_link->RelativeAngularVel(),
-                            state.twist.angular);
+  bmb_utilities::NWUToNED(ignitionToBMBVector3(pose.Pos()))
+      .copyTo(state.pose.position);
+  bmb_utilities::NWUToNED(ignitionToBMBQuaternion(pose.Rot()))
+      .copyTo(state.pose.orientation);
+  bmb_utilities::NWUToNED(ignitionToBMBVector3(base_link->RelativeLinearVel()))
+      .copyTo(state.twist.linear);
+  bmb_utilities::NWUToNED(ignitionToBMBVector3(base_link->RelativeAngularVel()))
+      .copyTo(state.twist.angular);
   return state;
+}
+
+static Wrench<double> getWrench(const bmb_msgs::AircraftState& aircraft_state,
+                                const bmb_msgs::ControlInputs& control_inputs) {
+  const Wrench<double> wrench_relative =
+      getAppliedLoads(aircraft_state, control_inputs);
+  ROS_INFO_STREAM(wrench_relative.toStr());
+  const Wrench<double> wrench_absolute =
+      Quaternion<double>{aircraft_state.pose.orientation}.unrotate(
+          wrench_relative);
+  return bmb_utilities::NEDToNWU(wrench_absolute);
 }
 
 void ARISControlPlugin::update() {
@@ -125,10 +141,10 @@ void ARISControlPlugin::update() {
   }
 
   // apply loads
-  const Wrench<double> wrench = bmb_utilities::NEDToNWU(
-      getAppliedLoads(getAircraftState(), control_inputs));
-  base_link->AddRelativeForce(bmbToIgnitionVector3(wrench.force));
-  base_link->AddRelativeTorque(bmbToIgnitionVector3(wrench.torque));
+  const Wrench<double> wrench = getWrench(getAircraftState(), control_inputs);
+  base_link->AddForceAtRelativePosition(bmbToIgnitionVector3(wrench.force),
+                                        COM_OFFSET);
+  base_link->AddTorque(bmbToIgnitionVector3(wrench.torque));
 
   // geometric effects of the propeller and control surfaces
   this->joints[kPropeller]->SetVelocity(
