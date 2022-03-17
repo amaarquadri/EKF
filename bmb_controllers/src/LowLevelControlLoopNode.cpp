@@ -30,20 +30,19 @@ LowLevelControlLoopNode::LowLevelControlLoopNode(ros::NodeHandle& nh,
 }
 
 bmb_msgs::ControlInputs LowLevelControlLoopNode::getControlInputs() {
-  const bmb_msgs::StateCommand smoothed_command =
-      smoother.getSmoothedStateCommand(latest_state_command);
+  const bmb_msgs::StateCommand smoothed_command = latest_state_command;
 
   const Quaternion<double> orientation{latest_aircraft_state.pose.orientation};
   const double pitch = orientation.getPitch();
   const double roll = orientation.getRoll();
 
   bmb_msgs::ControlInputs control_inputs{};
-  control_inputs.propeller_force = speed_pid.update(
-      latest_aircraft_state.twist.linear.x, smoothed_command.speed);
+  control_inputs.propeller_force =
+      -0.2 * (latest_aircraft_state.twist.linear.x - smoothed_command.speed);
   control_inputs.right_aileron_angle = 0;
-//      roll_pid.update(roll, smoothed_command.roll);
+  //      roll_pid.update(roll, smoothed_command.roll);
   control_inputs.elevator_angle = 0;
-//      pitch_pid.update(pitch, smoothed_command.pitch);
+  //      pitch_pid.update(pitch, smoothed_command.pitch);
   return control_inputs;
 }
 
