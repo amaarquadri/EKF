@@ -13,7 +13,7 @@ class PIDFFController {
  public:
   PIDFFController() = default;
 
-  PIDFFController(const ControllerGains& gains, const double& dt)
+  PIDFFController(const ControllerGains& gains, const double& dt=1e-3)
       : gains(gains) {
     // TODO: combine into single transfer function
     I = gains.ki * TransferFunction<T, 2, 2>{

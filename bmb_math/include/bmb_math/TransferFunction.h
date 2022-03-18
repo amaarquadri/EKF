@@ -12,7 +12,7 @@ class TransferFunction : public RationalFunction<T, n, m> {
   static_assert(m >= n, "Transfer function is not proper!");
   static_assert(n != 0 && m != 0,
                 "Numerator and denominator must have at least 1 element!");
-
+  bool discrete = false;
   Vector<T, m>
       past_inputs;  // only use the n oldest of these values at each time step
   Vector<T, m - 1> past_outputs;
@@ -71,6 +71,7 @@ class TransferFunction : public RationalFunction<T, n, m> {
 
     TransferFunction<T, p, q> discretized = this->_of_(trapezoidal);
     discretized.normalize();
+    discretized.discrete = true;
     return discretized;
   }
 
@@ -78,6 +79,7 @@ class TransferFunction : public RationalFunction<T, n, m> {
    * The output should not be used in algebraic loops if n == m
    */
   T next_output(const T& input) {
+    assert(this->discrete);
     T next_output = static_cast<T>(0);
     past_inputs = past_inputs.pushFrontPopBack(input);
     for (size_t i = 0; i < m - 1; i++)
@@ -91,6 +93,7 @@ class TransferFunction : public RationalFunction<T, n, m> {
 
   template <size_t output_size>
   Vector<T, output_size> step() {
+    assert(this->discrete);
     Vector<T, output_size> step_response;
     for (size_t i = 0; i < output_size; i++)
       step_response[i] = next_output(static_cast<T>(1));
