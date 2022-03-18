@@ -3,22 +3,13 @@
 #include <bmb_msgs/StateCommand.h>
 #include <bmb_utilities/MathUtils.h>
 
-static constexpr double MAX_ACCELERATION = 3;  // m/s^2
-
 /**
  * Based on max tail velocity of 0.3m/s and a 1.3m distance from the rotation
  * axis to the tail.
  */
 static constexpr double MAX_PITCH_RATE = 0.3 / 1.3;  // rad/s
 
-/**
- * Based on a most aggressive command of changing from 10m/s degrees to 20m/s
- * degrees. This is a step input of 10m/s.
- * Setting the time constant to 10m/s / MAX_ACCELERATION ensures that in this
- * worst case scenario the roll rate will equal the MAX_ROLL_RATE.
- */
-static const TransferFunction<double, 1, 2> SPEED_SMOOTHER{
-    1, 10 / MAX_ACCELERATION, 1};
+static const TransferFunction<double, 1, 2> SPEED_SMOOTHER{1, 0.1, 1};
 
 static const TransferFunction<double, 1, 2> ROLL_SMOOTHER{1, 2, 1};
 
