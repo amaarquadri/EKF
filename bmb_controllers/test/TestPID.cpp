@@ -5,6 +5,8 @@
 #include <bmb_utilities/MathUtils.h>
 #include <gtest/gtest.h>
 #include <cmath>
+#include <ros/package.h>
+#include <fstream>
 
 TEST(TestPID, testPID) {
   TransferFunction<double, 1, 2> first_order = {1, 1, 2};
