@@ -89,12 +89,12 @@ class Quaternion : public Vector<T, 4> {
 
   T getRoll() const {
     const double sinr_cosp = 2 * (q0 * q1 + q2 * q3);
-    const double cosr_cosp = 1 - 2 * (q0 * q1 + q2 * q3);
+    const double cosr_cosp = 1 - 2 * (q1 * q1 + q2 * q2);
     return std::atan2(sinr_cosp, cosr_cosp);
   }
 
   T getPitch() const {
-    const double sinp = 2 * (q0 * q1 - q2 * q3);
+    const double sinp = 2 * (q0 * q2 - q3 * q1);
     if (std::abs(sinp) >= 1)
       return std::copysign(M_PI / 2, sinp);  // use 90 degrees if out of range
     else
@@ -102,8 +102,8 @@ class Quaternion : public Vector<T, 4> {
   }
 
   T getYaw() const {
-    const double siny_cosp = 2 * (q0 * q1 + q2 * q3);
-    const double cosy_cosp = 1 - 2 * (q0 * q1 + q2 * q3);
+    const double siny_cosp = 2 * (q0 * q3 + q1 * q2);
+    const double cosy_cosp = 1 - 2 * (q2 * q2 + q3 * q3);
     return std::atan2(siny_cosp, cosy_cosp);
   }
 
