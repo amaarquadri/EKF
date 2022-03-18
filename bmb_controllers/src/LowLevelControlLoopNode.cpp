@@ -47,7 +47,7 @@ bmb_msgs::ControlInputs LowLevelControlLoopNode::getControlInputs() {
   control_inputs.propeller_force =
       std::clamp(speed_pid.update(latest_aircraft_state.twist.linear.x,
                                   smoothed_command.speed),
-                 0, MAX_PROPELLER_FORCE);
+                 0.0, MAX_PROPELLER_FORCE);
   control_inputs.right_aileron_angle =
       std::clamp(roll_pid.update(roll, smoothed_command.roll),
                  -MAX_AILERON_ANGLE, MAX_AILERON_ANGLE);
