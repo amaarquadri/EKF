@@ -17,6 +17,8 @@ class TransferFunction : public RationalFunction<T, n, m> {
       past_inputs;  // only use the n oldest of these values at each time step
   Vector<T, m - 1> past_outputs;
 
+  template <typename, size_t, size_t>
+  friend class TransferFunction;
  public:
   TransferFunction() = default;
 
