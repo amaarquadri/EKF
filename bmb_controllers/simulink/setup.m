@@ -10,3 +10,4 @@ drag_b = 0.0595573697856826;
 elevator_m = 0.0842508724650606;
 body_pitch_b = 0.0015675980775375;
 body_pitch_m = -0.250343385330279;
+initial_roll = asin(-body_pitch_b / body_pitch_m); % for pitch PID
