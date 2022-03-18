@@ -17,7 +17,7 @@ TEST(TestPID, testPID) {
   const int N = time / dt;
   const double M_PI_6 = M_PI / 6.0;
 
-  PIDFFController rollPID(rollPIDGains, dt);
+  PIDFFController<double> rollPID(rollPIDGains, dt);
   auto discrete_first_order = first_order.discretize(dt);
   auto discrete_double_integrator = double_integrator.discretize(dt);
 
