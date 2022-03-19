@@ -41,6 +41,14 @@ struct Accel {
     angular.copyTo(msg.angular);
   }
 
+  constexpr Accel<T> operator+() const {
+    return {Vector3<T>{+linear}, Vector3<T>{+angular}};
+  }
+
+  constexpr Accel<T> operator-() const {
+    return {Vector3<T>{-linear}, Vector3<T>{-angular}};
+  }
+
   constexpr Accel<T> operator+(const Accel<T>& other) const {
     return {Vector3<T>{linear + other.linear},
             Vector3<T>{angular + other.angular}};
