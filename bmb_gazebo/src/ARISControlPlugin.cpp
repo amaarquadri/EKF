@@ -156,11 +156,11 @@ void ARISControlPlugin::update() {
   this->joints[kPropeller]->SetVelocity(
       0, PROPELLER_FORCE_TO_VEL_RATIO * control_inputs.propeller_force);
 #if GAZEBO_MAJOR_VERSION >= 8
-  this->joints[kRightAileron]->SetPosition(0,
-                                           control_inputs.right_aileron_angle);
-  this->joints[kLeftAileron]->SetPosition(0,
-                                          -control_inputs.right_aileron_angle);
-  this->joints[kElevator]->SetPosition(0, control_inputs.elevator_angle);
+  this->joints[kRightAileron]->SetPosition(
+      0, control_inputs.right_aileron_angle, true);
+  this->joints[kLeftAileron]->SetPosition(
+      0, -control_inputs.right_aileron_angle, true);
+  this->joints[kElevator]->SetPosition(0, control_inputs.elevator_angle, true);
 #else
   this->joints[kRightAileron]->SetAngle(0, control_inputs.right_aileron_angle);
   this->joints[kLeftAileron]->SetAngle(0, -control_inputs.right_aileron_angle);
