@@ -78,8 +78,8 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
   const Wrench<double> aileron_wrench{right_aileron_angle_mag,
                                       right_aileron_angle_mag,
                                       right_aileron_angle_mag,
-                                      right_aileron_angle_mag,
                                       control_inputs.right_aileron_angle,
+                                      right_aileron_angle_mag,
                                       control_inputs.right_aileron_angle};
 
   // absolute value of aileron angle is used for the force models
