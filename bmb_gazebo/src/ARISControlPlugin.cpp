@@ -87,9 +87,6 @@ void ARISControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
   this->control_inputs_sub = this->nh.subscribe(
       "control_inputs", 1, &ARISControlPlugin::controlInputsCallback, this);
 
-  this->aircraft_state2_pub_ =
-      this->nh.advertise<bmb_msgs::AircraftState>("aircraft_state2", 1);
-
   // initialize linear velocity to 10m/s
   // base_link->SetLinearVel(bmbToIgnitionVector3(Vector3<double>{10}));
 
@@ -142,9 +139,6 @@ void ARISControlPlugin::update() {
     std::lock_guard<std::mutex> lock(this->mutex);
     control_inputs = this->latest_control_inputs;
   }
-
-  //  bmb_msgs::AircraftState state = getAircraftState();
-  //  aircraft_state2_pub_.publish(state);
 
   // apply loads
   const Wrench<double> wrench = getWrench(getAircraftState(), control_inputs);
