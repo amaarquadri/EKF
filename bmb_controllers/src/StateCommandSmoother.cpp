@@ -3,11 +3,11 @@
 #include <bmb_msgs/StateCommand.h>
 #include <bmb_utilities/MathUtils.h>
 
-static const TransferFunction<double, 1, 2> SPEED_SMOOTHER{1, 0.1, 1};
+static const TransferFunction<double, 1, 2> SPEED_SMOOTHER{1, 1, 0.1};
 
-static const TransferFunction<double, 1, 2> ROLL_SMOOTHER{1, 2, 1};
+static const TransferFunction<double, 1, 2> ROLL_SMOOTHER{1, 1, 2};
 
-static const TransferFunction<double, 1, 2> PITCH_SMOOTHER{1, 2, 1};
+static const TransferFunction<double, 1, 2> PITCH_SMOOTHER{1, 1, 2};
 
 StateCommandSmoother::StateCommandSmoother(const double& update_frequency) {
   const double dt = 1 / update_frequency;
