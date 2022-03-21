@@ -36,7 +36,8 @@ LowLevelControlLoopNode::LowLevelControlLoopNode(ros::NodeHandle& nh,
 }
 
 bmb_msgs::ControlInputs LowLevelControlLoopNode::getControlInputs() {
-  const bmb_msgs::StateCommand smoothed_command = latest_state_command;
+  const bmb_msgs::StateCommand smoothed_command =
+      smoother.getSmoothedStateCommand(latest_state_command);
 
   const Quaternion<double> orientation{latest_aircraft_state.pose.orientation};
   const double pitch = orientation.getPitch();
