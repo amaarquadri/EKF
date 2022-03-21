@@ -21,7 +21,7 @@
 using namespace gazebo;
 
 static const auto COM_OFFSET =
-    bmbToIgnitionVector3(Vector3<double>{-0.12195, 0.00111, 0.06595});
+    bmbToIgnitionVector3(Vector3<double>{}); // -0.12195, 0.00111, 0.06595});
 
 ARISControlPlugin::~ARISControlPlugin() {
 #if GAZEBO_MAJOR_VERSION >= 8
