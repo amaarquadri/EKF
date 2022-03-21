@@ -11,14 +11,15 @@
 #include <cmath>
 
 // aerodynamic slope constants
-static constexpr Wrench<double> BODY_M_WRENCH{};
+static constexpr Wrench<double> BODY_M_WRENCH{0, 0, -1.39627650007691};
 static constexpr Wrench<double> AILERON_M_WRENCH{0, 0, 0, 0.0547822725108043};
 static constexpr Wrench<double> ELEVATOR_M_WRENCH{
     0, 0, 0, 0, 0.0842508724650606, 0};
 static constexpr Wrench<double> RUDDER_M_WRENCH{};
 
 // aerodynamic offset constants
-static constexpr Wrench<double> BODY_B_WRENCH{-0.0595573697856826};
+static constexpr Wrench<double> BODY_B_WRENCH{-0.0595573697856826, 0,
+                                              -0.204721453757253};
 
 // propeller constants
 static constexpr double THRUST_TORQUE_RATIO_PROPELLER = 0;
@@ -99,12 +100,12 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
       RUDDER_M_WRENCH * sin_aoa_xy * speed_xy_squared;
 
   return 
-  //body_loads
-  //+ aileron_loads
+  body_loads
+  + aileron_loads
   + elevator_loads
   //+ rudder_loads
-  //+ getPropellerLoads(control_inputs.propeller_force)
-  //+ getGravitationalLoads(quat)
+  + getPropellerLoads(control_inputs.propeller_force)
+  + getGravitationalLoads(quat)
   ;
 }
 
