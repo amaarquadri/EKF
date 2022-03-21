@@ -75,7 +75,7 @@ class ControlInputsPublishThread(threading.Thread):
         self.publisher.publish(control_inputs)
 
 
-class KeyboardStateCommander:
+class KeyboardControlInputsCommander:
     MOVE_BINDINGS = {
         'w': (1, 0),
         's': (-1, 0),
