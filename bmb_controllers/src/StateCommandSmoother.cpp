@@ -21,6 +21,6 @@ bmb_msgs::StateCommand StateCommandSmoother::getSmoothedStateCommand(
   bmb_msgs::StateCommand smoothed_command;
   smoothed_command.speed = speed_smoother.next_output(state_command.speed);
   smoothed_command.roll = roll_smoother.next_output(state_command.roll);
-  smoothed_command.pitch = roll_smoother.next_output(state_command.pitch);
+  smoothed_command.pitch = pitch_smoother.next_output(state_command.pitch);
   return smoothed_command;
 }
