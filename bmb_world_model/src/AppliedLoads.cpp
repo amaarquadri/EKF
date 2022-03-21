@@ -54,7 +54,7 @@ static Wrench<double> getPropellerLoads(const double& propeller_force) {
 }
 
 static Wrench<double> getGravitationalLoads(const Quaternion<double>& quat) {
-  return {};  //{quat.rotate(WEIGHT), Vector3<double>{}};
+  return {quat.rotate(WEIGHT), Vector3<double>{}};
 }
 
 Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
@@ -92,15 +92,20 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
   const Wrench<double> body_loads =
       (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;
   const Wrench<double> aileron_loads =
-      AILERON_M_WRENCH * aileron_wrench * speed_xz_squared;
+      AILERON_M_WRENCH * aileron_wrench * 100;
   const Wrench<double> elevator_loads =
-      ELEVATOR_M_WRENCH * elevator_wrench * 10; // TODO: remove hardcoding
+      ELEVATOR_M_WRENCH * elevator_wrench * 100; // TODO: remove hardcoding
   const Wrench<double> rudder_loads =
       RUDDER_M_WRENCH * sin_aoa_xy * speed_xy_squared;
 
-  return body_loads + aileron_loads + elevator_loads + rudder_loads +
-         getPropellerLoads(control_inputs.propeller_force) +
-         getGravitationalLoads(quat);
+  return 
+  //body_loads
+  //+ aileron_loads
+  + elevator_loads
+  //+ rudder_loads
+  //+ getPropellerLoads(control_inputs.propeller_force)
+  //+ getGravitationalLoads(quat)
+  ;
 }
 
 Matrix<double, 6, bmb_msgs::AircraftState::SIZE> getAppliedLoadsJacobian(
