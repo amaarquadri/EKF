@@ -68,7 +68,7 @@ static constexpr size_t p =
 // controller constants
 static constexpr ControllerGains THROTTLE_GAIN{3, 2, 0, 0};
 static constexpr ControllerGains ROLL_GAIN{1, 0.2, 2};
-static constexpr ControllerGains PITCH_GAIN{1, 0, 0, 1};
+static constexpr ControllerGains PITCH_GAIN{35, 15, 10};
 static constexpr ControllerGains ELEVATOR_GAIN{1, 1, 1, 1};
 static constexpr double PROPELLER_K_P = 1;
 static constexpr ControllerGains AILERON_GAIN{1, 1, 1, 1};

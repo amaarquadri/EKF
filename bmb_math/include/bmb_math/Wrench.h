@@ -42,6 +42,14 @@ struct Wrench {
     torque.copyTo(msg.torque);
   }
 
+  constexpr Wrench<T> operator+() const {
+    return {Vector3<T>{+force}, Vector3<T>{+torque}};
+  }
+
+  constexpr Wrench<T> operator-() const {
+    return {Vector3<T>{-force}, Vector3<T>{-torque}};
+  }
+
   constexpr Wrench<T> operator+(const Wrench<T>& other) const {
     return {Vector3<T>{force + other.force}, Vector3<T>{torque + other.torque}};
   }
