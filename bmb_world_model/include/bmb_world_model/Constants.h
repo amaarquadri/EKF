@@ -47,7 +47,7 @@ static constexpr Vector<double, 2> STARTING_COORDINATES{
 static constexpr double EARTH_RADIUS = 6.3781e6;  // m
 
 // aircraft inertial constants
-static constexpr double MASS = 3.615;  // aircraft mass, kg
+static constexpr double MASS = 3.3;  // aircraft mass, kg
 static constexpr Vector3<double> WEIGHT{
     0, 0, MASS* GRAVITATIONAL_ACCELERATION};  // NOLINT(cert-err58-cpp)
 static constexpr Matrix<double, 3, 3> INERTIA_TENSOR{

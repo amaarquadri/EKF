@@ -4,7 +4,7 @@
     <arg name="y" default="0"/>
     <arg name="z" default="10"/>
     <arg name="roll" default="0"/>
-    <arg name="pitch" default="0"/>
+    <arg name="pitch" default="$(eval -5 * pi / 180)"/>
     <arg name="yaw" default="0"/>
 
     <param name="aris_description"
