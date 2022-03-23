@@ -10,14 +10,15 @@
 
 // environmental constants
 static constexpr double GRAVITATIONAL_ACCELERATION = 9.81;  // m/s^2
-static constexpr Vector3<double> EARTH_GRAVITY{0, 0, GRAVITATIONAL_ACCELERATION};
+static constexpr Vector3<double> EARTH_GRAVITY{0, 0,
+                                               GRAVITATIONAL_ACCELERATION};
 static constexpr double ATMOSPHERIC_PRESSURE = 101325;  // Pa
 static constexpr double AIR_DENSITY = 1.225;            // kg/m^3
 static constexpr double AIR_MOLAR_MASS = 0.0289644;     // kg/mol
 static constexpr double GAS_CONSTANT = 8.3144598;       // J/(K mol)
 
 // rail track constants
-static constexpr double RAIL_WIDTH = 1.4351;  // m
+static constexpr double RAIL_WIDTH = 1.4351;      // m
 static constexpr Vector3<double> NORTH{1, 0, 0};  // NOLINT(cert-err58-cpp)
 
 // camera constants
@@ -42,7 +43,7 @@ static constexpr Vector3<double> ANG_VELOCITY_BIAS{0.001, 0.002, 0.003};
 
 // GPS constants
 static constexpr Vector<double, 2> STARTING_COORDINATES{
-    43.47308029580669, -80.54007051556243};   // lat long coordinates of E5
+    43.47308029580669, -80.54007051556243};       // lat long coordinates of E5
 static constexpr double EARTH_RADIUS = 6.3781e6;  // m
 
 // aircraft inertial constants
@@ -50,7 +51,8 @@ static constexpr double MASS = 3.615;  // aircraft mass, kg
 static constexpr Vector3<double> WEIGHT{
     0, 0, MASS* GRAVITATIONAL_ACCELERATION};  // NOLINT(cert-err58-cpp)
 static constexpr Matrix<double, 3, 3> INERTIA_TENSOR{
-    1, 0, 0, 0, 1, 0, 0, 0, 1};  // NOLINT(cert-err58-cpp)
+    12.327, -3.07, 0.739,  -3.07, 1.711,
+    -2.789, 0.739, -2.789, 12.659};  // NOLINT(cert-err58-cpp)
 static const Matrix<double, 3, 3> INERTIA_TENSOR_INV =
     INERTIA_TENSOR.inv();  // NOLINT(cert-err58-cpp)
 
