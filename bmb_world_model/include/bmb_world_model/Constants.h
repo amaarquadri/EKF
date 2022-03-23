@@ -67,6 +67,9 @@ static constexpr size_t n = 25;  // number of states
 static constexpr size_t p =
     bmb_msgs::SensorMeasurements::SIZE;  // number of sensor measurements
 
+static constexpr double MAX_PROPELLER_FORCE =
+    2.21 * GRAVITATIONAL_ACCELERATION;  // N
+
 // controller constants
 static constexpr ControllerGains THROTTLE_GAIN{3, 2, 0, 0};
 static constexpr ControllerGains ROLL_GAIN{1, 0.2, 2};

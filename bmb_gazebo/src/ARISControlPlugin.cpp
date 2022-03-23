@@ -4,6 +4,7 @@
 #include <bmb_msgs/ControlInputs.h>
 #include <bmb_utilities/CoordinateSystems.h>
 #include <bmb_world_model/AppliedLoads.h>
+#include <bmb_world_model/Constants.h>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/common/UpdateInfo.hh>
 #include <gazebo/common/common.hh>
@@ -129,9 +130,11 @@ static Wrench<double> getWrench(const bmb_msgs::AircraftState& aircraft_state,
 }
 
 void ARISControlPlugin::update() {
-  // 9000RPM is max speed and 2.21kg is max force
+  // 9000RPM is max speed
+  static constexpr double MAX_PROPELLER_ANGULAR_VELOCITY =
+      9000 * 60 / 2 * M_PI;  // rad/s
   static constexpr double PROPELLER_FORCE_TO_VEL_RATIO =
-      (9000 * 60 / (2 * M_PI)) / (2.21 * 9.81);
+      MAX_PROPELLER_ANGULAR_VELOCITY / MAX_PROPELLER_FORCE;
 
   // read control_inputs in a thread-safe way
   bmb_msgs::ControlInputs control_inputs;
