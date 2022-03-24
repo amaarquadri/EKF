@@ -67,9 +67,7 @@ static constexpr double MAX_PROPELLER_FORCE =
     2.21 * GRAVITATIONAL_ACCELERATION;  // N
 
 // controller constants
-static constexpr ControllerGains ELEVATOR_GAIN{1, 1, 1, 1};
 static constexpr double PROPELLER_K_P = 1;
-static constexpr ControllerGains AILERON_GAIN{1, 1, 1, 1};
 static constexpr double BASELINE_VELOCITY = 10;  // m/s
 static constexpr double TRIM =
     7 * M_PI / 180.0;  // rad. This is used for sin of trim. Alternatively can
