@@ -6,18 +6,17 @@
 #include <bmb_msgs/ControlInputs.h>
 #include <bmb_msgs/StateCommand.h>
 #include <bmb_utilities/ControllerGains.h>
-#include <bmb_world_model/Constants.h>
 #include <algorithm>
 #include <cmath>
-
-static constexpr double MAX_PROPELLER_FORCE = 2.2 * 9.81;
-static constexpr double MAX_AILERON_ANGLE = M_PI / 6;
-static constexpr double MAX_ELEVATOR_ANGLE = M_PI / 6;
 
 LowLevelControlLoopNode::LowLevelControlLoopNode(ros::NodeHandle& nh,
                                                  const double& update_frequency)
     : update_frequency(update_frequency),
       smoother(StateCommandSmoother{update_frequency}) {
+  static constexpr ControllerGains THROTTLE_GAIN{3, 2, 0, 0};
+  static constexpr ControllerGains ROLL_GAIN{1, 0.2, 2};
+  static constexpr ControllerGains PITCH_GAIN{35, 15, 10};
+
   const double update_period = 1 / update_frequency;
   speed_pid = PIDFFController<double>{THROTTLE_GAIN, update_period};
   roll_pid = PIDFFController<double>{ROLL_GAIN, update_period};
@@ -42,6 +41,10 @@ bmb_msgs::ControlInputs LowLevelControlLoopNode::getControlInputs() {
   const Quaternion<double> orientation{latest_aircraft_state.pose.orientation};
   const double pitch = orientation.getPitch();
   const double roll = orientation.getRoll();
+
+  static constexpr double MAX_PROPELLER_FORCE = 2.2 * 9.81;
+  static constexpr double MAX_AILERON_ANGLE = M_PI / 6;
+  static constexpr double MAX_ELEVATOR_ANGLE = M_PI / 6;
 
   bmb_msgs::ControlInputs control_inputs{};
   control_inputs.propeller_force =

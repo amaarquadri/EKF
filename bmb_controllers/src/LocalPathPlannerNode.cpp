@@ -1,15 +1,16 @@
 #include "bmb_controllers/LocalPathPlannerNode.h"
-#include <bmb_controllers/PosVelState.h>
 #include <bmb_controllers/DubinsPath.h>
 #include <bmb_controllers/PIDFFController.h>
+#include <bmb_controllers/PosVelState.h>
 #include <bmb_controllers/PurePursuit.h>
 #include <bmb_msgs/AircraftState.h>
 #include <bmb_msgs/ReferenceCommand.h>
 #include <bmb_msgs/StateCommand.h>
 #include <bmb_utilities/ControllerGains.h>
-#include <bmb_world_model/Constants.h>
 #include <ros/ros.h>
 #include <cmath>
+
+static constexpr ControllerGains ALTITUDE_GAIN{0.05, 0.005, 0.04};
 
 LocalPathPlannerNode::LocalPathPlannerNode(ros::NodeHandle& nh,
                                            const double& update_frequency)
@@ -39,6 +40,9 @@ void LocalPathPlannerNode::referenceCommandCallback(
 }
 
 bmb_msgs::StateCommand LocalPathPlannerNode::getStateCommand() {
+  static constexpr double MIN_RADIUS_CURVATURE =
+      30;  // calculated to be 23.5 m, at 50 km/h
+
   const PosVelState<double> current_state{latest_aircraft_state};
   const PosVelState<double> goal{latest_reference_command};
 

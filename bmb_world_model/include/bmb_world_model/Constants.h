@@ -56,10 +56,6 @@ static constexpr Matrix<double, 3, 3> INERTIA_TENSOR{
 static const Matrix<double, 3, 3> INERTIA_TENSOR_INV =
     INERTIA_TENSOR.inv();  // NOLINT(cert-err58-cpp)
 
-// aircraft body aerodynamic constants
-static constexpr double MIN_RADIUS_CURVATURE =
-    30;  // calculated to be 23.5 m, at 50 km/h
-
 static constexpr double T_SAMPLE = 1E-3;  // sampling period
 
 // Kalman filter constants
@@ -71,13 +67,9 @@ static constexpr double MAX_PROPELLER_FORCE =
     2.21 * GRAVITATIONAL_ACCELERATION;  // N
 
 // controller constants
-static constexpr ControllerGains THROTTLE_GAIN{3, 2, 0, 0};
-static constexpr ControllerGains ROLL_GAIN{1, 0.2, 2};
-static constexpr ControllerGains PITCH_GAIN{35, 15, 10};
 static constexpr ControllerGains ELEVATOR_GAIN{1, 1, 1, 1};
 static constexpr double PROPELLER_K_P = 1;
 static constexpr ControllerGains AILERON_GAIN{1, 1, 1, 1};
-static constexpr ControllerGains ALTITUDE_GAIN{0.05, 0.005, 0.04};
 static constexpr double BASELINE_VELOCITY = 10;  // m/s
 static constexpr double TRIM =
     7 * M_PI / 180.0;  // rad. This is used for sin of trim. Alternatively can
