@@ -1,3 +1,10 @@
 <launch>
     <arg name="sim" default="true"/>
+
+    <node name="real_aileron_node" pkg="bmb_actuators" type="real_aileron_node"
+          output="screen" unless="$(arg sim)"/>
+    <node name="real_elevator_node" pkg="bmb_actuators" type="real_elevator_node"
+          output="screen" unless="$(arg sim)"/>
+    <node name="real_propeller_node" pkg="bmb_actuators" type="real_propeller_node"
+          output="screen" unless="$(arg sim)"/>
 </launch>
