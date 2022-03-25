@@ -10,14 +10,15 @@
 
 // environmental constants
 static constexpr double GRAVITATIONAL_ACCELERATION = 9.81;  // m/s^2
-static constexpr Vector3<double> EARTH_GRAVITY{0, 0, GRAVITATIONAL_ACCELERATION};
+static constexpr Vector3<double> EARTH_GRAVITY{0, 0,
+                                               GRAVITATIONAL_ACCELERATION};
 static constexpr double ATMOSPHERIC_PRESSURE = 101325;  // Pa
 static constexpr double AIR_DENSITY = 1.225;            // kg/m^3
 static constexpr double AIR_MOLAR_MASS = 0.0289644;     // kg/mol
 static constexpr double GAS_CONSTANT = 8.3144598;       // J/(K mol)
 
 // rail track constants
-static constexpr double RAIL_WIDTH = 1.4351;  // m
+static constexpr double RAIL_WIDTH = 1.4351;      // m
 static constexpr Vector3<double> NORTH{1, 0, 0};  // NOLINT(cert-err58-cpp)
 
 // camera constants
@@ -42,21 +43,18 @@ static constexpr Vector3<double> ANG_VELOCITY_BIAS{0.001, 0.002, 0.003};
 
 // GPS constants
 static constexpr Vector<double, 2> STARTING_COORDINATES{
-    43.47308029580669, -80.54007051556243};   // lat long coordinates of E5
+    43.47308029580669, -80.54007051556243};       // lat long coordinates of E5
 static constexpr double EARTH_RADIUS = 6.3781e6;  // m
 
 // aircraft inertial constants
-static constexpr double MASS = 3.615;  // aircraft mass, kg
+static constexpr double MASS = 3.3;  // aircraft mass, kg
 static constexpr Vector3<double> WEIGHT{
     0, 0, MASS* GRAVITATIONAL_ACCELERATION};  // NOLINT(cert-err58-cpp)
 static constexpr Matrix<double, 3, 3> INERTIA_TENSOR{
-    1, 0, 0, 0, 1, 0, 0, 0, 1};  // NOLINT(cert-err58-cpp)
+    12.327, -3.07, 0.739,  -3.07, 1.711,
+    -2.789, 0.739, -2.789, 12.659};  // NOLINT(cert-err58-cpp)
 static const Matrix<double, 3, 3> INERTIA_TENSOR_INV =
     INERTIA_TENSOR.inv();  // NOLINT(cert-err58-cpp)
-
-// aircraft body aerodynamic constants
-static constexpr double MIN_RADIUS_CURVATURE =
-    30;  // calculated to be 23.5 m, at 50 km/h
 
 static constexpr double T_SAMPLE = 1E-3;  // sampling period
 
@@ -65,14 +63,11 @@ static constexpr size_t n = 25;  // number of states
 static constexpr size_t p =
     bmb_msgs::SensorMeasurements::SIZE;  // number of sensor measurements
 
+static constexpr double MAX_PROPELLER_FORCE =
+    2.21 * GRAVITATIONAL_ACCELERATION;  // N
+
 // controller constants
-static constexpr ControllerGains THROTTLE_GAIN{3, 2, 0, 0};
-static constexpr ControllerGains ROLL_GAIN{1, 0.2, 2};
-static constexpr ControllerGains PITCH_GAIN{35, 15, 10};
-static constexpr ControllerGains ELEVATOR_GAIN{1, 1, 1, 1};
 static constexpr double PROPELLER_K_P = 1;
-static constexpr ControllerGains AILERON_GAIN{1, 1, 1, 1};
-static constexpr ControllerGains ALTITUDE_GAIN{0.05, 0.005, 0.04};
 static constexpr double BASELINE_VELOCITY = 10;  // m/s
 static constexpr double TRIM =
     7 * M_PI / 180.0;  // rad. This is used for sin of trim. Alternatively can

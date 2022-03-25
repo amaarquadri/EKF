@@ -48,7 +48,7 @@ class StateCommandPublishThread(threading.Thread):
 
     def stop(self):
         self.done = True
-        self.update(0, 0, 10)
+        self.update(5, 0, 10)
         self.join()
 
     def run(self):
@@ -99,7 +99,7 @@ class KeyboardStateCommander:
 
     def __init__(self):
         self.settings = termios.tcgetattr(sys.stdin)
-        self.pitch = 0
+        self.pitch = 5
         self.roll = 0
         self.speed = 10
         self.status = 0

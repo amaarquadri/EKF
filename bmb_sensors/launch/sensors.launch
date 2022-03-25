@@ -1,3 +1,6 @@
 <launch>
-    <node name="sim_sensors_node" pkg="bmb_sensors" type="sim_sensors_node" output="screen"/>
+    <arg name="sim" default="true"/>
+
+    <node name="sim_sensors_node" pkg="bmb_sensors" type="sim_sensors_node"
+          output="screen" if="$(arg sim)"/>
 </launch>
