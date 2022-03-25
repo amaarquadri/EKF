@@ -130,7 +130,7 @@ static void gps(const Vector3<double>& position,
   sensor_measurements.gps_reading.altitude = -position.z;
 }
 
-bmb_msgs::SensorMeasurements getSensorMeasurements(
+bmb_msgs::SensorMeasurements bmb_world_model::getSensorMeasurements(
     const bmb_msgs::AircraftState& state,
     const Vector3<double>& accelerometer_bias,
     const Vector3<double>& gyroscope_bias, const Accel<double>& accel) {
@@ -152,7 +152,7 @@ bmb_msgs::SensorMeasurements getSensorMeasurements(
 
 std::tuple<Matrix<double, p, bmb_msgs::AircraftState::SIZE>,
            Matrix<double, p, 3>, Matrix<double, p, 3>, Matrix<double, p, 6>>
-getSensorMeasurementsJacobian(const bmb_msgs::AircraftState& state,
+bmb_world_model::getSensorMeasurementsJacobian(const bmb_msgs::AircraftState& state,
                               const Vector3<double>& accelerometer_bias,
                               const Vector3<double>& gyroscope_bias,
                               const Accel<double>& accel) {
