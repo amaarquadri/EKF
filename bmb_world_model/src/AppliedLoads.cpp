@@ -15,8 +15,6 @@
 static constexpr double THRUST_TORQUE_RATIO_PROPELLER = 1;
 static constexpr Vector3<double> L_FRONT_PROPELLER{0, 0, 0};
 
-using bmb_utilities::saturation;
-
 static Matrix<ExprPtr, 3, 4> getQuatToWeightJacExpr() {
   Matrix<ExprPtr, 3, 4> expr;
 
@@ -48,15 +46,17 @@ static Wrench<double> getGravitationalLoads(const Quaternion<double>& quat) {
   return {quat.rotate(WEIGHT), Vector3<double>{}};
 }
 
-Wrench<double> wrenchFromAOA(const Vector3<double>& body_vel,
-                             const double& sin_aoa_xz) {
+Wrench<double> bmb_world_model::wrenchFromAOA(const Vector3<double>& body_vel,
+                                              const double& sin_aoa_xz) {
   const double speed_xz_squared =
       body_vel.x * body_vel.x + body_vel.z * body_vel.z;
-  return (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;
+  return (bmb_world_model::BODY_M_WRENCH * sin_aoa_xz +
+          bmb_world_model::BODY_B_WRENCH) *
+         speed_xz_squared;
 }
 
-Wrench<double> wrenchFromAileron(const Vector3<double>& body_vel,
-                                 const double& right_aileron_angle) {
+Wrench<double> bmb_world_model::wrenchFromAileron(
+    const Vector3<double>& body_vel, const double& right_aileron_angle) {
   const double speed_xz_squared =
       body_vel.x * body_vel.x + body_vel.z * body_vel.z;
   // absolute value of aileron angle is used for the force models
@@ -64,11 +64,11 @@ Wrench<double> wrenchFromAileron(const Vector3<double>& body_vel,
   const Wrench<double> aileron_wrench{
       right_aileron_angle_mag, right_aileron_angle_mag, right_aileron_angle_mag,
       right_aileron_angle,     right_aileron_angle_mag, right_aileron_angle};
-  return AILERON_M_WRENCH * aileron_wrench * speed_xz_squared;
+  return bmb_world_model::AILERON_M_WRENCH * aileron_wrench * speed_xz_squared;
 }
 
-Wrench<double> wrenchFromElevator(const Vector3<double>& body_vel,
-                                  const double& elevator_angle) {
+Wrench<double> bmb_world_model::wrenchFromElevator(
+    const Vector3<double>& body_vel, const double& elevator_angle) {
   const double speed_xz_squared =
       body_vel.x * body_vel.x + body_vel.z * body_vel.z;
   // absolute value of elevator angle is used for the force models
@@ -76,18 +76,20 @@ Wrench<double> wrenchFromElevator(const Vector3<double>& body_vel,
   const Wrench<double> elevator_wrench{elevator_angle, elevator_angle_mag,
                                        elevator_angle, elevator_angle,
                                        elevator_angle, elevator_angle};
-  return ELEVATOR_M_WRENCH * elevator_wrench * speed_xz_squared;
+  return bmb_world_model::ELEVATOR_M_WRENCH * elevator_wrench *
+         speed_xz_squared;
 }
 
-Wrench<double> wrenchFromRudder(const Vector3<double>& body_vel,
-                                const double& sin_aoa_xy) {
+Wrench<double> bmb_world_model::wrenchFromRudder(
+    const Vector3<double>& body_vel, const double& sin_aoa_xy) {
   const double speed_xy_squared =
       body_vel.x * body_vel.x + body_vel.y * body_vel.y;
-  return RUDDER_M_WRENCH * sin_aoa_xy * speed_xy_squared;
+  return bmb_world_model::RUDDER_M_WRENCH * sin_aoa_xy * speed_xy_squared;
 }
 
-Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
-                               const bmb_msgs::ControlInputs& control_inputs) {
+Wrench<double> bmb_world_model::getAppliedLoads(
+    const bmb_msgs::AircraftState& state,
+    const bmb_msgs::ControlInputs& control_inputs) {
   static geometry_msgs::Vector3 b_vel = state.twist.linear;
   const Vector3<double> body_vel = {b_vel.x, b_vel.y, b_vel.z};
   const Quaternion<double> quat{state.pose.orientation};
@@ -106,7 +108,8 @@ Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
          getGravitationalLoads(quat);
 }
 
-Matrix<double, 6, bmb_msgs::AircraftState::SIZE> getAppliedLoadsJacobian(
+Matrix<double, 6, bmb_msgs::AircraftState::SIZE>
+bmb_world_model::getAppliedLoadsJacobian(
     const bmb_msgs::AircraftState& state,
     const bmb_msgs::ControlInputs& control_inputs) {
   auto wrench_jac = Matrix<double, 6, bmb_msgs::AircraftState::SIZE>::zeros();

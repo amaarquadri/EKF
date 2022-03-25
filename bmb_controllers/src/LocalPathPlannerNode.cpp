@@ -46,13 +46,14 @@ void LocalPathPlannerNode::referenceCommandCallback(
 double pitchFromLift(const Vector3<double>& body_vel, const double& lift) {
   const double speed_xz_squared =
       body_vel.x * body_vel.x + body_vel.z * body_vel.z;
-  return std::asin((lift / speed_xz_squared - BODY_B_WRENCH.force.z) /
-                   BODY_M_WRENCH.force.z)
+  return std::asin(
+      (lift / speed_xz_squared - bmb_world_model::BODY_B_WRENCH.force.z) /
+      bmb_world_model::BODY_M_WRENCH.force.z)
 }
 
 double velocityXZFromLift(const double& sin_AOA, const double& lift) {
-  return std::sqrt(
-      lift / (BODY_M_WRENCH.force.z * sin_aoa_xz + BODY_B_WRENCH.force.z));
+  return std::sqrt(lift / (bmb_world_model::BODY_M_WRENCH.force.z * sin_aoa_xz +
+                           bmb_world_model::BODY_B_WRENCH.force.z));
 }
 
 bmb_msgs::StateCommand LocalPathPlannerNode::getStateCommand() {
