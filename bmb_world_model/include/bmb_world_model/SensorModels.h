@@ -8,7 +8,6 @@
 #include <bmb_world_model/Constants.h>
 #include <utility>
 
-namespace bmb_world_model {
 bmb_msgs::SensorMeasurements getSensorMeasurements(
     const bmb_msgs::AircraftState& state,
     const Vector3<double>& accelerometer_bias,
@@ -23,4 +22,3 @@ getSensorMeasurementsJacobian(const bmb_msgs::AircraftState& state,
                               const Vector3<double>& accelerometer_bias,
                               const Vector3<double>& gyroscope_bias,
                               const Accel<double>& accel);
-}  // namespace bmb_world_model

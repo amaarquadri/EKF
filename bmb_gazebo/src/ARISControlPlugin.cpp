@@ -121,7 +121,7 @@ bmb_msgs::AircraftState ARISControlPlugin::getAircraftState() const {
 static Wrench<double> getWrench(const bmb_msgs::AircraftState& aircraft_state,
                                 const bmb_msgs::ControlInputs& control_inputs) {
   const Wrench<double> wrench_relative =
-      getAppliedLoads(aircraft_state, control_inputs);
+      bmb_world_model::getAppliedLoads(aircraft_state, control_inputs);
   ROS_INFO_STREAM(wrench_relative.toStr());
   const Wrench<double> wrench_absolute =
       Quaternion<double>{aircraft_state.pose.orientation}.unrotate(

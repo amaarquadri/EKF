@@ -41,8 +41,7 @@ Wrench<double> wrenchFromElevator(const Vector3<double>& body_vel,
 Wrench<double> wrenchFromRudder(const Vector3<double>& body_vel,
                                 const double& sin_aoa_xy);
 
-Matrix<double, 6, bmb_msgs::AircraftState::SIZE>
-bmb_world_model::getAppliedLoadsJacobian(
+Matrix<double, 6, bmb_msgs::AircraftState::SIZE> getAppliedLoadsJacobian(
     const bmb_msgs::AircraftState& state,
     const bmb_msgs::ControlInputs& control_inputs);
 }  // namespace bmb_world_model
