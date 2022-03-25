@@ -2,7 +2,7 @@
 
 #include <bmb_math/Matrix.h>
 #include <bmb_math/Wrench.h>
-#include <bmb_math/Vector3>
+#include <bmb_math/Vector3.h>
 #include <bmb_msgs/AircraftState.h>
 #include <bmb_msgs/ControlInputs.h>
 
@@ -29,16 +29,16 @@ static constexpr Wrench<double> BODY_B_WRENCH{
 Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
                                const bmb_msgs::ControlInputs& control_inputs);
 
-const Wrench<double> wrenchFromAOA(const Vector3& body_vel,
+const Wrench<double> wrenchFromAOA(const Vector3<double>& body_vel,
                                    const double& sin_aoa_xz);
 
-Wrench<double> wrenchFromAileron(const Vector3& body_vel,
+Wrench<double> wrenchFromAileron(const Vector3<double>& body_vel,
                                  const double& right_aileron_angle);
 
-Wrench<double> wrenchFromElevator(const Vector3& body_vel,
+Wrench<double> wrenchFromElevator(const Vector3<double>& body_vel,
                                   const double& elevator_angle);
 
-Wrench<double> wrenchFromRudder(const Vector3& body_vel,
+Wrench<double> wrenchFromRudder(const Vector3<double>& body_vel,
                                 const double& sin_aoa_xy);
 
 Matrix<double, 6, bmb_msgs::AircraftState::SIZE>

@@ -1,8 +1,9 @@
 #include "bmb_controllers/LocalPathPlannerNode.h"
-#include <bmb_controllers/PosVelState.h>
 #include <bmb_controllers/DubinsPath.h>
 #include <bmb_controllers/PIDFFController.h>
+#include <bmb_controllers/PosVelState.h>
 #include <bmb_controllers/PurePursuit.h>
+#include <bmb_math/Vector3.h>
 #include <bmb_msgs/AircraftState.h>
 #include <bmb_msgs/ReferenceCommand.h>
 #include <bmb_msgs/StateCommand.h>
@@ -42,7 +43,7 @@ void LocalPathPlannerNode::referenceCommandCallback(
   update_dubins_path = true;
 }
 
-double pitchFromLift(const Vector3& body_vel, const double& lift) {
+double pitchFromLift(const Vector3<double>& body_vel, const double& lift) {
   const double speed_xz_squared =
       body_vel.x * body_vel.x + body_vel.z * body_vel.z;
   return std::asin((lift / speed_xz_squared - BODY_B_WRENCH.force.z) /
@@ -82,7 +83,7 @@ bmb_msgs::StateCommand LocalPathPlannerNode::getStateCommand() {
   }
 
   static geometry_msgs::Vector3 b_vel = latest_aircraft_state.twist.linear;
-  const Vector3 body_vel = {b_vel.x, b_vel.y, b_vel.z};
+  const Vector3<double> body_vel = {b_vel.x, b_vel.y, b_vel.z};
   const double cur_world_vel =
       std::hypot(body_vel.x, body_vel.z) const double vertical_force =
           altitude_pid.update(-latest_aircraft_state.pose.position.z,

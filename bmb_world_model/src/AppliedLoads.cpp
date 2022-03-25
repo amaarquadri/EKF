@@ -48,14 +48,14 @@ static Wrench<double> getGravitationalLoads(const Quaternion<double>& quat) {
   return {quat.rotate(WEIGHT), Vector3<double>{}};
 }
 
-Wrench<double> wrenchFromAOA(const Vector3& body_vel,
+Wrench<double> wrenchFromAOA(const Vector3<double>& body_vel,
                              const double& sin_aoa_xz) {
   const double speed_xz_squared =
       body_vel.x * body_vel.x + body_vel.z * body_vel.z;
   return (BODY_M_WRENCH * sin_aoa_xz + BODY_B_WRENCH) * speed_xz_squared;
 }
 
-Wrench<double> wrenchFromAileron(const Vector3& body_vel,
+Wrench<double> wrenchFromAileron(const Vector3<double>& body_vel,
                                  const double& right_aileron_angle) {
   const double speed_xz_squared =
       body_vel.x * body_vel.x + body_vel.z * body_vel.z;
@@ -67,7 +67,7 @@ Wrench<double> wrenchFromAileron(const Vector3& body_vel,
   return AILERON_M_WRENCH * aileron_wrench * speed_xz_squared;
 }
 
-Wrench<double> wrenchFromElevator(const Vector3& body_vel,
+Wrench<double> wrenchFromElevator(const Vector3<double>& body_vel,
                                   const double& elevator_angle) {
   const double speed_xz_squared =
       body_vel.x * body_vel.x + body_vel.z * body_vel.z;
@@ -79,7 +79,7 @@ Wrench<double> wrenchFromElevator(const Vector3& body_vel,
   return ELEVATOR_M_WRENCH * elevator_wrench * speed_xz_squared;
 }
 
-Wrench<double> wrenchFromRudder(const Vector3& body_vel,
+Wrench<double> wrenchFromRudder(const Vector3<double>& body_vel,
                                 const double& sin_aoa_xy) {
   const double speed_xy_squared =
       body_vel.x * body_vel.x + body_vel.y * body_vel.y;
@@ -89,13 +89,11 @@ Wrench<double> wrenchFromRudder(const Vector3& body_vel,
 Wrench<double> getAppliedLoads(const bmb_msgs::AircraftState& state,
                                const bmb_msgs::ControlInputs& control_inputs) {
   static geometry_msgs::Vector3 b_vel = state.twist.linear;
-  const Vector3 body_vel = {b_vel.x, b_vel.y, b_vel.z};
+  const Vector3<double> body_vel = {b_vel.x, b_vel.y, b_vel.z};
   const Quaternion<double> quat{state.pose.orientation};
 
-  const double sin_aoa_xy =
-      -body_vel.y / bmb_utilities::magnitude(body_vel.x, body_vel.y);
-  const double sin_aoa_xz =
-      body_vel.x / bmb_utilities::magnitude(body_vel.x, body_vel.z);
+  const double sin_aoa_xy = -body_vel.y / std::hypot(body_vel.x, body_vel.y);
+  const double sin_aoa_xz = body_vel.x / std::hypot(body_vel.x, body_vel.z);
 
   const Wrench<double> body_loads = wrenchFromAOA(body_vel, sin_aoa_xz);
   const Wrench<double> aileron_loads =
