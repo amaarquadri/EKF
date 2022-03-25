@@ -1,0 +1,171 @@
+rrors     << bmb_world_model:make /home/fydp/catkin_ws/logs/bmb_world_model/build.make.048.log
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:32:36: error: template placeholder type ‘const Vector3<...auto...>’ must be followed by a simple declarator-id
+   32 | const Wrench<double> wrenchFromAOA(const Vector3& body_vel,
+      |                                    ^~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Wrench.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:4,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector3.h:8:7: note: ‘template<class T> class Vector3’ declared here
+    8 | class Vector3 : public Vector<T, 3> {
+      |       ^~~~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:32:59: error: expected ‘)’ before ‘,’ token
+   32 | const Wrench<double> wrenchFromAOA(const Vector3& body_vel,
+      |                                   ~                       ^
+      |                                                           )
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:33:36: error: expected unqualified-id before ‘const’
+   33 |                                    const double& sin_aoa_xz);
+      |                                    ^~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:35:34: error: template placeholder type ‘const Vector3<...auto...>’ must be followed by a simple declarator-id
+   35 | Wrench<double> wrenchFromAileron(const Vector3& body_vel,
+      |                                  ^~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Wrench.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:4,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector3.h:8:7: note: ‘template<class T> class Vector3’ declared here
+    8 | class Vector3 : public Vector<T, 3> {
+      |       ^~~~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:35:57: error: expected ‘)’ before ‘,’ token
+   35 | Wrench<double> wrenchFromAileron(const Vector3& body_vel,
+      |                                 ~                       ^
+      |                                                         )
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:36:34: error: expected unqualified-id before ‘const’
+   36 |                                  const double& right_aileron_angle);
+      |                                  ^~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:38:35: error: template placeholder type ‘const Vector3<...auto...>’ must be followed by a simple declarator-id
+   38 | Wrench<double> wrenchFromElevator(const Vector3& body_vel,
+      |                                   ^~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Wrench.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:4,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector3.h:8:7: note: ‘template<class T> class Vector3’ declared here
+    8 | class Vector3 : public Vector<T, 3> {
+      |       ^~~~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:38:58: error: expected ‘)’ before ‘,’ token
+   38 | Wrench<double> wrenchFromElevator(const Vector3& body_vel,
+      |                                  ~                       ^
+      |                                                          )
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:39:35: error: expected unqualified-id before ‘const’
+   39 |                                   const double& elevator_angle);
+      |                                   ^~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:41:33: error: template placeholder type ‘const Vector3<...auto...>’ must be followed by a simple declarator-id
+   41 | Wrench<double> wrenchFromRudder(const Vector3& body_vel,
+      |                                 ^~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Wrench.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:4,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector3.h:8:7: note: ‘template<class T> class Vector3’ declared here
+    8 | class Vector3 : public Vector<T, 3> {
+      |       ^~~~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:41:56: error: expected ‘)’ before ‘,’ token
+   41 | Wrench<double> wrenchFromRudder(const Vector3& body_vel,
+      |                                ~                       ^
+      |                                                        )
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:42:33: error: expected unqualified-id before ‘const’
+   42 |                                 const double& sin_aoa_xy);
+      |                                 ^~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:47:50: error: ‘Matrix<double, 6, 13> bmb_world_model::getAppliedLoadsJacobian(const AircraftState&, const ControlInputs&)’ should have been declared inside ‘bmb_world_model’
+   47 |     const bmb_msgs::ControlInputs& control_inputs);
+      |                                                  ^
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:51:30: error: template placeholder type ‘const Vector3<...auto...>’ must be followed by a simple declarator-id
+   51 | Wrench<double> wrenchFromAOA(const Vector3& body_vel,
+      |                              ^~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Wrench.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:4,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector3.h:8:7: note: ‘template<class T> class Vector3’ declared here
+    8 | class Vector3 : public Vector<T, 3> {
+      |       ^~~~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:51:53: error: expected ‘)’ before ‘,’ token
+   51 | Wrench<double> wrenchFromAOA(const Vector3& body_vel,
+      |                             ~                       ^
+      |                                                     )
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:52:30: error: expected unqualified-id before ‘const’
+   52 |                              const double& sin_aoa_xz) {
+      |                              ^~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:58:34: error: template placeholder type ‘const Vector3<...auto...>’ must be followed by a simple declarator-id
+   58 | Wrench<double> wrenchFromAileron(const Vector3& body_vel,
+      |                                  ^~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Wrench.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:4,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector3.h:8:7: note: ‘template<class T> class Vector3’ declared here
+    8 | class Vector3 : public Vector<T, 3> {
+      |       ^~~~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:58:57: error: expected ‘)’ before ‘,’ token
+   58 | Wrench<double> wrenchFromAileron(const Vector3& body_vel,
+      |                                 ~                       ^
+      |                                                         )
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:59:34: error: expected unqualified-id before ‘const’
+   59 |                                  const double& right_aileron_angle) {
+      |                                  ^~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:70:35: error: template placeholder type ‘const Vector3<...auto...>’ must be followed by a simple declarator-id
+   70 | Wrench<double> wrenchFromElevator(const Vector3& body_vel,
+      |                                   ^~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Wrench.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:4,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector3.h:8:7: note: ‘template<class T> class Vector3’ declared here
+    8 | class Vector3 : public Vector<T, 3> {
+      |       ^~~~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:70:58: error: expected ‘)’ before ‘,’ token
+   70 | Wrench<double> wrenchFromElevator(const Vector3& body_vel,
+      |                                  ~                       ^
+      |                                                          )
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:71:35: error: expected unqualified-id before ‘const’
+   71 |                                   const double& elevator_angle) {
+      |                                   ^~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:82:33: error: template placeholder type ‘const Vector3<...auto...>’ must be followed by a simple declarator-id
+   82 | Wrench<double> wrenchFromRudder(const Vector3& body_vel,
+      |                                 ^~~~~
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Wrench.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:4,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector3.h:8:7: note: ‘template<class T> class Vector3’ declared here
+    8 | class Vector3 : public Vector<T, 3> {
+      |       ^~~~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:82:56: error: expected ‘)’ before ‘,’ token
+   82 | Wrench<double> wrenchFromRudder(const Vector3& body_vel,
+      |                                ~                       ^
+      |                                                        )
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:83:33: error: expected unqualified-id before ‘const’
+   83 |                                 const double& sin_aoa_xy) {
+      |                                 ^~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp: In function ‘Wrench<double> getAppliedLoads(const AircraftState&, const ControlInputs&)’:
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:96:68: error: no matching function for call to ‘magnitude(double&, double&)’
+   96 |       -body_vel.y / bmb_utilities::magnitude(body_vel.x, body_vel.y);
+      |                                                                    ^
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Matrix.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_utilities/include/bmb_utilities/MathUtils.h:66:3: note: candidate: ‘template<class T> T bmb_utilities::magnitude(std::initializer_list<_Tp>)’
+   66 | T magnitude(std::initializer_list<T> num_list) {
+      |   ^~~~~~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_utilities/include/bmb_utilities/MathUtils.h:66:3: note:   template argument deduction/substitution failed:
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:96:68: note:   mismatched types ‘std::initializer_list<_Tp>’ and ‘double’
+   96 |       -body_vel.y / bmb_utilities::magnitude(body_vel.x, body_vel.y);
+      |                                                                    ^
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:98:67: error: no matching function for call to ‘magnitude(double&, double&)’
+   98 |       body_vel.x / bmb_utilities::magnitude(body_vel.x, body_vel.z);
+      |                                                                   ^
+In file included from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Vector.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_math/include/bmb_math/Matrix.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/include/bmb_world_model/AppliedLoads.h:3,
+                 from /home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:1:
+/home/fydp/catkin_ws/src/fydp/bmb_utilities/include/bmb_utilities/MathUtils.h:66:3: note: candidate: ‘template<class T> T bmb_utilities::magnitude(std::initializer_list<_Tp>)’
+   66 | T magnitude(std::initializer_list<T> num_list) {
+      |   ^~~~~~~~~
+/home/fydp/catkin_ws/src/fydp/bmb_utilities/include/bmb_utilities/MathUtils.h:66:3: note:   template argument deduction/substitution failed:
+/home/fydp/catkin_ws/src/fydp/bmb_world_model/src/AppliedLoads.cpp:98:67: note:   mismatched types ‘std::initializer_list<_Tp>’ and ‘double’
+   98 |       body_vel.x / bmb_utilities::magnitude(body_vel.x, body_vel.z);
+      |                                                                   ^
+make[2]: *** [CMakeFiles/bmb_world_model.dir/build.make:63: CMakeFiles/bmb_world_model.dir/src/AppliedLoads.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:422: CMakeFiles/bmb_world_model.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2
+cd /home/fydp/catkin_ws/build/bmb_world_model; catkin build --get-env bmb_world_model | catkin env -si  /usr/bin/make --jobserver-auth=3,4; cd -
+
