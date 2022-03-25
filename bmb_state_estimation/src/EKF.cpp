@@ -59,7 +59,7 @@ void EKF::updateKF(const bmb_msgs::SensorMeasurements& sensor_measurements,
   const Vector3 accelerometer_bias = x.slice<accel_bx, accel_bz + 1>();
   const Vector3 gyro_bias = x.slice<gyro_bx, gyro_bz + 1>();
   const Matrix<double, 6, bmb_msgs::AircraftState::SIZE> wrench_jac =
-      getAppliedLoadsJacobian(
+      bmb_world_model::getAppliedLoadsJacobian(
           state,
           control_inputs);  // derivative of wrench with respect to state
   const Matrix<double, 6, bmb_msgs::AircraftState::SIZE> accel_jac =
@@ -80,7 +80,7 @@ void EKF::updateKF(const bmb_msgs::SensorMeasurements& sensor_measurements,
   Matrix<double, p, n> h_jac = Matrix<double, p, n>::zeros();
   auto [aircraft_state_to_h_jac, accelerometer_bias_to_h_jac,
         gyro_bias_to_h_jac, accel_to_h_jac] =
-      getSensorMeasurementsJacobian(state, accelerometer_bias, gyro_bias,
+      bmb_world_model::getSensorMeasurementsJacobian(state, accelerometer_bias, gyro_bias,
                                     current_accel);
   h_jac += aircraft_state_to_h_jac;
   h_jac.operator+=<0, accel_bx>(accelerometer_bias_to_h_jac);

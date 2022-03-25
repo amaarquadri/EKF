@@ -19,7 +19,7 @@ void KF::update(const bmb_msgs::SensorMeasurements& sensor_measurements,
                 const double& dt) {
   // calculate current loads once and store in an instance variable so that it
   // can be used throughout
-  current_loads = getAppliedLoads(getOutput(), control_inputs);
+  current_loads = bmb_world_model::getAppliedLoads(getOutput(), control_inputs);
   current_accel = bmb_world_model::toAccel(current_loads);
 
   // delegate to subclasses
@@ -64,7 +64,7 @@ Vector<double, n> KF::f(const Vector<double, n>& state,
 
 Vector<double, p> KF::h(const Vector<double, n>& state,
                         const double& /** dt **/) {
-  return bmb_math::as_vector(getSensorMeasurements(
+  return bmb_math::as_vector(bmb_world_model::getSensorMeasurements(
       getOutput(), state.slice<accel_bx, accel_bz + 1>(),
       state.slice<gyro_bx, gyro_bz + 1>(), current_accel));
 }
