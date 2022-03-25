@@ -40,9 +40,22 @@ void LocalPathPlannerNode::referenceCommandCallback(
   update_dubins_path = true;
 }
 
+double pitchFromLift(const Vector3& body_vel, const double& lift) {
+  const double speed_xz_squared =
+      body_vel.x * body_vel.x + body_vel.z * body_vel.z;
+  return std::asin((lift / speed_xz_squared - BODY_B_WRENCH.force.z) /
+                   BODY_M_WRENCH.force.z)
+}
+
+double velocityXZFromLift(const double& sin_AOA, const double& lift) {
+  return std::sqrt(
+      lift / (BODY_M_WRENCH.force.z * sin_aoa_xz + BODY_B_WRENCH.force.z));
+}
+
 bmb_msgs::StateCommand LocalPathPlannerNode::getStateCommand() {
-  static constexpr double SIN8 = 0.13917310096;
-  static constexpr double COS8 = 0.99026806874;
+  static constexpr double SIN6 = 0.10452846326;
+  static constexpr double COS6 = 0.99452189536;
+  static constexpr double RAD6 = 6 * M_PI / 180;
   const PosVelState<double> current_state{latest_aircraft_state};
   const PosVelState<double> goal{latest_reference_command};
 
@@ -63,19 +76,40 @@ bmb_msgs::StateCommand LocalPathPlannerNode::getStateCommand() {
 #endif
   }
 
-  const auto& b_vel = latest_aircraft_state.twist.linear;
-  const double vertical_force =
-      altitude_pid.update(-latest_aircraft_state.pose.position.z,
-                          latest_reference_command.altitude);
+  static geometry_msgs::Vector3 b_vel = latest_aircraft_state.twist.linear;
+  const Vector3 body_vel = {b_vel.x, b_vel.y, b_vel.z};
+  const double cur_world_vel =
+      std::hypot(body_vel.x, body_vel.z) const double vertical_force =
+          altitude_pid.update(-latest_aircraft_state.pose.position.z,
+                              latest_reference_command.altitude) +
+          WEIGHT.z;  // always lift weight
   const double horizontal_force =
-      MASS * std::hypot(b_vel.x, b_vel.z) * angular_vel;  // Centripetal force
-  const double net_force = std::hypot(horizontal_force, vertical_force);
-  // TODO: calculate max lift, verify feasibility, calculate StateCommand
-  const Wrench<double> max_wrench = bmb_world_model::wrenchFromAOA(b_vel, SIN8);
-  const double max_vertical_force =
-      -max_wrench.force.z * COS8 + max_wrench.force.x * SIN8;
+      MASS * cur_world_vel *
+      angular_vel;  // Centripetal force, CW ang vel results in positive force
+  const double net_force = std::hypot(vertical_force, horizontal_force);
+  // calculate max lift, verify feasibility, calculate StateCommand
+  const Wrench<double> max_wrench_at_cur_vel =
+      bmb_world_model::wrenchFromAOA(body_vel, SIN6);
+  const double max_vertical_force_at_cur_vel =
+      -max_wrench.force_at_cur_vel.z * COS6 +
+      max_wrench_at_cur_vel.force.x * SIN6;
+  double required_pitch = pitchFromLift(body_vel, vertical_force);
+  double required_roll = std::atan(vertical_force / horizontal_force);
+  double max_roll = std::asin(WEIGHT.z / max_vertical_force_at_cur_vel);
 
+  double commanded_vel = std::hypot(goal.vel[0], goal.vel[1]);
+  double commanded_roll = required_roll;
+  double commanded_pitch = bmb_msgs::saturation(required_pitch, RAD6);
+  if (std::abs(required_roll) > max_roll) {
+    double required_vel_xz = velocityXZFromLift(
+        SIN6, net_force / COS6);  // you have to really make sure altitude pid
+                                  // doesnt give very large forces
+    commanded_vel = required_vel_xz * COS6;
+  }
   bmb_msgs::StateCommand state_command;
+  state_command.speed = commanded_vel;
+  state_command.roll = commanded_roll;
+  state_command.pitch = commanded_pitch;
   return state_command;
 }
 
