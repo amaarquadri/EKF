@@ -8,8 +8,12 @@
     <arg name="omniscient" default="true"/>
     <arg name="paused" default="true"/>
 
-    <include file="$(find bmb_actuators)/launch/actuators.launch"/>
-    <include file="$(find bmb_sensors)/launch/sensors.launch"/>
+    <include file="$(find bmb_actuators)/launch/actuators.launch">
+        <arg name="sim" value="$(arg sim)"/>
+    </include>
+    <include file="$(find bmb_sensors)/launch/sensors.launch">
+        <arg name="sim" value="$(arg sim)"/>
+    </include>
     <include file="$(find bmb_controllers)/launch/controllers.launch">
         <arg name="level" value="$(arg level)"/>
     </include>
