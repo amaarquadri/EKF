@@ -20,7 +20,7 @@ static constexpr Wrench<double> AILERON_M_WRENCH{
 static constexpr Wrench<double> ELEVATOR_M_WRENCH{
     -0.0238646243046933, 0, 0.0803509547078008, 0, 0.0842508724650606, 0};
 static constexpr Wrench<double> RUDDER_M_WRENCH{0, 0, 0,
-                                                0, 0, 0.000279918236359769};
+                                                0, 0, 0.00362774034506748};
 
 // aerodynamic offset constants
 static constexpr Wrench<double> BODY_B_WRENCH{
